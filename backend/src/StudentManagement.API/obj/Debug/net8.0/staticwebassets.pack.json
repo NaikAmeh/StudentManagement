@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\uploads\\student-photos\\students\\7e2cec19-4fe2-4bf1-bf1c-70da400973eb.png",
+      "PackagePath": "staticwebassets\\uploads\\student-photos\\students\\7e2cec19-4fe2-4bf1-bf1c-70da400973eb.png"
+    },
+    {
+      "Id": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\uploads\\student-photos\\students\\SampleImg.png",
+      "PackagePath": "staticwebassets\\uploads\\student-photos\\students\\SampleImg.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.StudentManagement.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.StudentManagement.API.props",
+      "PackagePath": "build\\StudentManagement.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.StudentManagement.API.props",
+      "PackagePath": "buildMultiTargeting\\StudentManagement.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.StudentManagement.API.props",
+      "PackagePath": "buildTransitive\\StudentManagement.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

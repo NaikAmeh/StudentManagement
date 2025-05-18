@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "Hash": "yP9vCNxwfwEMilxnlrXDX3AM2jXt7osOXg7wVgNxuOY=",
+  "Source": "StudentManagement.API",
+  "BasePath": "_content/StudentManagement.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "StudentManagement.API\\wwwroot",
+      "Source": "StudentManagement.API",
+      "ContentRoot": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\",
+      "BasePath": "_content/StudentManagement.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\uploads\\student-photos\\students\\7e2cec19-4fe2-4bf1-bf1c-70da400973eb.png",
+      "SourceId": "StudentManagement.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\",
+      "BasePath": "_content/StudentManagement.API",
+      "RelativePath": "uploads/student-photos/students/7e2cec19-4fe2-4bf1-bf1c-70da400973eb.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\student-photos\\students\\7e2cec19-4fe2-4bf1-bf1c-70da400973eb.png"
+    },
+    {
+      "Identity": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\uploads\\student-photos\\students\\SampleImg.png",
+      "SourceId": "StudentManagement.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\wwwroot\\",
+      "BasePath": "_content/StudentManagement.API",
+      "RelativePath": "uploads/student-photos/students/SampleImg.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\student-photos\\students\\SampleImg.png"
+    }
+  ]
+}
