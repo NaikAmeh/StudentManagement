@@ -1,0 +1,594 @@
+2025-05-11 00:00:54.841 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-11 00:00:56.783 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (119ms) [Parameters=[@__registerDto_Username_0='ameh.naik' (Size = 100)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE `u`.`Username` = @__registerDto_Username_0
+LIMIT 1
+2025-05-11 00:00:56.987 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (46ms) [Parameters=[@__registerDto_Email_0='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__registerDto_Email_0
+LIMIT 1
+2025-05-11 00:01:43.452 +05:30 [INF] [StudentMgmt.Infrastructure.Repositories.UnitOfWork] Transaction "ad7bda10-28b4-45b8-ad71-be5412d082a1" started within UnitOfWork.ExecuteInTransactionAsync.
+2025-05-11 00:01:47.382 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (27ms) [Parameters=[@p0='2025-05-10T18:31:47.0650938Z' (DbType = DateTime), @p1=NULL (DbType = Int32), @p2='ameh.naik@mail.com' (Nullable = false) (Size = 150), @p3='MyZlNaf1nRlgnZm9sZBTUq1XV+yWMbD2Z/nuLFM+Ge/sNmrnq2t8ryfJz8HAhGtey7le8j/sr2nXjzajwdpIhA==' (Nullable = false) (Size = 4000), @p4='m9eJZkuiBe1Iwm7rfkJleg==' (Nullable = false) (Size = 4000), @p5='1', @p6='2025-05-10T18:31:47.0650938Z' (DbType = DateTime), @p7='ameh.naik' (Nullable = false) (Size = 100)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Users` (`CreatedAt`, `DefaultSchoolId`, `Email`, `PasswordHash`, `PasswordSalt`, `RoleId`, `UpdatedAt`, `Username`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `UserId`, `IsActive`, `IsPasswordChangeRequired`
+FROM `Users`
+WHERE ROW_COUNT() = 1 AND `UserId` = LAST_INSERT_ID();
+2025-05-11 00:01:51.015 +05:30 [INF] [StudentMgmt.Infrastructure.Repositories.UnitOfWork] Transaction "ad7bda10-28b4-45b8-ad71-be5412d082a1" committed successfully.
+2025-05-11 00:02:02.294 +05:30 [INF] [StudentManagement.Application.Services.UserService] User registered successfully: ameh.naik
+2025-05-11 00:02:53.911 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/register responded 201 in 149195.5907 ms
+2025-05-11 00:04:35.180 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 21.2276 ms
+2025-05-11 00:04:42.370 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (7ms) [Parameters=[@__loginDto_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDto_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDto_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDto_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 00:07:23.863 +05:30 [INF] [StudentManagement.API.Controllers.AuthController] User logged in successfully: ameh.naik
+2025-05-11 00:07:23.881 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 168690.8049 ms
+2025-05-11 00:07:33.252 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 38.5559 ms
+2025-05-11 00:07:39.727 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (6ms) [Parameters=[@__loginDto_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDto_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDto_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDto_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 00:07:47.323 +05:30 [INF] [StudentManagement.API.Controllers.AuthController] User logged in successfully: ameh.naik
+2025-05-11 00:08:17.536 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 44268.6448 ms
+2025-05-11 00:08:27.707 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 1.0317 ms
+2025-05-11 00:08:27.932 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 00:08:27.988 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 00:08:28.070 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (32ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 00:08:28.082 +05:30 [WRN] [StudentManagement.API.Controllers.StudentsController] Forbidden access attempt: User tried to access students for School ID 1
+2025-05-11 00:08:28.090 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 403 in 370.5019 ms
+2025-05-11 00:08:28.132 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 00:08:28.140 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 00:08:28.170 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (10ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 00:08:28.203 +05:30 [WRN] [StudentManagement.API.Controllers.StudentsController] Forbidden access attempt: User tried to access students for School ID 1
+2025-05-11 00:08:28.208 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 403 in 102.6619 ms
+2025-05-11 00:10:20.738 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.8662 ms
+2025-05-11 00:10:20.757 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.4675 ms
+2025-05-11 00:10:20.815 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 00:10:20.815 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 00:10:28.263 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 00:10:28.264 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 00:10:46.828 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 00:10:46.828 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 00:10:46.970 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (22ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 00:10:47.106 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (8ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 00:10:47.107 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 00:10:47.112 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 00:10:50.915 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 30132.8522 ms
+2025-05-11 00:10:50.915 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 30138.3675 ms
+2025-05-11 01:00:41.791 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-11 01:00:41.853 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-11 01:00:41.861 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-11 01:00:41.864 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-11 01:00:41.867 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-11 01:00:43.044 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 197.7223 ms
+2025-05-11 01:00:43.209 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 7.5164 ms
+2025-05-11 01:00:43.690 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 414.5943 ms
+2025-05-11 01:01:42.926 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 64.7174 ms
+2025-05-11 01:01:51.181 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-11 01:01:51.968 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (45ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='hfdj' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='hfdj' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:01:52.020 +05:30 [WRN] [StudentManagement.Application.Services.UserService] Login failed for hfdj: User not found or inactive.
+2025-05-11 01:01:52.042 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 401 in 9087.5638 ms
+2025-05-11 01:02:05.669 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 1.6226 ms
+2025-05-11 01:02:11.334 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='hfdj' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='hfdj' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:02:11.343 +05:30 [WRN] [StudentManagement.Application.Services.UserService] Login failed for hfdj: User not found or inactive.
+2025-05-11 01:02:11.351 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 401 in 5671.3160 ms
+2025-05-11 01:02:27.877 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.3179 ms
+2025-05-11 01:02:30.583 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:02:30.813 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:02:34.764 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 6868.2838 ms
+2025-05-11 01:03:12.237 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.2621 ms
+2025-05-11 01:03:14.286 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:03:14.303 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:03:14.312 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 2052.5323 ms
+2025-05-11 01:04:42.866 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.3457 ms
+2025-05-11 01:04:42.931 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:04:42.944 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:04:42.951 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 65.7104 ms
+2025-05-11 01:04:44.309 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:04:44.328 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:04:44.340 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 67.0726 ms
+2025-05-11 01:04:59.660 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.4580 ms
+2025-05-11 01:04:59.703 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:04:59.719 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:04:59.726 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 50.2478 ms
+2025-05-11 01:05:00.762 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:05:00.779 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:05:00.789 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 56.8439 ms
+2025-05-11 01:06:23.198 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-11 01:06:23.245 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-11 01:06:23.253 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-11 01:06:23.255 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-11 01:06:23.257 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-11 01:06:24.536 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 228.6501 ms
+2025-05-11 01:06:24.681 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 11.1254 ms
+2025-05-11 01:06:25.098 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 342.2954 ms
+2025-05-11 01:06:47.857 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 69.8132 ms
+2025-05-11 01:06:54.220 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-11 01:06:55.004 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (63ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:06:55.266 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:06:55.312 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 7441.4459 ms
+2025-05-11 01:11:38.512 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-11 01:11:38.568 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-11 01:11:38.574 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-11 01:11:38.576 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-11 01:11:38.578 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-11 01:11:39.851 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 163.7788 ms
+2025-05-11 01:11:40.066 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 10.6187 ms
+2025-05-11 01:11:40.558 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 413.6746 ms
+2025-05-11 01:12:01.305 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 57.8928 ms
+2025-05-11 01:12:11.478 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-11 01:12:12.317 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (41ms) [Parameters=[@__loginDto_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDto_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDto_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDto_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:12:12.522 +05:30 [INF] [StudentManagement.API.Controllers.AuthController] User logged in successfully: ameh.naik
+2025-05-11 01:12:12.556 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 11232.0199 ms
+2025-05-11 01:13:11.287 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-11 01:13:11.354 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-11 01:13:11.362 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-11 01:13:11.365 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-11 01:13:11.366 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-11 01:13:12.249 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 23.2175 ms
+2025-05-11 01:13:12.382 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 159.4732 ms
+2025-05-11 01:13:12.568 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 10.3715 ms
+2025-05-11 01:13:12.962 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 335.8061 ms
+2025-05-11 01:13:34.011 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 73.4510 ms
+2025-05-11 01:13:41.634 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-11 01:13:42.462 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (69ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:13:42.685 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:13:42.725 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 8698.9020 ms
+2025-05-11 01:22:05.906 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 4.6405 ms
+2025-05-11 01:22:11.093 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (7ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:22:11.100 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:22:11.104 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 5166.1088 ms
+2025-05-11 01:23:37.988 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.3121 ms
+2025-05-11 01:23:45.932 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 01:24:40.170 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 01:25:14.896 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 96885.4240 ms
+2025-05-11 11:04:11.077 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 18.5840 ms
+2025-05-11 11:04:11.077 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 18.5961 ms
+2025-05-11 11:04:11.259 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 141.8821 ms
+2025-05-11 11:04:11.259 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 131.3907 ms
+2025-05-11 11:04:28.656 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.5063 ms
+2025-05-11 11:04:31.461 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (5ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 11:04:31.472 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 11:04:31.486 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 2817.5287 ms
+2025-05-11 11:06:41.996 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/paginated responded 204 in 0.6896 ms
+2025-05-11 11:06:41.999 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/paginated responded 204 in 2.0940 ms
+2025-05-11 11:06:46.337 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUsersPaginated
+2025-05-11 11:06:46.337 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUsersPaginated
+2025-05-11 11:06:46.351 +05:30 [INF] [StudentManagement.Application.Services.UserService] Retrieving paginated users with parameters: {"PageNumber":1,"PageSize":10,"Username":null,"Email":null,"Role":null,"IsActive":null,"SortOrder":"username_asc","$type":"UserQueryParameters"}
+2025-05-11 11:06:46.352 +05:30 [INF] [StudentManagement.Application.Services.UserService] Retrieving paginated users with parameters: {"PageNumber":1,"PageSize":10,"Username":null,"Email":null,"Role":null,"IsActive":null,"SortOrder":"username_asc","$type":"UserQueryParameters"}
+2025-05-11 11:06:46.480 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM `Users` AS `u`
+2025-05-11 11:06:46.547 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM `Users` AS `u`
+2025-05-11 11:06:46.574 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (14ms) [Parameters=[@__p_1='10', @__p_0='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+ORDER BY `u`.`Username`
+LIMIT @__p_1 OFFSET @__p_0
+2025-05-11 11:06:46.574 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__p_1='10', @__p_0='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+ORDER BY `u`.`Username`
+LIMIT @__p_1 OFFSET @__p_0
+2025-05-11 11:06:46.607 +05:30 [INF] [StudentManagement.Application.Services.UserService] Retrieved 3 users for page 1/1. Total users: 3
+2025-05-11 11:06:46.607 +05:30 [INF] [StudentManagement.Application.Services.UserService] Retrieved 3 users for page 1/1. Total users: 3
+2025-05-11 11:06:46.624 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/paginated responded 200 in 4594.4044 ms
+2025-05-11 11:06:46.624 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/paginated responded 200 in 4604.3820 ms
+2025-05-11 11:06:53.738 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/5/details responded 204 in 0.2673 ms
+2025-05-11 11:06:53.745 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/5/details responded 204 in 0.4287 ms
+2025-05-11 11:06:53.749 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools responded 204 in 0.5837 ms
+2025-05-11 11:06:53.762 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools responded 204 in 0.5939 ms
+2025-05-11 11:06:53.865 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUserDetails for User ID: 5
+2025-05-11 11:06:53.865 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUserDetails for User ID: 5
+2025-05-11 11:06:53.915 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieving all schools.
+2025-05-11 11:06:53.916 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieving all schools.
+2025-05-11 11:06:53.992 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt`, `s`.`Name`, `s`.`UpdatedAt`
+FROM `Schools` AS `s`
+2025-05-11 11:06:53.997 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt`, `s`.`Name`, `s`.`UpdatedAt`
+FROM `Schools` AS `s`
+2025-05-11 11:06:54.028 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieved 1 schools.
+2025-05-11 11:06:54.033 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieved 1 schools.
+2025-05-11 11:06:54.048 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools responded 200 in 263.2087 ms
+2025-05-11 11:06:54.048 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools responded 200 in 278.6553 ms
+2025-05-11 11:06:54.262 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (12ms) [Parameters=[@__id_0='5'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`, `t0`.`SchoolId0`, `t0`.`Address`, `t0`.`CreatedAt`, `t0`.`Name`, `t0`.`UpdatedAt`, `t`.`Address`, `t`.`CreatedAt0`, `t`.`Name`, `t`.`UpdatedAt0`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`, `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt` AS `CreatedAt0`, `s`.`Name`, `s`.`UpdatedAt` AS `UpdatedAt0`
+    FROM `Users` AS `u`
+    LEFT JOIN `Schools` AS `s` ON `u`.`DefaultSchoolId` = `s`.`SchoolId`
+    WHERE `u`.`UserId` = @__id_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN (
+    SELECT `u0`.`UserId`, `u0`.`SchoolId`, `s0`.`SchoolId` AS `SchoolId0`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+    FROM `UserSchoolLinks` AS `u0`
+    INNER JOIN `Schools` AS `s0` ON `u0`.`SchoolId` = `s0`.`SchoolId`
+) AS `t0` ON `t`.`UserId` = `t0`.`UserId`
+ORDER BY `t`.`UserId`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`
+2025-05-11 11:06:54.262 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (13ms) [Parameters=[@__id_0='5'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`, `t0`.`SchoolId0`, `t0`.`Address`, `t0`.`CreatedAt`, `t0`.`Name`, `t0`.`UpdatedAt`, `t`.`Address`, `t`.`CreatedAt0`, `t`.`Name`, `t`.`UpdatedAt0`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`, `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt` AS `CreatedAt0`, `s`.`Name`, `s`.`UpdatedAt` AS `UpdatedAt0`
+    FROM `Users` AS `u`
+    LEFT JOIN `Schools` AS `s` ON `u`.`DefaultSchoolId` = `s`.`SchoolId`
+    WHERE `u`.`UserId` = @__id_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN (
+    SELECT `u0`.`UserId`, `u0`.`SchoolId`, `s0`.`SchoolId` AS `SchoolId0`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+    FROM `UserSchoolLinks` AS `u0`
+    INNER JOIN `Schools` AS `s0` ON `u0`.`SchoolId` = `s0`.`SchoolId`
+) AS `t0` ON `t`.`UserId` = `t0`.`UserId`
+ORDER BY `t`.`UserId`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`
+2025-05-11 11:06:54.302 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/5/details responded 200 in 543.3083 ms
+2025-05-11 11:06:54.302 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/5/details responded 200 in 538.2290 ms
+2025-05-11 11:07:21.240 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/5 responded 204 in 0.9821 ms
+2025-05-11 11:07:21.313 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing UpdateUser for User ID: 5
+2025-05-11 11:07:21.327 +05:30 [INF] [StudentManagement.Application.Services.UserService] Attempting to update user 5 with core info and school assignments.
+2025-05-11 11:07:21.370 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (5ms) [Parameters=[@__userId_0='5'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `u0`.`UserId`, `u0`.`SchoolId`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+    FROM `Users` AS `u`
+    WHERE `u`.`UserId` = @__userId_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN `UserSchoolLinks` AS `u0` ON `t`.`UserId` = `u0`.`UserId`
+ORDER BY `t`.`UserId`, `u0`.`UserId`
+2025-05-11 11:07:21.420 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__updateUserDto_DefaultSchoolId_Value_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Schools` AS `s`
+    WHERE `s`.`SchoolId` = @__updateUserDto_DefaultSchoolId_Value_0)
+2025-05-11 11:07:21.451 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Schools` AS `s`
+    WHERE `s`.`SchoolId` = @__schoolId_0)
+2025-05-11 11:07:21.472 +05:30 [INF] [StudentManagement.Application.Services.UserService] Adding 1 school links for user 5: 1
+2025-05-11 11:07:26.037 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (30ms) [Parameters=[@p0='1', @p1='5', @p12='5', @p2='2025-05-10T18:31:47.0000000' (DbType = DateTime), @p3=NULL (DbType = Int32), @p4='ameh.naik@mail.com' (Nullable = false) (Size = 150), @p5='True', @p6='False', @p7='MyZlNaf1nRlgnZm9sZBTUq1XV+yWMbD2Z/nuLFM+Ge/sNmrnq2t8ryfJz8HAhGtey7le8j/sr2nXjzajwdpIhA==' (Nullable = false) (Size = 4000), @p8='m9eJZkuiBe1Iwm7rfkJleg==' (Nullable = false) (Size = 4000), @p9='1', @p10='2025-05-11T05:37:25.7577865Z' (DbType = DateTime), @p11='ameh.naik' (Nullable = false) (Size = 100)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `UserSchoolLinks` (`SchoolId`, `UserId`)
+VALUES (@p0, @p1);
+UPDATE `Users` SET `CreatedAt` = @p2, `DefaultSchoolId` = @p3, `Email` = @p4, `IsActive` = @p5, `IsPasswordChangeRequired` = @p6, `PasswordHash` = @p7, `PasswordSalt` = @p8, `RoleId` = @p9, `UpdatedAt` = @p10, `Username` = @p11
+WHERE `UserId` = @p12;
+SELECT ROW_COUNT();
+2025-05-11 11:07:26.104 +05:30 [INF] [StudentManagement.Application.Services.UserService] User 5 updated successfully (core info and school assignments).
+2025-05-11 11:07:26.114 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP PUT /api/users/5 responded 204 in 4857.9578 ms
+2025-05-11 11:07:26.149 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/5/details responded 204 in 0.6428 ms
+2025-05-11 11:07:26.187 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUserDetails for User ID: 5
+2025-05-11 11:07:26.221 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (10ms) [Parameters=[@__id_0='5'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`, `t0`.`SchoolId0`, `t0`.`Address`, `t0`.`CreatedAt`, `t0`.`Name`, `t0`.`UpdatedAt`, `t`.`Address`, `t`.`CreatedAt0`, `t`.`Name`, `t`.`UpdatedAt0`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`, `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt` AS `CreatedAt0`, `s`.`Name`, `s`.`UpdatedAt` AS `UpdatedAt0`
+    FROM `Users` AS `u`
+    LEFT JOIN `Schools` AS `s` ON `u`.`DefaultSchoolId` = `s`.`SchoolId`
+    WHERE `u`.`UserId` = @__id_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN (
+    SELECT `u0`.`UserId`, `u0`.`SchoolId`, `s0`.`SchoolId` AS `SchoolId0`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+    FROM `UserSchoolLinks` AS `u0`
+    INNER JOIN `Schools` AS `s0` ON `u0`.`SchoolId` = `s0`.`SchoolId`
+) AS `t0` ON `t`.`UserId` = `t0`.`UserId`
+ORDER BY `t`.`UserId`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`
+2025-05-11 11:07:26.242 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/5/details responded 200 in 80.0037 ms
+2025-05-11 11:09:12.101 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/1/details responded 204 in 0.3453 ms
+2025-05-11 11:09:12.125 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools responded 204 in 0.3060 ms
+2025-05-11 11:09:12.145 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools responded 204 in 0.2934 ms
+2025-05-11 11:09:12.163 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUserDetails for User ID: 1
+2025-05-11 11:09:12.176 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing GetUserDetails for User ID: 1
+2025-05-11 11:09:12.179 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[@__id_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`, `t0`.`SchoolId0`, `t0`.`Address`, `t0`.`CreatedAt`, `t0`.`Name`, `t0`.`UpdatedAt`, `t`.`Address`, `t`.`CreatedAt0`, `t`.`Name`, `t`.`UpdatedAt0`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`, `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt` AS `CreatedAt0`, `s`.`Name`, `s`.`UpdatedAt` AS `UpdatedAt0`
+    FROM `Users` AS `u`
+    LEFT JOIN `Schools` AS `s` ON `u`.`DefaultSchoolId` = `s`.`SchoolId`
+    WHERE `u`.`UserId` = @__id_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN (
+    SELECT `u0`.`UserId`, `u0`.`SchoolId`, `s0`.`SchoolId` AS `SchoolId0`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+    FROM `UserSchoolLinks` AS `u0`
+    INNER JOIN `Schools` AS `s0` ON `u0`.`SchoolId` = `s0`.`SchoolId`
+) AS `t0` ON `t`.`UserId` = `t0`.`UserId`
+ORDER BY `t`.`UserId`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`
+2025-05-11 11:09:12.192 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__id_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`, `t0`.`SchoolId0`, `t0`.`Address`, `t0`.`CreatedAt`, `t0`.`Name`, `t0`.`UpdatedAt`, `t`.`Address`, `t`.`CreatedAt0`, `t`.`Name`, `t`.`UpdatedAt0`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`, `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt` AS `CreatedAt0`, `s`.`Name`, `s`.`UpdatedAt` AS `UpdatedAt0`
+    FROM `Users` AS `u`
+    LEFT JOIN `Schools` AS `s` ON `u`.`DefaultSchoolId` = `s`.`SchoolId`
+    WHERE `u`.`UserId` = @__id_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN (
+    SELECT `u0`.`UserId`, `u0`.`SchoolId`, `s0`.`SchoolId` AS `SchoolId0`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+    FROM `UserSchoolLinks` AS `u0`
+    INNER JOIN `Schools` AS `s0` ON `u0`.`SchoolId` = `s0`.`SchoolId`
+) AS `t0` ON `t`.`UserId` = `t0`.`UserId`
+ORDER BY `t`.`UserId`, `t`.`SchoolId`, `t0`.`UserId`, `t0`.`SchoolId`
+2025-05-11 11:09:12.201 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/1/details responded 200 in 81.0077 ms
+2025-05-11 11:09:12.203 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieving all schools.
+2025-05-11 11:09:12.207 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieving all schools.
+2025-05-11 11:09:12.209 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/users/1/details responded 200 in 81.7142 ms
+2025-05-11 11:09:12.228 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt`, `s`.`Name`, `s`.`UpdatedAt`
+FROM `Schools` AS `s`
+2025-05-11 11:09:12.229 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`SchoolId`, `s`.`Address`, `s`.`CreatedAt`, `s`.`Name`, `s`.`UpdatedAt`
+FROM `Schools` AS `s`
+2025-05-11 11:09:12.233 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieved 1 schools.
+2025-05-11 11:09:12.239 +05:30 [INF] [StudentManagement.Application.Services.SchoolService] Retrieved 1 schools.
+2025-05-11 11:09:12.242 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools responded 200 in 66.0441 ms
+2025-05-11 11:09:12.245 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools responded 200 in 68.9469 ms
+2025-05-11 11:09:35.983 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/users/1 responded 204 in 1.3899 ms
+2025-05-11 11:09:36.015 +05:30 [INF] [StudentManagement.API.Controllers.UsersController] Executing UpdateUser for User ID: 1
+2025-05-11 11:09:40.486 +05:30 [INF] [StudentManagement.Application.Services.UserService] Attempting to update user 1 with core info and school assignments.
+2025-05-11 11:09:47.138 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[@__userId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`UserId`, `t`.`CreatedAt`, `t`.`DefaultSchoolId`, `t`.`Email`, `t`.`IsActive`, `t`.`IsPasswordChangeRequired`, `t`.`PasswordHash`, `t`.`PasswordSalt`, `t`.`RoleId`, `t`.`UpdatedAt`, `t`.`Username`, `u0`.`UserId`, `u0`.`SchoolId`
+FROM (
+    SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+    FROM `Users` AS `u`
+    WHERE `u`.`UserId` = @__userId_0
+    LIMIT 1
+) AS `t`
+LEFT JOIN `UserSchoolLinks` AS `u0` ON `t`.`UserId` = `u0`.`UserId`
+ORDER BY `t`.`UserId`, `u0`.`UserId`
+2025-05-11 11:15:49.719 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Schools` AS `s`
+    WHERE `s`.`SchoolId` = @__schoolId_0)
+2025-05-11 11:15:49.745 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.2315 ms
+2025-05-11 11:15:49.745 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.2315 ms
+2025-05-11 11:15:49.749 +05:30 [INF] [StudentManagement.Application.Services.UserService] Adding 1 school links for user 1: 1
+2025-05-11 11:15:51.532 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@p0='1', @p1='1', @p12='1', @p2='2025-05-10T15:27:31.0000000' (DbType = DateTime), @p3=NULL (DbType = Int32), @p4='ameh@example.com' (Nullable = false) (Size = 150), @p5='True', @p6='False', @p7='6x99XVFlLJFmIlxhdjpgg5nTYeHAUO/ZcUTIUs9nclIkKwBq1u0Ve7VfIYE8X0kxNw1rib7e9TToGqdRygCLFw==' (Nullable = false) (Size = 4000), @p8='3EdI5Y4XDIVQE0ghaxf9Sw==' (Nullable = false) (Size = 4000), @p9='1', @p10='2025-05-11T05:45:51.5062752Z' (DbType = DateTime), @p11='ameh' (Nullable = false) (Size = 100)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `UserSchoolLinks` (`SchoolId`, `UserId`)
+VALUES (@p0, @p1);
+UPDATE `Users` SET `CreatedAt` = @p2, `DefaultSchoolId` = @p3, `Email` = @p4, `IsActive` = @p5, `IsPasswordChangeRequired` = @p6, `PasswordHash` = @p7, `PasswordSalt` = @p8, `RoleId` = @p9, `UpdatedAt` = @p10, `Username` = @p11
+WHERE `UserId` = @p12;
+SELECT ROW_COUNT();
+2025-05-11 11:15:51.547 +05:30 [INF] [StudentManagement.Application.Services.UserService] User 1 updated successfully (core info and school assignments).
+2025-05-11 11:15:51.552 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP PUT /api/users/1 responded 204 in 375557.6076 ms
+2025-05-11 11:15:51.560 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:15:51.560 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:16:29.512 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-11 11:16:29.758 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-11 11:16:29.823 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-11 11:16:29.833 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-11 11:16:29.848 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-11 11:16:31.329 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 363.6946 ms
+2025-05-11 11:16:32.276 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 611.6725 ms
+2025-05-11 11:16:40.597 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 68.4091 ms
+2025-05-11 11:16:40.596 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 68.0856 ms
+2025-05-11 11:16:46.405 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:16:46.406 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:17:51.889 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 11:17:51.889 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 11:17:54.159 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-11 11:17:54.970 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (41ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 11:17:54.970 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (41ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 11:17:55.034 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 11:17:55.034 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 11:17:55.220 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (22ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 11:17:55.220 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (22ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 11:17:55.242 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 11:17:55.242 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 11:17:55.290 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 74671.7129 ms
+2025-05-11 11:17:55.290 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 74681.5330 ms
+2025-05-11 11:18:05.082 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.7483 ms
+2025-05-11 11:18:05.082 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.4981 ms
+2025-05-11 11:18:05.132 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:18:05.132 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:18:09.600 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 11:18:09.603 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 11:24:59.498 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 11:24:59.499 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 11:25:23.483 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 11:25:25.182 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 11:25:25.314 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (29ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 11:25:25.321 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (7ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 11:25:25.328 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 11:25:25.334 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 11:25:37.333 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 452234.8144 ms
+2025-05-11 11:25:37.333 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 452240.5823 ms
+2025-05-11 11:26:12.751 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 1.4739 ms
+2025-05-11 11:26:16.097 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 11:26:16.248 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 11:26:16.287 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 3525.8137 ms
+2025-05-11 11:26:16.362 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.2500 ms
+2025-05-11 11:26:16.365 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.1792 ms
+2025-05-11 11:26:16.389 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:26:17.394 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 11:26:17.399 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 11:26:19.481 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-11 11:26:19.502 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (16ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 11:26:20.494 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 11:26:20.498 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[@__userId_0='5', @__schoolId_1='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 11:26:20.506 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 11:26:20.509 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-11 11:26:20.513 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 11:26:20.522 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 4151.3846 ms
+2025-05-11 11:26:20.526 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-11 11:26:20.533 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-11 11:26:20.535 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 4161.8256 ms
+2025-05-11 16:04:53.523 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 17.8403 ms
+2025-05-11 16:04:53.633 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 73.8309 ms
+2025-05-11 16:04:53.668 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 2.7155 ms
+2025-05-11 16:07:29.808 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 14.6434 ms
+2025-05-11 16:07:29.808 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 3.3104 ms
+2025-05-11 16:08:29.668 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.6851 ms
+2025-05-11 16:08:43.994 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (8ms) [Parameters=[@__loginDetails_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDetails_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`DefaultSchoolId`, `u`.`Email`, `u`.`IsActive`, `u`.`IsPasswordChangeRequired`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`RoleId`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDetails_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDetails_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-11 16:08:44.001 +05:30 [INF] [StudentManagement.Application.Services.UserService] User logged in successfully: ameh.naik
+2025-05-11 16:08:44.004 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 14288.2283 ms
+2025-05-11 16:08:44.047 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 0.1420 ms
+2025-05-11 16:08:44.052 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 0.1408 ms
+2025-05-11 16:08:44.059 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 1.6685 ms
+2025-05-11 16:08:44.075 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 8.1136 ms
+2025-05-11 16:12:40.285 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 0.4557 ms
+2025-05-11 16:12:40.287 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 0.7069 ms
+2025-05-11 16:12:40.343 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 2.8853 ms
+2025-05-11 16:12:40.343 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 1.1089 ms
+2025-05-11 16:15:37.592 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 0.2592 ms
+2025-05-11 16:15:37.593 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 0.0883 ms
+2025-05-11 16:15:37.624 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 2.3640 ms
+2025-05-11 16:15:37.626 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 1.4777 ms
+2025-05-11 16:29:26.060 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 6.3802 ms
+2025-05-11 16:29:26.060 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/standards-divisions responded 204 in 6.3890 ms
+2025-05-11 16:29:26.073 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 1.1544 ms
+2025-05-11 16:29:26.105 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/standards-divisions responded 404 in 1.3520 ms
+2025-05-11 16:45:47.316 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/students responded 204 in 10.3236 ms
+2025-05-11 16:45:47.447 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-11 16:45:47.513 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing CreateStudent for School ID: 0
+2025-05-11 16:45:50.573 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (31ms) [Parameters=[@__userId_0='5', @__schoolId_1='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `UserSchoolLinks` AS `u`
+    WHERE (`u`.`UserId` = @__userId_0) AND (`u`.`SchoolId` = @__schoolId_1))
+2025-05-11 16:45:50.584 +05:30 [WRN] [StudentManagement.API.Controllers.StudentsController] Forbidden creation attempt: User tried to create student for School ID 0
+2025-05-11 16:45:50.596 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/students responded 403 in 3262.5613 ms

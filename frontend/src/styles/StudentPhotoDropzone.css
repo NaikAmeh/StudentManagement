@@ -1,0 +1,58 @@
+.list-container {
+  padding: 15px;
+}
+
+.dropzone {
+  width: 70px;
+  height: 70px;
+  border: 2px dashed #adb5bd;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px;
+  transition: border .24s ease-in-out;
+  margin: auto;
+}
+
+.dropzone.accept {
+  border-color: #198754;
+  background-color: #e9f7ef;
+}
+
+.dropzone.reject {
+  border-color: #dc3545;
+  background-color: #f8d7da;
+}
+
+.dropzone.uploading {
+  border-color: #6c757d;
+  background-color: #e9ecef;
+  cursor: progress;
+}
+
+.photo-preview {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+}
+
+.placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  color: #6c757d;
+  vertical-align: middle;
+  border: 1px solid #ced4da;
+}

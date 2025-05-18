@@ -1,0 +1,54 @@
+.list-container {
+  padding: 15px;
+}
+
+.import-results-container {
+  margin: 20px 0;
+  border: 1px solid #ffc107;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #fff3cd;
+}
+
+.import-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.import-results-table th,
+.import-results-table td {
+  border: 1px solid #dee2e6;
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.import-results-table th {
+  background-color: #f8f9fa;
+}
+
+.import-results-table tr {
+  background-color: inherit;
+}
+
+.import-results-table tr.error {
+  background-color: #f8d7da;
+}
+
+.import-results-table tr.success {
+  background-color: inherit;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.success-message {
+  color: #198754;
+}
+
+.warning-message {
+  color: #ff9800;
+}

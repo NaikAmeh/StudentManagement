@@ -1,0 +1,192 @@
+2025-05-01 19:40:22.978 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-01 19:40:23.050 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-01 19:40:23.060 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-01 19:40:23.063 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-01 19:40:23.065 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-01 19:40:35.324 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 33.2292 ms
+2025-05-01 19:40:35.548 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 179.0829 ms
+2025-05-01 19:40:35.704 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui.css responded 200 in 97.1790 ms
+2025-05-01 19:40:35.742 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 133.9700 ms
+2025-05-01 19:40:35.818 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 210.3842 ms
+2025-05-01 19:40:36.052 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 0.4090 ms
+2025-05-01 19:40:36.491 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 363.0738 ms
+2025-05-01 19:41:31.388 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-01 19:42:15.559 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-01 19:42:52.375 +05:30 [WRN] [StudentManagement.API.Controllers.StudentsController] Cannot verify school access: User ID claim not found or invalid.
+2025-05-01 19:42:52.381 +05:30 [WRN] [StudentManagement.API.Controllers.StudentsController] Forbidden access attempt: User tried to access students for School ID 1
+2025-05-01 19:42:52.389 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 403 in 82420.3381 ms
+2025-05-01 19:42:53.420 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 5.4390 ms
+2025-05-01 19:42:53.583 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 115.8970 ms
+2025-05-01 19:42:53.666 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 198.9332 ms
+2025-05-01 19:42:54.045 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 87.7288 ms
+2025-05-01 19:43:07.196 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 25.1903 ms
+2025-05-01 19:43:30.543 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 7.2537 ms
+2025-05-01 19:45:51.322 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 29.2736 ms
+2025-05-01 19:46:36.796 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 0.6459 ms
+2025-05-01 19:46:52.788 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 0.4373 ms
+2025-05-01 19:47:13.687 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 4.0012 ms
+2025-05-01 19:50:44.743 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 0.6128 ms
+2025-05-01 19:51:07.581 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-01 19:51:07.965 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-01 19:51:08.036 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-01 19:51:08.130 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-01 19:51:08.133 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-01 19:51:10.372 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 238.0876 ms
+2025-05-01 19:51:10.678 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui.css responded 200 in 179.0852 ms
+2025-05-01 19:51:10.681 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 182.8999 ms
+2025-05-01 19:51:10.715 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 210.4156 ms
+2025-05-01 19:51:11.910 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 305.9913 ms
+2025-05-01 19:51:17.655 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 4.9030 ms
+2025-05-01 19:51:17.724 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 22.7937 ms
+2025-05-01 19:51:17.741 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 46.0573 ms
+2025-05-01 19:51:18.049 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 54.3996 ms
+2025-05-01 19:56:47.284 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 95587.7995 ms
+2025-05-01 20:01:06.933 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 17.6157 ms
+2025-05-01 20:01:12.384 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 3.5961 ms
+2025-05-01 20:01:13.243 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 0.7144 ms
+2025-05-01 20:01:37.859 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 1.7337 ms
+2025-05-01 20:01:38.652 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 0.7447 ms
+2025-05-01 20:01:41.555 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 6.6521 ms
+2025-05-01 20:01:41.688 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 68.2695 ms
+2025-05-01 20:01:41.706 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 97.3724 ms
+2025-05-01 20:01:42.043 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 64.7682 ms
+2025-05-01 20:08:29.345 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-01 20:08:29.419 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-01 20:08:29.427 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-01 20:08:29.429 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-01 20:08:29.431 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-01 20:08:30.725 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 37.3934 ms
+2025-05-01 20:08:31.628 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 272.9297 ms
+2025-05-01 20:08:31.871 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui.css responded 200 in 134.3533 ms
+2025-05-01 20:08:31.876 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 136.6865 ms
+2025-05-01 20:08:31.914 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 176.4197 ms
+2025-05-01 20:08:32.153 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 0.7929 ms
+2025-05-01 20:08:32.556 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 318.1060 ms
+2025-05-01 20:09:26.792 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 10933.0230 ms
+2025-05-01 20:24:16.902 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-01 20:24:17.002 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-01 20:24:17.011 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-01 20:24:17.015 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-01 20:24:17.018 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-01 20:24:18.193 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 21.8725 ms
+2025-05-01 20:24:18.365 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 139.4267 ms
+2025-05-01 20:24:18.502 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui.css responded 200 in 92.8518 ms
+2025-05-01 20:24:18.502 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 89.6057 ms
+2025-05-01 20:24:18.547 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 134.8873 ms
+2025-05-01 20:24:18.783 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 0.4525 ms
+2025-05-01 20:24:19.221 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 369.5095 ms
+2025-05-01 20:31:46.217 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-01 20:31:46.272 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-01 20:31:46.279 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-01 20:31:46.281 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-01 20:31:46.283 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-01 20:31:47.449 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 24.7474 ms
+2025-05-01 20:31:47.642 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 156.8314 ms
+2025-05-01 20:31:47.772 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui.css responded 200 in 77.0431 ms
+2025-05-01 20:31:47.779 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 79.2805 ms
+2025-05-01 20:31:47.819 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 121.8244 ms
+2025-05-01 20:31:48.040 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 1.1840 ms
+2025-05-01 20:31:48.383 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 283.5415 ms
+2025-05-01 20:32:36.785 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 32963.8353 ms
+2025-05-01 20:55:51.746 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 1368876.6875 ms
+2025-05-01 20:57:12.602 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-01 20:57:13.995 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (196ms) [Parameters=[@__loginDto_UsernameOrEmail_0='ameh@mail.com' (Size = 100), @__loginDto_UsernameOrEmail_0_1='ameh@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`Email`, `u`.`IsActive`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`Role`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDto_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDto_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-01 20:57:36.652 +05:30 [INF] [StudentManagement.API.Controllers.AuthController] User logged in successfully: amnaik
+2025-05-01 20:57:36.714 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 46293.4640 ms
+2025-05-01 20:58:37.039 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 7573.1176 ms
+2025-05-01 20:59:13.874 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-01 20:59:17.736 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-01 20:59:31.455 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-01 20:59:31.709 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (26ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-01 20:59:31.719 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-01 20:59:31.738 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 17990.9444 ms
+2025-05-01 23:34:42.544 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7145
+2025-05-01 23:34:43.120 +05:30 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5145
+2025-05-01 23:34:43.135 +05:30 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2025-05-01 23:34:43.157 +05:30 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2025-05-01 23:34:43.167 +05:30 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API
+2025-05-01 23:34:49.159 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 101.3112 ms
+2025-05-01 23:34:49.760 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 486.0764 ms
+2025-05-01 23:34:51.596 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui.css responded 200 in 288.6139 ms
+2025-05-01 23:34:51.728 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 419.4501 ms
+2025-05-01 23:34:51.949 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 641.7346 ms
+2025-05-01 23:34:53.266 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/favicon-16x16.png responded 200 in 0.8269 ms
+2025-05-01 23:34:55.301 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 824.8427 ms
+2025-05-01 23:37:02.920 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 210.0293 ms
+2025-05-01 23:37:02.921 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 210.6786 ms
+2025-05-01 23:37:10.277 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 7321.7671 ms
+2025-05-01 23:37:10.277 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 401 in 7289.3145 ms
+2025-05-01 23:37:47.520 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 1.2179 ms
+2025-05-01 23:38:02.544 +05:30 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-05-01 23:38:03.587 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (131ms) [Parameters=[@__loginDto_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDto_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`Email`, `u`.`IsActive`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`Role`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDto_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDto_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-01 23:38:38.024 +05:30 [WRN] [StudentManagement.API.Controllers.AuthController] Login failed for ameh: Invalid password.
+2025-05-01 23:38:38.364 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 401 in 50827.7882 ms
+2025-05-01 23:38:42.372 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/auth/login responded 204 in 0.5021 ms
+2025-05-01 23:38:44.539 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (5ms) [Parameters=[@__loginDto_UsernameOrEmail_0='ameh.naik@mail.com' (Size = 100), @__loginDto_UsernameOrEmail_0_1='ameh.naik@mail.com' (Size = 150)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`UserId`, `u`.`CreatedAt`, `u`.`Email`, `u`.`IsActive`, `u`.`PasswordHash`, `u`.`PasswordSalt`, `u`.`Role`, `u`.`UpdatedAt`, `u`.`Username`
+FROM `Users` AS `u`
+WHERE (`u`.`Username` = @__loginDto_UsernameOrEmail_0) OR (`u`.`Email` = @__loginDto_UsernameOrEmail_0_1)
+LIMIT 1
+2025-05-01 23:40:12.410 +05:30 [INF] [StudentManagement.API.Controllers.AuthController] User logged in successfully: ameh
+2025-05-01 23:40:12.433 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/auth/login responded 200 in 90043.6133 ms
+2025-05-01 23:40:20.032 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.4090 ms
+2025-05-01 23:40:20.034 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.8975 ms
+2025-05-01 23:40:20.187 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-01 23:40:20.190 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-01 23:40:27.719 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-01 23:40:27.719 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-01 23:41:15.310 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-01 23:41:15.310 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-01 23:41:15.523 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (26ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-01 23:41:15.551 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-01 23:41:15.561 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-01 23:41:15.569 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-01 23:41:15.583 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 55508.5580 ms
+2025-05-01 23:41:15.583 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 55509.7257 ms
+2025-05-01 23:59:19.874 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 1.7399 ms
+2025-05-01 23:59:19.975 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-01 23:59:24.796 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-01 23:59:29.021 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-01 23:59:29.085 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-01 23:59:29.101 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-01 23:59:29.114 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 9206.6245 ms
+2025-05-01 23:59:29.122 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP OPTIONS /api/schools/1/students responded 204 in 0.2756 ms
+2025-05-01 23:59:29.162 +05:30 [INF] [StudentMgmt.Infrastructure.FileStorage.FileStorageService] Local Storage Base Path resolved to: D:\Projects\Core\StudentManagement\StudentManagement\src\StudentManagement.API\wwwroot\uploads\student-photos
+2025-05-01 23:59:31.039 +05:30 [INF] [StudentManagement.API.Controllers.StudentsController] Executing GetStudentsBySchool for School ID: 1
+2025-05-01 23:59:38.609 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieving students for School ID: 1
+2025-05-01 23:59:38.637 +05:30 [INF] [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (14ms) [Parameters=[@__schoolId_0='1'], CommandType='"Text"', CommandTimeout='30']
+SELECT `s`.`StudentId`, `s`.`CreatedAt`, `s`.`DateOfBirth`, `s`.`FirstName`, `s`.`IsActive`, `s`.`LastName`, `s`.`PhotoPath`, `s`.`SchoolId`, `s`.`StudentIdentifier`, `s`.`UpdatedAt`, `s0`.`SchoolId`, `s0`.`Address`, `s0`.`CreatedAt`, `s0`.`Name`, `s0`.`UpdatedAt`
+FROM `Students` AS `s`
+INNER JOIN `Schools` AS `s0` ON `s`.`SchoolId` = `s0`.`SchoolId`
+WHERE `s`.`SchoolId` = @__schoolId_0
+ORDER BY `s`.`LastName`, `s`.`FirstName`
+2025-05-01 23:59:38.652 +05:30 [INF] [StudentManagement.Application.Services.StudentService] Retrieved 3 students for School ID: 1
+2025-05-01 23:59:38.658 +05:30 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/schools/1/students responded 200 in 9517.9508 ms

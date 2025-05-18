@@ -1,0 +1,92 @@
+/* General layout container */
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Light background for the entire layout */
+  }
+  
+  /* Header styling */
+  .layout-header {
+    background-color: #007bff; /* Blue header background */
+    color: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header-title h3 {
+    margin: 0;
+    font-size: 1.5em;
+  }
+  
+  .user-info {
+    margin-left: 15px;
+    font-size: 0.9em;
+    color: #e0e0e0; /* Light gray for user info */
+  }
+  
+  /* Navigation styling */
+  .layout-nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .layout-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease;
+  }
+  
+  .layout-nav a:hover {
+    color: #ffdd57; /* Yellow hover effect */
+  }
+  
+  .logout-button {
+    padding: 8px 12px;
+    background-color: #ff4d4f; /* Red logout button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .logout-button:hover {
+    background-color: #d9363e; /* Darker red on hover */
+  }
+  
+  /* Main content styling */
+  .layout-main {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #ffffff; /* White background for main content */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for content area */
+    margin: 20px;
+    border-radius: 8px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .layout-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .layout-nav {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  
+    .layout-main {
+      margin: 10px;
+      padding: 15px;
+    }
+  }
+  

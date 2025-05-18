@@ -1,0 +1,79 @@
+/* General container styling */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Form group styling */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: #d9534f;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  /* Button styling */
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  
+  .login-button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  /* Heading styling */
+  .login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 15px;
+    }
+  
+    .login-button {
+      font-size: 14px;
+    }
+  }
