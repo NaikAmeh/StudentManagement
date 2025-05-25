@@ -1,5 +1,6 @@
 // src/components/students/StudentTableHeader.js
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+
 
 // --- Styles ---
 const thTdStyle = {
@@ -15,6 +16,7 @@ const thStyle = {
   position: "sticky",
   top: 0,
   zIndex: 1,
+  border: "1px solid #dee2e6", // Explicitly define the border
 };
 const filterInputStyle = {
   width: "95%",
@@ -33,6 +35,11 @@ const sortIndicatorStyle = {
   // color will be set dynamically
 };
 
+
+const pointerStyle = {
+  cursor: "pointer", // Add pointer style for clickable headers
+};
+
 const StudentTableHeader = ({
   filters,
   sortConfig,
@@ -42,6 +49,7 @@ const StudentTableHeader = ({
   isAllSelected,
   numSelected, // Needed to determine indeterminate state potentially
   totalFilteredCount, // Needed for select all logic
+  onOpenFilterPopup
 }) => {
 
   const getSortIndicator = (key) => {
@@ -51,11 +59,11 @@ const StudentTableHeader = ({
 
   const getSortIndicatorColor = (key) => {
      return sortConfig.key === key ? "#0d6efd" : "#6c757d";
-  }
+  };
 
   const handleSelectAllChange = (e) => {
       onSelectAll(e.target.checked);
-  }
+  };
 
   return (
     <thead>
@@ -71,58 +79,46 @@ const StudentTableHeader = ({
         </th>
         <th style={photoCellStyle}>Photo</th>
         <th style={thStyle}>
-          Last Name
+        <span
+         style={pointerStyle}
+         onClick={(e) => onOpenFilterPopup("fullName", e)}>
+          Full Name
+          </span>
           <span
-            onClick={() => onSort("lastName")}
-            style={{...sortIndicatorStyle, color: getSortIndicatorColor('lastName')}}
-            title="Sort by Last Name"
+            onClick={() => onSort("fullName")}
+            style={{ cursor: "pointer", marginLeft: "5px", color: getSortIndicatorColor("fullName") }}
           >
-            {getSortIndicator("lastName")}
+            {getSortIndicator("fullName")}
           </span>
-          <input
-            type="text"
-            name="lastName"
-            value={filters.lastName}
-            onChange={onFilterChange}
-            style={filterInputStyle}
-            placeholder="Filter"
-          />
         </th>
         <th style={thStyle}>
-          First Name
-           <span
-            onClick={() => onSort("firstName")}
-            style={{...sortIndicatorStyle, color: getSortIndicatorColor('firstName')}}
-            title="Sort by First Name"
-          >
-             {getSortIndicator("firstName")}
-          </span>
-          <input
-            type="text"
-            name="firstName"
-            value={filters.firstName}
-            onChange={onFilterChange}
-            style={filterInputStyle}
-            placeholder="Filter"
-          />
-        </th>
-        <th style={thStyle}>
+        <span
+         style={pointerStyle}
+         onClick={(e) => onOpenFilterPopup("studentIdentifier", e)}>
           Identifier
-           <span
-            onClick={() => onSort("studentIdentifier")}
-            style={{...sortIndicatorStyle, color: getSortIndicatorColor('studentIdentifier')}}
-            title="Sort by Identifier"
-          >
-             {getSortIndicator("studentIdentifier")}
           </span>
-          <input
-            type="text"
-            name="studentIdentifier"
-            value={filters.studentIdentifier}
-            onChange={onFilterChange}
-            style={filterInputStyle}
-            placeholder="Filter"
-          />
+          <span
+            onClick={() => onSort("studentIdentifier")}
+            style={{ cursor: "pointer", marginLeft: "5px", color: getSortIndicatorColor("studentIdentifier") }}
+          >
+            {getSortIndicator("studentIdentifier")}
+          </span>
+        </th>
+        <th style={thStyle}>
+          <span
+            style={pointerStyle}
+            onClick={(e) => onOpenFilterPopup("standard", e)}
+          >
+            Standard
+          </span>
+        </th>
+        <th style={thStyle}>
+          <span
+            style={pointerStyle}
+            onClick={(e) => onOpenFilterPopup("division", e)}
+          >
+            Division
+          </span>
         </th>
         <th style={thStyle}>
             Status

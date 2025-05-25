@@ -16,6 +16,10 @@ import {
   selectSelectedSchoolId,
   selectSchoolLoading,
   selectSelectedSchool,
+  fetchStandards, 
+  fetchDivisions,
+  selectAvailableStandards,
+  selectAvailableDivisions
 } from "../../store/slices/schoolSlice";
 import {
   fetchStudentsBySchool,
@@ -45,6 +49,7 @@ import StudentImport from '../students/StudentImport'; // *** Import the new com
 import StudentTable from "../students/StudentTable"; // Assuming this is a separate component for the table
 import PaginationControls from "../Shared/PaginationControls";
 
+
 // --- Styles ---
 const listContainerStyle = { padding: "20px", maxWidth: '1200px', margin: '0 auto' };
 
@@ -65,7 +70,7 @@ function StudentListPage() {
   const photoUploadError = useSelector(selectStudentErrorPhotoUpload);
 
   // --- Local State ---
-  const [filters, setFilters] = useState({ lastName: "", firstName: "", studentIdentifier: "" });
+  const [filters, setFilters] = useState({ fullName: "", studentIdentifier: "" });
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
   const [stagedPhotos, setStagedPhotos] = useState({});
@@ -74,23 +79,31 @@ function StudentListPage() {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
+  //const [standardOptions, setStandardOptions] = useState([]);
+  //const [divisionOptions, setDivisionOptions] = useState([]);
+
+
   // *** State to track if import component is busy ***
   const [isImportOperationUnderway, setIsImportOperationUnderway] = useState(false);
 
   // REMOVED Import specific state variables
   // REMOVED Import specific ref
-
+  const standardOptions = useSelector(selectAvailableStandards) || [];
+  const divisionOptions = useSelector(selectAvailableDivisions) || [];
+debugger;
   const recordsPerPage = 2;
 
   // --- Data Fetching and Cleanup ---
   useEffect(() => {
     if (selectedSchoolId) {
       dispatch(fetchStudentsBySchool(selectedSchoolId));
+      dispatch(fetchStandards());
+      dispatch(fetchDivisions());
     } else {
       dispatch(clearStudents());
     }
     // Reset local state
-    setFilters({ lastName: "", firstName: "", studentIdentifier: "" });
+    setFilters({ fullName: "", studentIdentifier: "" });
     setSortConfig({ key: null, direction: "asc" });
     setCurrentPage(1);
     setStagedPhotos({});
@@ -113,9 +126,10 @@ function StudentListPage() {
      if (!Array.isArray(students)) return [];
      const filtered = students.filter(
        (student) =>
-         (!filters.lastName || student.lastName?.toLowerCase().includes(filters.lastName.toLowerCase())) &&
-         (!filters.firstName || student.firstName?.toLowerCase().includes(filters.firstName.toLowerCase())) &&
-         (!filters.studentIdentifier || student.studentIdentifier?.toLowerCase().includes(filters.studentIdentifier.toLowerCase()))
+         (!filters.fullName || student.fullName?.toLowerCase().includes(filters.fullName.toLowerCase())) &&
+         (!filters.studentIdentifier || student.studentIdentifier?.toLowerCase().includes(filters.studentIdentifier.toLowerCase())) 
+         && (!filters.standard || student.standardId === filters.standard) &&
+         (!filters.division || student.divisionId === filters.division)
      );
      if (sortConfig.key) {
        filtered.sort((a, b) => {
@@ -139,6 +153,7 @@ function StudentListPage() {
 
   // --- Callback Handlers (Non-Import) ---
   const handleFilterChange = useCallback((e) => {
+    debugger;
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
     setCurrentPage(1);
@@ -190,6 +205,14 @@ function StudentListPage() {
           return { ...prev, [studentId]: { file: file, preview: URL.createObjectURL(file) } };
       });
   }, [dispatch]);
+  
+  // useEffect(() => {
+  //   if (selectedSchoolId) {
+  //     dispatch(fetchStudentsBySchool(selectedSchoolId)); // Fetch the latest data
+  //   } else {
+  //     dispatch(clearStudents());
+  //   }
+  // }, [selectedSchoolId, dispatch]);
 
   const handleSaveAllPhotos = useCallback(async () => {
     const photosToUpload = Object.entries(stagedPhotos);
@@ -220,9 +243,16 @@ function StudentListPage() {
             return nextStaged;
         });
         resultMessage += " Failed photos remain staged.";
-    } else { setStagedPhotos({}); }
+    } 
+    
+    // Refetch the updated student list if there are successful uploads
+  if (successfulUploads.length > 0) {
+    await dispatch(fetchStudentsBySchool(selectedSchoolId)); // Refetch the updated student list
+    setStagedPhotos({}); // Clear staged photos after successful upload
+  }
+
     alert(resultMessage);
-  }, [dispatch, stagedPhotos]);
+  }, [dispatch, stagedPhotos, selectedSchoolId]);
 
   const handleAddStudent = useCallback(() => {
     if (selectedSchoolId) navigate(`/students/new`, { state: { schoolId: selectedSchoolId } });
@@ -332,6 +362,31 @@ function StudentListPage() {
   // Use the new tracking state for import operation
   const isOverallLoading = loadingStudents || loadingDelete || isImportOperationUnderway || loadingPhotoUpload || loadingSchools || isGeneratingPdf;
 
+  // useEffect(() => {
+  //   // Fetch Standard options
+  //   const fetchStandards = async () => {
+  //     try {
+  //       const response = await api.get("/api/standards");
+  //       setStandardOptions(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch standards:", error);
+  //     }
+  //   };
+
+  //   // Fetch Division options
+  //   const fetchDivisions = async () => {
+  //     try {
+  //       const response = await api.get("/api/divisions");
+  //       setDivisionOptions(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch divisions:", error);
+  //     }
+  //   };
+
+  //   fetchStandards();
+  //   fetchDivisions();
+  // }, []);
+
   // --- Render Logic ---
   return (
     <div style={listContainerStyle}>
@@ -398,6 +453,8 @@ function StudentListPage() {
                   onDropPhoto={handleDropPhoto}
                   onDownloadSinglePdf={handleDownloadSinglePdf}
                   onDeleteStudent={handleDeleteStudent}
+                  standardOptions={standardOptions}
+                  divisionOptions={divisionOptions}
               />
               {/* Render pagination controls */}
               <PaginationControls

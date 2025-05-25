@@ -61,6 +61,12 @@ namespace StudentManagement.Domain.Entities
             IsActive = isActive;
             School = school;
         }
+
+        public virtual void UpdatePhoto(string photoName, string photoPath)
+        {
+            PhotoName = photoName;
+            PhotoPath = photoPath;
+        }
     }
 
 }

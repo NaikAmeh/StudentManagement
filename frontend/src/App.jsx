@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation }
 import { useSelector, useDispatch } from 'react-redux'; // Use Redux hook
 import { selectIsAuthenticated, selectAuthLoading, selectCurrentUser, selectDefaultSchoolId  } from './store/slices/authSlice'; // Import Redux selectors
 import { fetchSchools, selectAvailableSchools, setSelectedSchool } from './store/slices/schoolSlice'; // Import school-related actions and selectors
+import { fetchStudentsBySchool } from './store/slices/studentSlice';
 
 // Import Pages
 import LoginPage from './pages/LoginPage';
@@ -102,12 +103,16 @@ console.log("currentUser",defaultSchoolId);
   }, [defaultSchoolId, availableSchools]);
 
   const handleSwitchSchool = (school) => {
+    debugger;
     console.log("handleSwitchSchool",defaultSchoolId);
-    const selected = availableSchools.find((school) => school.schoolId === schoolId);
-    if (selected) {
-      dispatch(setSelectedSchool(schoolId)); // Set the selected school in Redux
-      setSelectedSchool(selected); // Update local state
+    //const selected = availableSchools.find((school) => school.schoolId === schoolId);
+    if (school) {
+      //dispatch(setSelectedSchool(school.schoolId)); // Set the selected school in Redux
+      setSelectedSchool(school); // Update local state
       setIsSwitchSchoolPopupOpen(false); // Close the popup
+
+      // Fetch students for the selected school
+    dispatch(fetchStudentsBySchool(school.schoolId));
     }
   };
 

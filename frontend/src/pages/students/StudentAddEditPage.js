@@ -23,7 +23,6 @@ import {
   clearPhotoUploadError,
   setCurrentStudentPhotoPath,
 } from "../../store/slices/studentSlice";
-//import { selectSelectedSchoolId } from "../../store/slices/schoolSlice";
 import { selectSelectedSchoolId, selectSelectedSchool } from '../../store/slices/schoolSlice';
 import api from '../../services/api'; // For fetching common data
 
@@ -111,22 +110,14 @@ function StudentAddEditPage({ mode = "add" }) {
   const selectedSchoolIdFromContext = useSelector(selectSelectedSchoolId);
   
   const selectedSchool = useSelector(selectSelectedSchool); // Get full school object
-console.log("Selected School from context:", selectedSchool);
+//console.log("Selected School from context:", selectedSchool);
   // --- Local Form State ---
   const initialFormData = {
     fullName: '', dateOfBirth: '', gender: '', email: '', phoneNo: '', address: '',
-    enrollmentDate: '', standard: '', division: '', rollNo: '', studentIdentifier: '',
+    enrollmentDate: '', standardId: '', divisionId: '', rollNo: '', studentIdentifier: '',
     isActive: true, schoolId: ''
 };
 const [formData, setFormData] = useState(initialFormData);
-  // const [formData, setFormData] = useState({
-  //   firstName: "",
-  //   lastName: "",
-  //   dateOfBirth: "",
-  //   studentIdentifier: "",
-  //   isActive: true,
-  //   schoolId: "",
-  // });
   const [selectedPhotoFile, setSelectedPhotoFile] = useState(null); // Holds the File object
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState(null); // For image preview
   const [isEditMode, setIsEditMode] = useState(mode === "edit");
@@ -145,43 +136,46 @@ const [formData, setFormData] = useState(initialFormData);
 
   // Fetch Master Data (Standards, Divisions) based on selected school
   useEffect(() => {
-    const schoolIdForMasters =  selectedSchool?.schoolId;
-console.log("Selected School ID for Masters:", schoolIdForMasters);
+    const schoolIdForMasters = selectedSchool?.schoolId;
 
     const fetchMasters = async (schoolIdForMasters) => {
-        if (!schoolIdForMasters) {
-          console.log("No school ID provided for fetching masters.");
-            setStandards([]); setDivisions([]); return;
+      if (!schoolIdForMasters) {
+        if (standards.length > 0 || divisions.length > 0) {
+          setStandards([]);
+          setDivisions([]);
         }
-        setLoadingMasters(true);
-        try {
-          console.log("Fetching standards/divisions for school ID:", schoolIdForMasters);
-            const [standardsRes, divisionsRes] = await Promise.all([
-                api.get(`/api/commondata/standards?schoolId=${schoolIdForMasters}`),
-                api.get(`/api/commondata/divisions?schoolId=${schoolIdForMasters}`)
-            ]);
-            setStandards(standardsRes.data || []);
-            setDivisions(divisionsRes.data || []);
-        } catch (err) {
-            console.error("Failed to fetch standards/divisions", err);
-            setPageError("Could not load standard/division options.");
-        } finally {
-            setLoadingMasters(false);
+        return;
+      }
+      setLoadingMasters(true);
+      try {
+        const [standardsRes, divisionsRes] = await Promise.all([
+          api.get(`/api/commondata/standards?schoolId=${schoolIdForMasters}`),
+          api.get(`/api/commondata/divisions?schoolId=${schoolIdForMasters}`)
+        ]);
+
+        // Only update state if data has changed
+        if (JSON.stringify(standards) !== JSON.stringify(standardsRes.data)) {
+          setStandards(standardsRes.data || []);
         }
+        if (JSON.stringify(divisions) !== JSON.stringify(divisionsRes.data)) {
+          setDivisions(divisionsRes.data || []);
+        }
+      } catch (err) {
+        setPageError("Could not load standard/division options.");
+      } finally {
+        setLoadingMasters(false);
+      }
     };
 
     const schoolIdToFetchFor = isEditMode ? currentStudent?.schoolId : selectedSchool?.schoolId;
     if (schoolIdToFetchFor) {
-        fetchMasters(schoolIdToFetchFor);
-    } else if (!isEditMode && selectedSchool) { // For Add mode, use context school
-        fetchMasters(selectedSchool.schoolId);
-    } else if (!isEditMode && !selectedSchool) {
-        // If in add mode and no school selected from context, clear or handle
-        setStandards([]); setDivisions([]);
-        console.warn("Add Student: No school selected in context to fetch masters.");
+      fetchMasters(schoolIdToFetchFor);
     }
+  }, [isEditMode, currentStudent?.schoolId, selectedSchool]);
 
-}, [isEditMode, currentStudent?.schoolId, selectedSchool]); // Re-fetch if school context changes in add mode
+useEffect(() => {
+    console.log("Standards array:", standards);
+  }, [standards]);
 
   // Effect for mode change / Initial Load / Fetch Details
   useEffect(() => {
@@ -218,26 +212,35 @@ console.log("Selected School ID for Masters:", schoolIdForMasters);
   // Effect to populate form when currentStudent data arrives (edit mode)
   useEffect(() => {
     if (isEditMode && currentStudent) {
-      setFormData({
+      const updatedFormData = {
         fullName: currentStudent.fullName || '',
-        dateOfBirth: currentStudent.dateOfBirth ? new Date(currentStudent.dateOfBirth).toISOString().split('T')[0] : '',
+        dateOfBirth: currentStudent.dateOfBirth
+          ? new Date(currentStudent.dateOfBirth).toISOString().split('T')[0]
+          : '',
         gender: currentStudent.gender || '',
         email: currentStudent.email || '',
         phoneNo: currentStudent.phoneNo || '',
         address: currentStudent.address || '',
-        enrollmentDate: currentStudent.enrollmentDate ? new Date(currentStudent.enrollmentDate).toISOString().split('T')[0] : '',
-        standard: currentStudent.standard || '', // Should match value in standards list
-        division: currentStudent.division || '', // Should match value in divisions list
-        rollNo: currentStudent.rollNo?.toString() || '', // Ensure string for input
+        enrollmentDate: currentStudent.enrollmentDate
+          ? new Date(currentStudent.enrollmentDate).toISOString().split('T')[0]
+          : '',
+        standardId: currentStudent.standardId || '',
+        divisionId: currentStudent.divisionId || '',
+        rollNo: currentStudent.rollNo?.toString() || '',
         studentIdentifier: currentStudent.studentIdentifier || '',
         isActive: currentStudent.isActive ?? true,
-        schoolId: currentStudent.schoolId // This is primarily for context, not directly editable
-      });
-      setPhotoPreviewUrl(null); // Clear preview when loading existing data
-      setSelectedPhotoFile(null); // Clear selected file
-      if (fileInputRef.current) fileInputRef.current.value = ""; // Clear file input visually
+        schoolId: currentStudent.schoolId
+      };
+
+      // Only update formData if it has changed
+      if (JSON.stringify(formData) !== JSON.stringify(updatedFormData)) {
+        setFormData(updatedFormData);
+      }
+      setPhotoPreviewUrl(null);
+      setSelectedPhotoFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
-  }, [currentStudent, isEditMode]);
+  }, [currentStudent, isEditMode, formData]);
 
   // Effect to handle Page Errors (e.g., failed details fetch)
   useEffect(() => {
@@ -268,10 +271,10 @@ console.log("Selected School ID for Masters:", schoolIdForMasters);
             if (!value) error = 'Full Name is required.';
             else if (value.length > 100) error = 'Full Name max 100 chars.';
             break;
-        case 'standard':
+        case 'standardId':
             if (!value) error = 'Standard is required.';
             break;
-        case 'division':
+        case 'divisionId':
             if (!value) error = 'Division is required.';
             break;
         case 'rollNo':
@@ -289,47 +292,54 @@ console.log("Selected School ID for Masters:", schoolIdForMasters);
 }, []);
 
 const validateForm = useCallback(() => {
-  let allValid = true;
-  const newErrors = {};
-  Object.keys(formData).forEach(key => {
-      if (!validateField(key, formData[key])) { // Call validateField for each
-          allValid = false;
-          // Ensure error message is captured if validateField doesn't set it immediately for all cases
-          if (!newErrors[key] && formErrors[key]) newErrors[key] = formErrors[key];
-      }
-  });
-   // After individual checks, update formErrors state at once if needed
-   setFormErrors(prev => ({...prev, ...newErrors}));
-  return allValid;
-}, [formData, validateField, formErrors]); // Add formErrors to dependencies
+    let allValid = true;
+    const newErrors = {};
 
- // Re-validate on field change IF submit has been attempted
- useEffect(() => {
-  if (hasAttemptedSubmit) {
+    Object.keys(formData).forEach((key) => {
+      if (!validateField(key, formData[key])) {
+        allValid = false;
+        if (!newErrors[key] && formErrors[key]) {
+          newErrors[key] = formErrors[key];
+        }
+      }
+    });
+
+    // Only update formErrors if there are changes
+    if (JSON.stringify(formErrors) !== JSON.stringify(newErrors)) {
+      setFormErrors(newErrors);
+    }
+
+    return allValid;
+  }, [formData, validateField, formErrors]);
+
+  useEffect(() => {
+    if (hasAttemptedSubmit) {
       validateForm();
-  }
-}, [formData, hasAttemptedSubmit, validateForm]);
+    }
+  }, [formData, hasAttemptedSubmit, validateForm]);
+
   // --- Event Handlers ---
 
   // Handles changes in text inputs, date, checkbox
-  const handleChange = useCallback(
-    (e) => {
-      const { name, value, type, checked } = e.target;
-      // setFormData((prev) => ({
-      //   ...prev,
-      //   [name]: type === "checkbox" ? checked : value,
-      // }));
-      const val = type === 'checkbox' ? checked : value;
-        setFormData(prev => ({ ...prev, [name]: val }));
-      // Clear errors when user starts typing again
-      if (submitError) dispatch(clearSubmitError());
-      if (photoUploadError) dispatch(clearPhotoUploadError());
-      if (hasAttemptedSubmit) { // Validate on change only after first submit attempt
-        validateField(name, val);
-    }
-    },
-    [dispatch, submitError, photoUploadError, hasAttemptedSubmit, validateField]
-  );
+const handleChange = useCallback(
+  (e) => {
+    const { name, value } = e.target;
+
+    // Update the formData state
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value, // Update the correct field in formData
+    }));
+
+    // Validate the specific field when its value changes
+    validateField(name, value);
+
+    // Clear errors when user starts typing again
+    if (submitError) dispatch(clearSubmitError());
+    if (photoUploadError) dispatch(clearPhotoUploadError());
+  },
+  [dispatch, submitError, photoUploadError, validateField]
+);
 
   // Handles the file input change for photo selection
   const handlePhotoFileChange = useCallback(
@@ -372,105 +382,67 @@ const validateForm = useCallback(() => {
   // Handles the main form submission (Add or Edit)
   const handleSubmit = useCallback(
     async (e) => {
-      debugger;
-      console.log("Save button clicked");
       e.preventDefault();
-      setHasAttemptedSubmit(true); 
-      dispatch(clearSubmitError());
-      dispatch(clearPhotoUploadError());
-
-      if (!validateForm()) { // Perform full form validation
+      console.log("Save button clicked");
+  
+      // Validate the entire form on submission
+      if (!validateForm()) {
+        console.log("Form validation failed");
         alert("Please correct the highlighted errors.");
         return;
-    }
-
+      }
+  
       let studentIdToUse = isEditMode ? parseInt(id, 10) : null;
-      let isNewStudent = false;
       let success = false;
-
+  
       const dtoData = {
         ...formData,
         rollNo: parseInt(formData.rollNo, 10),
         dateOfBirth: formData.dateOfBirth || null,
         enrollmentDate: formData.enrollmentDate || null,
-    };
-
-      // Disable button during operation (handled by isLoading state check on button)
-      console.log("Form submit initiated...");
-
+      };
+  
       try {
-        // Step 1: Save/Update Student Data (text fields etc.)
-        // const formattedDateOfBirth = formData.dateOfBirth
-        //   ? new Date(formData.dateOfBirth).toISOString().split("T")[0]
-        //   : null;
-
         if (isEditMode && studentIdToUse) {
-          const updateDto = {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            dateOfBirth: formattedDateOfBirth,
-            studentIdentifier: formData.studentIdentifier || null,
-            isActive: formData.isActive,
-          };
-          console.log(
-            `Dispatching updateStudent for ID: ${studentIdToUse}`,
-            updateDto
-          );
-          await dispatch(
-            updateStudent({ id: studentIdToUse, updateStudentDto: updateDto })
-          ).unwrap();const { schoolId, ...updateDtoFields } = dtoData; // Exclude schoolId from UpdateStudentDto
+          console.log("Updating student with ID:", studentIdToUse);
+          const { schoolId, ...updateDtoFields } = dtoData;
           await dispatch(updateStudent({ id: studentIdToUse, updateStudentDto: updateDtoFields })).unwrap();
-          console.log("Update student data successful.");
         } else {
-          // Add mode
           if (!dtoData.schoolId) {
-            setFormErrors(prev => ({...prev, schoolId: "School ID is missing. Select school from header."}));
+            console.log("School ID is missing");
+            setFormErrors((prev) => ({ ...prev, schoolId: "School ID is missing. Select school from header." }));
             throw new Error("School ID is missing.");
           }
+          console.log("Adding new student");
           const createdStudent = await dispatch(addStudent(dtoData)).unwrap();
           studentIdToUse = createdStudent?.studentId;
           if (!studentIdToUse) throw new Error("Failed to get new student ID.");
         }
-
-        // Step 2: Upload Photo if selected AND we have a valid studentId
+  
         if (selectedPhotoFile && studentIdToUse) {
-          console.log(
-            `Proceeding to upload photo for student ID: ${studentIdToUse}`
-          );
+          console.log("Uploading photo for student ID:", studentIdToUse);
           await dispatch(
             uploadStudentPhoto({
               studentId: studentIdToUse,
               file: selectedPhotoFile,
             })
           ).unwrap();
-          console.log("Photo upload successful.");
-          // Clear file state after successful upload as part of submit flow
-          setSelectedPhotoFile(null);
-          if (fileInputRef.current) fileInputRef.current.value = "";
-        } else if (selectedPhotoFile && !studentIdToUse) {
-          // Should not happen if logic above is correct, but safeguard
-          console.warn(
-            "Photo was selected, but student ID is invalid. Photo not uploaded."
-          );
         }
-
-        success = true; // If we reach here without exceptions, mark as success
+  
+        success = true;
       } catch (error) {
         console.error("Error during student save/upload:", error);
         success = false;
-        // Errors are set in Redux state by rejected thunks (submitError or photoUploadError)
-        // The component will re-render and display them via useSelector.
       }
-
-      // Step 3: Navigate on overall success
+  
       if (success) {
-        alert(`Student successfully ${isNewStudent ? "added" : "updated"}!`);
-        navigate("/students"); // Navigate back to list
+        console.log("Student save successful");
+        alert(`Student successfully ${isEditMode ? "updated" : "added"}!`);
+        navigate("/students");
       }
-      // If not successful, errors should be displayed via Redux state selectors
     },
-    [dispatch, formData, id, isEditMode, mode, navigate, selectedPhotoFile, validateForm, submitError, photoUploadError]
-  ); // Dependencies for useCallback
+    [dispatch, formData, id, isEditMode, navigate, selectedPhotoFile, validateForm]
+  );
 
   // Handles navigation back to the list page
   const handleCancel = useCallback(() => navigate("/students"), [navigate]);
@@ -553,21 +525,44 @@ const validateForm = useCallback(() => {
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="standard">Standard/Class:</label>
-                        <select style={getInputClass('standard')} id="standard" name="standard" value={formData.standard} onChange={handleChange} disabled={isLoading || loadingMasters}>
+                        <select
+                            style={getInputClass('standard')}
+                            id="standard"
+                            name="standardId"
+                            value={formData.standardId || ''} // Ensure value is correctly bound
+                            onChange={handleChange}
+                            disabled={isLoading || loadingMasters}
+                        >
                             <option value="">-- Select Standard --</option>
                             {loadingMasters && <option disabled>Loading...</option>}
-                            {standards.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                            {standards.map((s) => (
+                                <option key={s.standardId} value={s.standardId}>{s.name}</option>
+                            ))}
                         </select>
-                         {hasAttemptedSubmit && formErrors.standard && <small style={errorStyle}>{formErrors.standard}</small>}
+                        {hasAttemptedSubmit && formErrors.standardId && (
+                            <small style={errorStyle}>{formErrors.standardId}</small>
+                        )}
                     </div>
+
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="division">Division:</label>
-                        <select style={getInputClass('division')} id="division" name="division" value={formData.division} onChange={handleChange} disabled={isLoading || loadingMasters}>
+                        <select
+                            style={getInputClass('division')}
+                            id="division"
+                            name="divisionId"
+                            value={formData.divisionId || ''} // Ensure value is correctly bound
+                            onChange={handleChange}
+                            disabled={isLoading || loadingMasters}
+                        >
                             <option value="">-- Select Division --</option>
                             {loadingMasters && <option disabled>Loading...</option>}
-                            {divisions.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                            {divisions.map((d) => (
+                                <option key={d.divisionId} value={d.divisionId}>{d.name}</option>
+                            ))}
                         </select>
-                         {hasAttemptedSubmit && formErrors.division && <small style={errorStyle}>{formErrors.division}</small>}
+                        {hasAttemptedSubmit && formErrors.divisionId && (
+                            <small style={errorStyle}>{formErrors.divisionId}</small>
+                        )}
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="rollNo">Roll No:</label>
@@ -610,18 +605,19 @@ const validateForm = useCallback(() => {
 
           {/* Display current photo in Edit mode if available and no new preview */}
           {isEditMode && currentStudent?.photoPath && !photoPreviewUrl && (
-            <div>
-              <label style={labelStyle}>Current Photo:</label>
-              <img
-                src={`/${currentStudent.photoPath}`}
-                alt="Current"
-                style={currentPhotoStyle}
-                onError={(e) => {
-                  e.target.style.display = "none";
-                }}
-              />
-            </div>
-          )}
+  <div>
+    <label style={labelStyle}>Current Photo:</label>
+    <img
+      src={`https://localhost:62376/uploads/${currentStudent.photoName}`} // Replace localhost:5000 with your backend URL
+      alt="Current"
+      style={currentPhotoStyle}
+      onError={(e) => {
+        e.target.style.display = "none"; // Hide the image if it fails to load
+        console.error("Failed to load current photo:", currentStudent.photoName);
+      }}
+    />
+  </div>
+)}
 
           {/* Display photo preview if a new file is selected */}
           {photoPreviewUrl && (

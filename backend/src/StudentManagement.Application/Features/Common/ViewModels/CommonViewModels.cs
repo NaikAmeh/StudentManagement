@@ -11,12 +11,12 @@ namespace StudentManagement.Application.Features.Common.ViewModels
     }
     public class VmStandard 
     { 
-        public int Id { get; set; } 
+        public int StandardId { get; set; } 
         public string Name { get; set; }
     }
     public class VmDivision 
     { 
-        public int Id { get; set; } 
+        public int DivisionId { get; set; } 
         public string Name { get; set; }
     }
 }

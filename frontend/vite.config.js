@@ -29,4 +29,4 @@ export default defineConfig({
   //   include: /.*\.js$/, ///(js|jsx)$/, // match both .js and .jsx files
   // },
 });
-
+//VITE_API_BASE_URL=https://localhost:7145

@@ -1,4 +1,3 @@
-// src/components/students/StudentTableRow.js
 import React from "react";
 import { Link } from "react-router-dom";
 import StudentPhotoDropzone from "../students/StudentPhotoDropzone"; // Import the dropzone
@@ -34,16 +33,20 @@ const StudentTableRow = ({
   onDownloadSinglePdf,
   onDeleteStudent,
 }) => {
-  const { studentId, firstName, lastName, studentIdentifier, isActive, photoThumbnailPath, photoPath } = student;
-  const studentName = `${firstName} ${lastName}`;
-  const currentPhotoPath = photoThumbnailPath || photoPath;
+  const { studentId, fullName, studentIdentifier, isActive, photoName, standardName, divisionName } = student;
+console.log("StudentTableRow", studentId, fullName, studentIdentifier, isActive, photoName, standardName);
+debugger;
+  // Construct the photo URL using localhost
+  const photoUrl = photoName
+    ? `https://localhost:62376/uploads/${photoName}?t=${new Date().getTime()}`
+    : null;
 
   const handleSelect = (e) => {
     onSelectStudent(studentId, e.target.checked);
   };
 
   const handleDelete = () => {
-    onDeleteStudent(studentId, studentName);
+    onDeleteStudent(studentId, fullName);
   };
 
   const handleDownloadPdf = () => {
@@ -61,17 +64,31 @@ const StudentTableRow = ({
         />
       </td>
       <td style={photoCellStyle}>
-        <StudentPhotoDropzone
-          studentId={studentId}
-          photoPath={currentPhotoPath}
-          stagedPhoto={stagedPhoto}
-          onDrop={onDropPhoto}
-          isUploading={isUploadingPhoto}
-        />
+         {/* {photoUrl ? (
+          <img
+            src={photoUrl}
+            alt={`${fullName}'s photo`}
+            style={{ maxWidth: "80px", maxHeight: "80px", borderRadius: "5px" }}
+            onError={(e) => {
+              e.target.style.display = "none"; // Hide the image if it fails to load
+              console.error("Failed to load photo:", photoName);
+            }}
+          />
+        ) : (
+          <span>No Photo</span>
+        )}  */}
+         <StudentPhotoDropzone
+            studentId={studentId}
+            photoName={student.photoName}
+            stagedPhoto={stagedPhoto}
+            isUploadingPhoto={isUploadingPhoto}
+            onDropPhoto={onDropPhoto}
+          />
       </td>
-      <td style={thTdStyle}>{lastName}</td>
-      <td style={thTdStyle}>{firstName}</td>
+      <td style={thTdStyle}>{fullName}</td>
       <td style={thTdStyle}>{studentIdentifier || "N/A"}</td>
+      <td style={thTdStyle}>{standardName || "N/A"}</td>
+      <td style={thTdStyle}>{divisionName || "N/A"}</td>
       <td style={thTdStyle}>{isActive ? "Active" : "Inactive"}</td>
       <td style={actionsCellStyle}>
         <Link

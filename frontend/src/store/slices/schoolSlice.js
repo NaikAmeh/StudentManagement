@@ -2,6 +2,47 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 
+// Thunks to fetch Standards and Divisions
+export const fetchStandards = createAsyncThunk(
+    "school/fetchStandards",
+    async (_, { getState, rejectWithValue }) => {
+      const state = getState();
+      const selectedSchoolId = state.school.selectedSchoolId; // Access selectedSchoolId from the state
+  
+      if (!selectedSchoolId) {
+        return rejectWithValue("No school selected.");
+      }
+  
+      try {
+        const response = await api.get(`/api/commondata/standards?schoolId=${selectedSchoolId}`);
+        debugger;
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch standards.");
+      }
+    }
+  );
+  
+  export const fetchDivisions = createAsyncThunk(
+    "school/fetchDivisions",
+    async (_, { getState, rejectWithValue }) => {
+      const state = getState();
+      const selectedSchoolId = state.school.selectedSchoolId; // Access selectedSchoolId from the state
+  
+      if (!selectedSchoolId) {
+        return rejectWithValue("No school selected.");
+      }
+  
+      try {
+        const response = await api.get(`/api/commondata/divisions?schoolId=${selectedSchoolId}`);
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch divisions.");
+      }
+    }
+  );
+  
+
 // --- Async Thunk for Fetching Available Schools ---
 export const fetchSchools = createAsyncThunk(
     'school/fetchSchools',
@@ -39,6 +80,8 @@ const initialState = {
     selectedSchoolId: parseInt(localStorage.getItem('selectedSchoolId') || '0', 10) || null, // Load from storage
     loading: false,
     error: null,
+    standards: [],
+    divisions: [],
 };
 
 const schoolSlice = createSlice({
@@ -99,13 +142,40 @@ const schoolSlice = createSlice({
                 localStorage.removeItem('selectedSchoolId');
                  console.error("Redux fetch schools rejected:", action.payload);
             })
+            .addCase(fetchStandards.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                debugger;
+              })
+              .addCase(fetchStandards.fulfilled, (state, action) => {
+                state.loading = false;
+                state.standards = action.payload;
+                debugger;
+              })
+              .addCase(fetchStandards.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+                debugger;
+              })
+              .addCase(fetchDivisions.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+              })
+              .addCase(fetchDivisions.fulfilled, (state, action) => {
+                state.loading = false;
+                state.divisions = action.payload;
+              })
+              .addCase(fetchDivisions.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+              });
             // --- Handle Logout ---
             // Reset school state when user logs out (listen to authSlice action)
             // Note: This requires careful setup or cross-slice communication patterns
             // Simpler way: Dispatch clearSelectedSchool from logout logic or on auth change
             // Alternative: Add a case for `logout` action if imported correctly (can be tricky)
             // .addCase('auth/logout', (state) => { ... reset state ... });
-            ;
+            //;
     },
 });
 
@@ -115,6 +185,9 @@ export default schoolSlice.reducer;
 // Selectors
 export const selectAvailableSchools = (state) => state.school.availableSchools;
 export const selectSelectedSchoolId = (state) => state.school.selectedSchoolId;
+export const selectAvailableStandards = (state) => state.school.standards;
+export const selectAvailableDivisions = (state) => state.school.divisions;
+debugger;
 // Selector to get the full selected school object (derived state)
 export const selectSelectedSchool = (state) => {
     return state.school.availableSchools.find(s => s.schoolId === state.school.selectedSchoolId) || null;

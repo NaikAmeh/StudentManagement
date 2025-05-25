@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "cDAsfbnDbi72TBJY9YSsB9K2++P8WJTWAHyYHsgswnktNmoYAqe7+cU9WRrnAPVmd2JsgrW0LNNACmmcSkveuQ==",
+  "dgSpecHash": "jPRl/DPTlgm2pzi73unhL99JUkIXTgVwyrhbm1SCEG9Nbt8e/0JLvUfRfK0rvN9Q2D0IffYNRfpKGZ6kMJemHg==",
   "success": true,
   "projectFilePath": "D:\\Projects\\Core\\StudentManagement\\CodeBase\\backend\\src\\StudentManagement.API\\StudentManagement.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ameh\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
+    "C:\\Users\\ameh\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\closedxml\\0.104.2\\closedxml.0.104.2.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\closedxml.parser\\1.2.0\\closedxml.parser.1.2.0.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\documentformat.openxml\\3.1.1\\documentformat.openxml.3.1.1.nupkg.sha512",
@@ -27,6 +28,7 @@
     "C:\\Users\\ameh\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.13\\microsoft.entityframeworkcore.abstractions.8.0.13.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.13\\microsoft.entityframeworkcore.analyzers.8.0.13.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\microsoft.entityframeworkcore.design\\8.0.13\\microsoft.entityframeworkcore.design.8.0.13.nupkg.sha512",
+    "C:\\Users\\ameh\\.nuget\\packages\\microsoft.entityframeworkcore.proxies\\8.0.13\\microsoft.entityframeworkcore.proxies.8.0.13.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.13\\microsoft.entityframeworkcore.relational.8.0.13.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
@@ -84,6 +86,7 @@
     "C:\\Users\\ameh\\.nuget\\packages\\system.composition.runtime\\6.0.0\\system.composition.runtime.6.0.0.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\system.composition.typedparts\\6.0.0\\system.composition.typedparts.6.0.0.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\system.diagnostics.diagnosticsource\\9.0.4\\system.diagnostics.diagnosticsource.9.0.4.nupkg.sha512",
+    "C:\\Users\\ameh\\.nuget\\packages\\system.diagnostics.eventlog\\6.0.0\\system.diagnostics.eventlog.6.0.0.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.8.0\\system.identitymodel.tokens.jwt.8.8.0.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512",
     "C:\\Users\\ameh\\.nuget\\packages\\system.io.pipelines\\9.0.0\\system.io.pipelines.9.0.0.nupkg.sha512",

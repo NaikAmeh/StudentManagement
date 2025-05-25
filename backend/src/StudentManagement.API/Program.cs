@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using QuestPDF.Infrastructure;
 using Serilog;
@@ -36,7 +37,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
                                 .AllowAnyHeader()
-                                .AllowAnyMethod();
+                                .AllowAnyMethod()
+                                .WithExposedHeaders("Content-Disposition"); // Optional: Expose additional headers if needed
                       });
 });
 
@@ -163,6 +165,20 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.FromLogContext()); // Enable LogContext enrichment
                                // --- End Serilog Config ---
 
+//var frontendUrls = builder.Configuration.GetSection("AllowedFrontendUrls").Get<string[]>()
+//                   ?? new[] { "http://localhost:3000" };
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowMyReactApp",
+//        policy =>
+//        {
+//            policy.WithOrigins(frontendAppUrl)
+//                  .AllowAnyHeader()
+//                  .AllowAnyMethod();
+//        });
+//});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -223,10 +239,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(MyAllowSpecificOrigins);
+
+var folderPath = Path.Combine("D:\\Projects\\Core\\StudentManagement\\CodeBase\\Resources\\Images\\Students");
+if (!Directory.Exists(folderPath))
+{
+    Directory.CreateDirectory(folderPath);
+}
+// IMPORTANT: This enables serving static files from wwwroot
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(folderPath),//User config
+    RequestPath = "/uploads"
+});
 app.UseHttpsRedirection();
 
 app.UseRouting();
-app.UseCors(MyAllowSpecificOrigins);
 
 // --- Add Authentication and Authorization Middleware ---
 // IMPORTANT: Call UseAuthentication() BEFORE UseAuthorization()

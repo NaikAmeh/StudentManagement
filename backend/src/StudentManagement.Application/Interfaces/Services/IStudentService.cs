@@ -47,8 +47,8 @@ namespace StudentManagement.Application.Interfaces.Services
         /// <returns>True if the deletion was successful; otherwise, false (e.g., if the student was not found).</returns>
         Task<bool> DeleteStudentAsync(int id);
         //Implement
-        //// Add methods for photo upload/update later
-        //Task<string?> UpdateStudentPhotoAsync(int studentId, Stream photoStream, string contentType, string originalFileName);
+        // Add methods for photo upload/update later
+        Task<string?> UpdateStudentPhotoAsync(int studentId, Stream photoStream, string contentType, string originalFileName);
 
         // Add methods for Excel import/export later
         // Task<byte[]> ExportStudentsToExcelAsync(int schoolId);
@@ -66,7 +66,7 @@ namespace StudentManagement.Application.Interfaces.Services
         /// <summary>
         /// Imports students from an Excel stream for a specific school, validates, and saves valid records.
         /// </summary>
-      //  Task<List<VmStudentImportResult>> ImportStudentsFromExcelAsync(int schoolId, Stream excelStream);
+        Task<List<VmStudentImportResult>> ImportStudentsFromExcelAsync(int schoolId, Stream excelStream);
 
         /// <summary>
         /// Generates a PDF ID card for a single student.

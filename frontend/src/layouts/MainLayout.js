@@ -4,8 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout, selectCurrentUser, selectIsAuthenticated } from '../store/slices/authSlice';
 import SchoolSelector from '../components/SchoolSelector'; // Ensure this uses Redux too
 import SwitchSchoolPopup from '../pages/School/SwitchSchoolPopup'; // Import the new popup component
-
+import api from '../services/api'; // Import your API service
 import '../styles/MainLayout.css'; // Import the CSS file
+
 
 function MainLayout({ selectedSchool, onSwitchSchool }) {
   const user = useSelector(selectCurrentUser); // Get user from Redux state
@@ -15,11 +16,26 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
   //const location = useLocation(); // For active link styling
 
   const [isSwitchSchoolPopupOpen, setIsSwitchSchoolPopupOpen] = useState(false);
-  const [availableSchools, setAvailableSchools] = useState([
-    { id: 1, name: 'School A' },
-    { id: 2, name: 'School B' },
-    { id: 3, name: 'School C' },
-  ]);
+  // const [availableSchools, setAvailableSchools] = useState([
+  //   { id: 1, name: 'School A' },
+  //   { id: 2, name: 'School B' },
+  //   { id: 3, name: 'School C' },
+  // ]);
+
+  const [availableSchools, setAvailableSchools] = useState([]);
+  // Fetch schools from the backend
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await api.get('/api/schools'); // Replace with your API endpoint
+        setAvailableSchools(response.data); // Assuming the API returns an array of schools
+      } catch (error) {
+        console.error('Failed to fetch schools:', error);
+      }
+    };
+
+    fetchSchools();
+  }, []);
 
   useEffect(() => {
     console.log("test", user,selectedSchool);
@@ -67,7 +83,7 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
             Logout
           </button>
           <div className="school-info">
-            <span>Current School: {selectedSchool.name}</span>
+            <span>Current School: {selectedSchool?.name || 'None'}</span>
             <button
               className="switch-school-button"
               onClick={() => setIsSwitchSchoolPopupOpen(true)}

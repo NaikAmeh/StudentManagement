@@ -142,6 +142,7 @@ export const uploadStudentPhoto = createAsyncThunk(
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+      debugger;
       if (response.data && response.data.photoPath) {
         console.log(
           "Redux Thunk: Photo uploaded, path:",

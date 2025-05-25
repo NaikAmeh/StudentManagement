@@ -35,6 +35,12 @@ namespace StudentMgmt.Infrastructure.Data.DBContext
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
+
         // Optional: Override SaveChangesAsync to update Timestamps automatically
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

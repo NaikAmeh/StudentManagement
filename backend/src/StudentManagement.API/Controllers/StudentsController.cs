@@ -306,7 +306,7 @@ namespace StudentManagement.API.Controllers
                 // Get stream from the uploaded file
                 using (var stream = file.OpenReadStream())
                 {
-                    string? savedPath = null;//await _studentService.UpdateStudentPhotoAsync(id, stream, file.ContentType, file.FileName);
+                    string? savedPath = await _studentService.UpdateStudentPhotoAsync(id, stream, file.ContentType, file.FileName);
 
                     if (savedPath == null)
                     {
@@ -375,55 +375,55 @@ namespace StudentManagement.API.Controllers
         // POST: api/schools/{schoolId}/students/import
 
         //Implement
-        //[HttpPost("/api/schools/{schoolId:int}/students/import")]
-        //[Consumes("multipart/form-data")] // Specify expected content type
-        //[ProducesResponseType(typeof(List<VmStudentImportResult>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad file or validation errors
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<List<VmStudentImportResult>>> ImportStudents(int schoolId, IFormFile file)
-        //{
-        //    _logger.LogInformation("Executing {ActionName} for School ID: {SchoolId}", nameof(ImportStudents), schoolId);
-        //    if (!await CanUserAccessSchool(schoolId)) return Forbid();
+        [HttpPost("/api/schools/{schoolId:int}/students/import")]
+        [Consumes("multipart/form-data")] // Specify expected content type
+        [ProducesResponseType(typeof(List<VmStudentImportResult>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad file or validation errors
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<VmStudentImportResult>>> ImportStudents(int schoolId, IFormFile file)
+        {
+            _logger.LogInformation("Executing {ActionName} for School ID: {SchoolId}", nameof(ImportStudents), schoolId);
+            if (!await CanUserAccessSchool(schoolId)) return Forbid();
 
-        //    if (file == null || file.Length == 0)
-        //    {
-        //        return BadRequest(new { message = "No file uploaded or file is empty." });
-        //    }
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { message = "No file uploaded or file is empty." });
+            }
 
-        //    // Basic check for Excel file extension (improve with MIME type check if needed)
-        //    var allowedExtensions = new[] { ".xlsx" };
-        //    var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-        //    if (!allowedExtensions.Contains(extension))
-        //    {
-        //        return BadRequest(new { message = "Invalid file type. Please upload an Excel file (.xlsx)." });
-        //    }
+            // Basic check for Excel file extension (improve with MIME type check if needed)
+            var allowedExtensions = new[] { ".xlsx" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+            {
+                return BadRequest(new { message = "Invalid file type. Please upload an Excel file (.xlsx)." });
+            }
 
-        //    try
-        //    {
-        //        using (var stream = file.OpenReadStream())
-        //        {
-        //            //var results =  await _studentService.ImportStudentsFromExcelAsync(schoolId, stream);
-        //            //// Check if there was a global error (e.g., file read error, school not found)
-        //            //if (results.Any(r => r.RowNumber == 0 && !r.Success))
-        //            //{
-        //            //    return BadRequest(results); // Return 400 if there was a fundamental issue
-        //            //}
-        //            //return Ok(results); // Return 200 OK with detailed row results
-        //        }
-        //    }
-        //    catch (ArgumentException ex) // Catch specific exceptions like school not found
-        //    {
-        //        _logger.LogWarning("Import validation error for School ID {SchoolId}: {ErrorMessage}", schoolId, ex.Message);
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error executing {ActionName} for School ID: {SchoolId}", nameof(ImportStudents), schoolId);
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while importing students.");
-        //    }
-        //}
+            try
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    var results = await _studentService.ImportStudentsFromExcelAsync(schoolId, stream);
+                    // Check if there was a global error (e.g., file read error, school not found)
+                    if (results.Any(r => r.RowNumber == 0 && !r.Success))
+                    {
+                        return BadRequest(results); // Return 400 if there was a fundamental issue
+                    }
+                    return Ok(results); // Return 200 OK with detailed row results
+                }
+            }
+            catch (ArgumentException ex) // Catch specific exceptions like school not found
+            {
+                _logger.LogWarning("Import validation error for School ID {SchoolId}: {ErrorMessage}", schoolId, ex.Message);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error executing {ActionName} for School ID: {SchoolId}", nameof(ImportStudents), schoolId);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while importing students.");
+            }
+        }
 
         /// <summary>
         /// Downloads a PDF ID card for a specific student.

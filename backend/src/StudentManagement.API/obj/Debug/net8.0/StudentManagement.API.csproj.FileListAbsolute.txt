@@ -635,3 +635,5 @@ D:\Projects\Core\StudentManagement\CodeBase\backend\src\StudentManagement.API\ob
 D:\Projects\Core\StudentManagement\CodeBase\backend\src\StudentManagement.API\obj\Debug\net8.0\StudentManagement.API.pdb
 D:\Projects\Core\StudentManagement\CodeBase\backend\src\StudentManagement.API\obj\Debug\net8.0\StudentManagement.API.genruntimeconfig.cache
 D:\Projects\Core\StudentManagement\CodeBase\backend\src\StudentManagement.API\obj\Debug\net8.0\ref\StudentManagement.API.dll
+D:\Projects\Core\StudentManagement\CodeBase\backend\src\StudentManagement.API\bin\Debug\net8.0\Castle.Core.dll
+D:\Projects\Core\StudentManagement\CodeBase\backend\src\StudentManagement.API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Proxies.dll

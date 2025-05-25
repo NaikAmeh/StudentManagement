@@ -122,6 +122,7 @@ namespace StudentManagement.Application.ViewModelMap
                 .ForMember(dest => dest.Division, opt => opt.Ignore());
 
             CreateMap<Standard, VmStandard>();
+            //.ForMember(dest => dest.id, opt => opt.MapFrom(src => src.StandardId)); to map diff namesexplicitly
             CreateMap<Division, VmDivision>();
             // --- End Student Mappings ---
         }

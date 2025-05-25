@@ -1,11 +1,28 @@
-/* General layout container */
+  /* Ensure the layout container takes the full height of the viewport */
 .layout-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9; /* Light background for the entire layout */
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent horizontal overflow */
+  background-color: #f9f9f9;
+}
+
+/* .layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;*/
+  /* background-color: #f9f9f9; *//* Light background for the entire layout */
+/* }*/
+
+
+/* Allow the main content area to scroll if it overflows */
+.layout-main {
+  flex: 1; /* Take up remaining space */
+  overflow-y: auto; /* Add vertical scroll bar if content overflows */
+  padding: 20px; /* Optional padding for better spacing */
+  box-sizing: border-box; /* Include padding in height calculation */
+}
   
   /* Header styling */
   .layout-header {
@@ -63,14 +80,14 @@
   }
   
   /* Main content styling */
-  .layout-main {
+  /*.layout-main {
     flex-grow: 1;
-    padding: 20px;
-    background-color: #ffffff; /* White background for main content */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for content area */
-    margin: 20px;
+    padding: 20px;*/
+   /* background-color: #ffffff;*/ /* White background for main content */
+   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/ /* Subtle shadow for content area */
+    /*margin: 20px;
     border-radius: 8px;
-  }
+  }*/
   
   /* Responsive design */
   @media (max-width: 768px) {

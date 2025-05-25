@@ -30,7 +30,7 @@ function SchoolSelector({ onSchoolChange }) {
   const handleSwitchSchool = (schoolId) => {
     const selected = availableSchools.find((school) => school.schoolId === schoolId);
     if (selected) {
-      dispatch(setSelectedSchool(schoolId)); // Set the selected school in Redux
+      //dispatch(setSelectedSchool(schoolId)); // Set the selected school in Redux
       setIsSwitchSchoolPopupOpen(false); // Close the popup
       if (onSchoolChange) {
         onSchoolChange(selected); // Notify parent component
