@@ -1,18 +1,22 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+﻿# Ignore build outputs
+**/bin/
+**/obj/
 
-/backend/.vs
-/.vs/CodeBase/FileContentIndex
-/.vs/CodeBase/v17
-/.vs/StudentManagement/config
-/.vs/StudentManagement/copilot-chat/8048c509/sessions
-/.vs/StudentManagement/DesignTimeBuild
-/.vs/StudentManagement/FileContentIndex
-/.vs/StudentManagement/v16/.suo
-/.vs/StudentManagement/v17/.futdcache.v2
-/.vs/StudentManagement/v17/.suo
-/.vs/StudentManagement/v17/DocumentLayout.json
-/.vs/slnx.sqlite
-/.vs/VSWorkspaceState.json
-/.vs/ProjectEvaluation
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Dependency directories
+node_modules/

@@ -1,0 +1,38 @@
+{
+  "name": ".NET Core + React + MySQL App (Shared Static)",
+  "dockerComposeFile": [
+    "../docker-compose.yml" // Path relative to this .devcontainer folder
+  ],
+  // The service VS Code should connect to by default.
+  // 'backend' or 'frontend' are good choices. You can switch later in VS Code.
+  "service": "backend",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  // Forward ports from the containers to your local machine.
+  // Codespaces usually auto-detects, but explicitly listing is good.
+  "forwardPorts": [
+    3000, // Frontend (React)
+    5000, // Backend (.NET Core)
+    3307  // MySQL (if you want to connect with an external tool)
+  ],
+
+  // Optional: VS Code extensions to install in the Codespace.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-azuretools.vscode-docker",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "cweijan.vscode-mysql-client2" // Optional: A MySQL client inside VS Code
+      ]
+    }
+  },
+
+  // Optional: Command to run after VS Code attaches to the service container.
+  "postAttachCommand": {
+     "server": "echo 'Codespace is ready! Access frontend at forwarded port 3000, backend at 5000. Shared images are served by the backend.'"
+  },
+
+  "remoteUser": "vscode" // Or 'root' if absolutely necessary for a service, usually 'vscode' is fine.
+}

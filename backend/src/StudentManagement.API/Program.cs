@@ -30,23 +30,42 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- CORS Configuration (remains the same) ---
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                      policy =>
+//                      {
+//                          policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+//                                .AllowAnyHeader()
+//                                .AllowAnyMethod()
+//                                .WithExposedHeaders("Content-Disposition"); // Optional: Expose additional headers if needed
+//                      });
+//});
+
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
+                     ?? Array.Empty<string>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+                          policy.WithOrigins(allowedOrigins)
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
-                                .WithExposedHeaders("Content-Disposition"); // Optional: Expose additional headers if needed
+                                .WithExposedHeaders("Content-Disposition");
                       });
 });
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
 
 // Add services to the container.
 
 // --- Database Context Configuration ---
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+                     ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), // Use AutoDetect
@@ -59,6 +78,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
     .EnableDetailedErrors(builder.Environment.IsDevelopment())
 );
+
+
+//var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+//                     ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(connectionString));
 
 
 // --- Register Application & Identity Services ---
@@ -225,6 +251,15 @@ QuestPDF.Settings.License = LicenseType.Community;
 // --- End QuestPDF Configuration ---
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
+
+
+app.Urls.Add($"http://*:{port}");
 
 // --- Add Serilog Request Logging Middleware ---
 // Logs details about each incoming HTTP request (method, path, status code, timing)
