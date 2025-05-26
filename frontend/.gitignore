@@ -1,3 +1,16 @@
+# --- Node.js / React Specific ---
+
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+.next/      # Next.js
+.nuxt/      # Nuxt.js
+.svelte-kit/ # SvelteKit
+public/build/ # Sometimes frameworks output here
+
 # Logs
 logs
 *.log
@@ -7,18 +20,43 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Environment variables files (already in root, but good for specificity)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Keep .env.example or similar committed!
+!.env.example
+!.env.defaults
+!.env.template
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+# Coverage directory
+coverage/
+.nyc_output/
+
+# IDE / Editor specific (already in root, but good for specificity)
 .idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Optional SASS cache
+.sass-cache/
+
+# Optional LESS cache
+.less-cache/
+
+# Optional Gatsby cache
+.cache/
+public # For Gatsby, public is a build artifact
+
+# Storybook
+storybook-static
+
+# TypeScript build output (if not handled by 'dist' or 'build')
+*.tsbuildinfo
+
+# Temporary files
+*.tmp

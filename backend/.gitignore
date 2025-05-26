@@ -1,0 +1,58 @@
+﻿# --- .NET Core Specific ---
+
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Publish output
+[Pp]ublish/
+
+# User-specific files
+*.user
+*.userprefs
+*.suo
+
+# Roslyn
+.roslyn/
+
+# EF Core Migrations - Design-time files (the actual migration C# files should be committed)
+# No common design-time files that need ignoring, actual migrations ARE code.
+
+# Local App Settings Overrides
+# appsettings.json is usually committed.
+# appsettings.Development.json might contain local-only settings or non-sensitive dev settings.
+# If it contains secrets, it should definitely be ignored.
+# It's a common practice to ignore it and use User Secrets or environment variables.
+appsettings.Development.json
+# If you use User Secrets (secrets.json is stored outside the project directory by default)
+# But if someone manually places it:
+secrets.json
+
+# Rider specific
+*.sln.ide
+*.sln.DotSettings
+*.sln.DotSettings.user
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Test Results specific to .NET
+TestResults/
+*.trx
+coverage.cobertura.xml
+*.coverlet.json
+
+# Paket dependencies
+.paket/paket.exe
+paket-files/
+
+# Cake build
+tools/
+
+# Fake build
+.fake/
+
+# VS Mac
+*.csproj. ধর্
