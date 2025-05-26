@@ -62,22 +62,39 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
 // Add services to the container.
 
-// --- Database Context Configuration ---
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-                     ?? builder.Configuration.GetConnectionString("DefaultConnection");
+// Add this line to load environment variables into configuration
+builder.Configuration.AddEnvironmentVariables();
+
+// Example for MySQL with Pomelo.EntityFrameworkCore.MySql
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Replace placeholders if they weren't picked up directly
+connectionString = connectionString
+    .Replace("${DB_HOST}", Environment.GetEnvironmentVariable("DB_HOST"))
+    .Replace("${DB_PORT}", Environment.GetEnvironmentVariable("DB_PORT"))
+    .Replace("${DB_DATABASE}", Environment.GetEnvironmentVariable("DB_DATABASE"))
+    .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER"))
+    .Replace("${DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD"));
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), // Use AutoDetect
-        mySqlOptions => mySqlOptions.EnableRetryOnFailure( // Optional: Add resilience
-            maxRetryCount: 5,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null)
-    )
-    // Optional: Add logging in development
-    .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
-    .EnableDetailedErrors(builder.Environment.IsDevelopment())
-);
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// --- Database Context Configuration ---
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+//                     ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), // Use AutoDetect
+//        mySqlOptions => mySqlOptions.EnableRetryOnFailure( // Optional: Add resilience
+//            maxRetryCount: 5,
+//            maxRetryDelay: TimeSpan.FromSeconds(30),
+//            errorNumbersToAdd: null)
+//    )
+//    // Optional: Add logging in development
+//    .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
+//    .EnableDetailedErrors(builder.Environment.IsDevelopment())
+//);
 
 
 //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
