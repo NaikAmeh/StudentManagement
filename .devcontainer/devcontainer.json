@@ -1,48 +1,33 @@
+// Codebase/.devcontainer/devcontainer.json
 {
-  "name": "StudentManagement Codespace",
-  "dockerFile": "../backend/src/StudentManagement.API/Dockerfile",
-  "workspaceFolder": "/workspaces/StudentManagement",
+  "name": "Student Management App - Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
 
-  "forwardPorts": [
-    5000,
-    5001,
-    3000,
-    3306
-  ],
-
-  "portsAttributes": {
-    "5000": { "label": "Backend API (HTTP)" },
-    "5001": { "label": "Backend API (HTTPS)" },
-    "3000": { "label": "Frontend (React Dev)" },
-    "3306": { "label": "MySQL Database" }
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/dotnet:2": { "version": "8.0" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
   },
-
-  "postCreateCommand": "dotnet restore backend/src/StudentManagement.API/StudentManagement.API.csproj",
-  "postStartCommand": "dotnet run --project backend/src/StudentManagement.API/StudentManagement.API.csproj & npm start --prefix frontend",
 
   "customizations": {
     "vscode": {
-      "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
-      },
       "extensions": [
-        "ms-dotnettools.csharp",
-        "ms-vscode.vscode-node-azure-pack",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker",
-        "GitHub.copilot",
-        "GitHub.codespaces",
-        "cweijan.vscode-mysql-client2",
-        "msjsdiag.debugger-for-chrome"
+        "ms-dotnettools.csdevkit", "ms-dotnettools.csharp", "ms-vscode.vscode-docker",
+        "humao.rest-client", "esbenp.prettier-vscode", "dbaeumer.vscode-eslint"
       ]
     }
   },
 
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "20"
-    }
+  "forwardPorts": [ 5001, 3000, 3307 ],
+
+  // Assuming the WORKSPACE FOLDER in Codespaces IS your 'Codebase' directory.
+  // If 'Codebase' is a sub-directory, adjust paths like 'cd Codebase && ...'
+  "postCreateCommand": "echo 'Codespace created. Setting up...' && sudo chown vscode:vscode -R . && dotnet tool install --global dotnet-ef && (cd frontend && npm install) && echo 'Project setup complete. Use: docker compose up'",
+
+  "postStartCommand": "echo 'Starting database service...' && docker compose up -d db",
+
+  "postAttachCommand": {
+    "message": "Welcome! Database service should be starting. Use 'docker compose up backend frontend' to start your app services."
   },
 
   "remoteUser": "vscode"

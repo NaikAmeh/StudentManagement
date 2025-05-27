@@ -1,0 +1,73 @@
+# Codebase/docker-compose.yml
+# 'version' attribute is obsolete and can be removed.
+
+services:
+  backend:
+    build:
+      context: ./backend  # Relative to this docker-compose.yml file
+      dockerfile: src/StudentManagement.API/Dockerfile
+    container_name: studentmanagement-api-dev
+    ports:
+      - "5001:8080"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/StudentManagement.Sln:/app/StudentManagement.Sln
+      - ./uploads:/app/uploads # For image persistence
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true
+      - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};Pooling=true;AllowPublicKeyRetrieval=true;
+    command: [ "dotnet", "watch", "run", "--project", "/app/src/StudentManagement.API/StudentManagement.API.csproj", "--non-interactive" ]
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  frontend_dev: # Service for frontend development using Vite dev server
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile # Assumes frontend/Dockerfile is for dev (see step 5)
+    container_name: studentmanagement-frontend-dev
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm run dev -- --host
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      # Example: VITE_API_BASE_URL=http://localhost:5001 (browser uses this, Codespaces forwards)
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: studentmanagement-db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql # For database data
+      # - ./path_to_sql_init_scripts:/docker-entrypoint-initdb.d # If you have .sql init files
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
