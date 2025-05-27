@@ -1,18 +1,26 @@
-# Codebase/frontend/Dockerfile
+      
+# /frontend/Dockerfile
 FROM node:20-alpine
 WORKDIR /app
 
-# Copy package.json and lock file first for caching
+# Copy package.json and lock file(s) for dependency caching
 COPY package*.json ./
+# If you use yarn: COPY yarn.lock ./
+# If you use pnpm: COPY pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm install # Use 'npm ci' if you have a package-lock.json and prefer stricter installs
+# Use 'npm ci' for production/CI if you have package-lock.json for reproducible builds.
+# For dev, 'npm install' is fine.
+RUN npm install
 
-# Copy the rest of the application code (will be mostly overridden by volume mount in dev)
+# Copy the rest of the application code
+# This will be largely overridden by volume mounts in docker-compose for development
 COPY . .
 
-# Vite's default dev port
+# Vite's default development port
 EXPOSE 5173
 
-# The CMD will be overridden by docker-compose.yml for 'npm run dev -- --host'
-# CMD ["npm", "run", "dev"]
+# The actual command to run the dev server will be specified in docker-compose.yml
+# CMD ["npm", "run", "dev", "--", "--host"]
+
+    

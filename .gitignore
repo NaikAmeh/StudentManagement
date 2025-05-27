@@ -74,3 +74,45 @@ mysql_data/
 coverage/
 *.cover
 *.codecov.yml
+
+# Node
+node_modules/
+frontend/node_modules/ # If npm install is run outside container before volume mount
+frontend/dist/
+frontend/build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# .NET
+bin/
+obj/
+**/bin/
+**/obj/
+Properties/launchSettings.json # Usually machine/user specific
+*.user
+*.suo
+
+# Rider / IntelliJ
+.idea/
+
+# VS Code
+.vscode/ # Except for .devcontainer/ and potentially launch.json/tasks.json if shared
+
+# Environment files
+.env # IMPORTANT: Contains secrets!
+*.env.local
+*.env.*.local
+
+# Docker
+uploads/* # If you don't want to commit test uploads
+!uploads/.gitkeep # To keep the folder if it's empty but needs to be in git
+mysql_data/ # If you were to mount MySQL data to a local dir instead of named volume
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

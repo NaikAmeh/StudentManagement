@@ -1,63 +1,73 @@
-# Codebase/docker-compose.yml
-# 'version' attribute is obsolete and can be removed.
+# /docker-compose.yml
+# 'version' attribute is now optional/obsolete
 
 services:
   backend:
     build:
-      context: ./backend  # Relative to this docker-compose.yml file
-      dockerfile: src/StudentManagement.API/Dockerfile
+      context: ./backend  # Build context is the ./backend/ folder
+      dockerfile: src/StudentManagement.API/Dockerfile # Path to Dockerfile within that context
     container_name: studentmanagement-api-dev
     ports:
-      - "5001:8080"
+      - "5001:8080" # Map host port 5001 to container port 8080
     volumes:
+      # Mount source code for live reloading with 'dotnet watch'
       - ./backend/src:/app/src
       - ./backend/StudentManagement.Sln:/app/StudentManagement.Sln
-      - ./uploads:/app/uploads # For image persistence
+      # Mount an 'uploads' folder for persistent image storage
+      - ./uploads:/app/uploads
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - DOTNET_USE_POLLING_FILE_WATCHER=1 # Helps with file watching in Docker volumes
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true
+      # Database connection string; 'db' is the service name of the MySQL container
       - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};Pooling=true;AllowPublicKeyRetrieval=true;
+    # Command to run inside the container for development
     command: [ "dotnet", "watch", "run", "--project", "/app/src/StudentManagement.API/StudentManagement.API.csproj", "--non-interactive" ]
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy # Ensures 'db' service is healthy before starting
     networks:
       - app-network
 
-  frontend_dev: # Service for frontend development using Vite dev server
+  frontend_dev: # Service for frontend development (Vite dev server)
     build:
-      context: ./frontend
-      dockerfile: Dockerfile # Assumes frontend/Dockerfile is for dev (see step 5)
+      context: ./frontend # Build context is the ./frontend/ folder
+      dockerfile: Dockerfile  # Uses /frontend/Dockerfile
     container_name: studentmanagement-frontend-dev
     ports:
-      - "3000:5173"
+      - "3000:5173" # Map host port 3000 to Vite's default port 5173
     volumes:
+      # Mount frontend source code for live reloading
       - ./frontend:/app
+      # Important: Prevent host node_modules from overwriting container's node_modules
       - /app/node_modules
-    working_dir: /app
+    working_dir: /app # Sets the working directory for the command
+    # Command to start the Vite development server, listening on all interfaces
     command: npm run dev -- --host
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      # Example: VITE_API_BASE_URL=http://localhost:5001 (browser uses this, Codespaces forwards)
+      - CHOKIDAR_USEPOLLING=true # Helps with file watching in Docker
+      # If your frontend needs to know the backend API URL (passed to Vite):
+      # VITE_API_BASE_URL=http://localhost:5001 (Browser accesses via localhost, Codespaces forwards)
     networks:
       - app-network
+    # depends_on: # Usually not strictly needed for frontend dev to wait for backend
+    #   - backend
 
-  db:
-    image: mysql:8.0
+  db: # MySQL database service
+    image: mysql:8.0 # Use an official MySQL image
     container_name: studentmanagement-db
     ports:
-      - "3307:3306"
+      - "3307:3306" # Map host port 3307 to MySQL's default port 3306
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - mysql_data:/var/lib/mysql # For database data
-      # - ./path_to_sql_init_scripts:/docker-entrypoint-initdb.d # If you have .sql init files
-    healthcheck:
+      # Persist MySQL data using a named volume
+      - mysql_data:/var/lib/mysql
+    healthcheck: # Checks if the database is healthy and ready
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
       interval: 10s
       timeout: 5s
@@ -65,9 +75,11 @@ services:
     networks:
       - app-network
 
+# Named volume for persistent MySQL data
 volumes:
   mysql_data:
 
+# Define a common network for services to communicate with each other by service name
 networks:
   app-network:
     driver: bridge

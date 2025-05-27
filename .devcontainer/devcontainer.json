@@ -1,34 +1,55 @@
-// Codebase/.devcontainer/devcontainer.json
+// /.devcontainer/devcontainer.json
 {
-  "name": "Student Management App - Dev Environment",
+  "name": "Student Management Development Environment",
+  // Use a pre-built universal image that includes common dev tools and Docker client
   "image": "mcr.microsoft.com/devcontainers/universal:2",
 
   "features": {
+    // Essential for running docker-compose commands inside the Codespace
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers/features/dotnet:2": { "version": "8.0" },
-    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+
+    // Installs .NET SDK in the Codespace for 'dotnet watch', 'dotnet ef', etc.
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "8.0" // Match your project's .NET version
+    },
+
+    // Installs Node.js in the Codespace for frontend tasks (npm install, npm run dev)
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20" // Match your project's Node.js version
+    }
   },
 
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-dotnettools.csdevkit", "ms-dotnettools.csharp", "ms-vscode.vscode-docker",
-        "humao.rest-client", "esbenp.prettier-vscode", "dbaeumer.vscode-eslint"
+        "ms-dotnettools.csdevkit",    // C# Dev Kit (includes C# extension)
+        "ms-vscode.vscode-docker",    // Docker VS Code extension
+        "humao.rest-client",          // For testing API endpoints
+        "esbenp.prettier-vscode",     // Prettier for code formatting
+        "dbaeumer.vscode-eslint"      // ESLint for frontend
       ]
     }
   },
 
-  "forwardPorts": [ 5001, 3000, 3307 ],
+  // Ports to forward from services defined in your root docker-compose.yml
+  "forwardPorts": [
+    5001, // Backend API
+    3000, // Frontend Vite dev server
+    3307  // MySQL database
+  ],
 
-  // Assuming the WORKSPACE FOLDER in Codespaces IS your 'Codebase' directory.
-  // If 'Codebase' is a sub-directory, adjust paths like 'cd Codebase && ...'
-  "postCreateCommand": "echo 'Codespace created. Setting up...' && sudo chown vscode:vscode -R . && dotnet tool install --global dotnet-ef && (cd frontend && npm install) && echo 'Project setup complete. Use: docker compose up'",
+  // Runs ONCE after the Codespace container is created.
+  // Assumes the workspace folder in Codespaces IS your project root (where docker-compose.yml is).
+  "postCreateCommand": "echo 'Codespace created. Performing initial setup...' && sudo chown vscode:vscode -R . && dotnet tool install --global dotnet-ef && (cd frontend && npm install) && echo 'Project setup complete. You can now use: docker compose up'",
 
+  // Runs EVERY time the Codespace starts (after postCreateCommand on first start).
   "postStartCommand": "echo 'Starting database service...' && docker compose up -d db",
 
+  // Runs after VS Code attaches to the Codespace.
   "postAttachCommand": {
-    "message": "Welcome! Database service should be starting. Use 'docker compose up backend frontend' to start your app services."
+    "message": "Welcome! Database service should be starting/running. Use 'docker compose up backend frontend_dev' to start your application services."
   },
 
+  // User to run as inside the Codespace container.
   "remoteUser": "vscode"
 }
