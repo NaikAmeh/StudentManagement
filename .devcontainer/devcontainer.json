@@ -1,6 +1,6 @@
 {
   "name": "StudentManagement Codespace",
-  "dockerFile": "backend/src/StudentManagement.API/Dockerfile",
+  "dockerFile": "../backend/src/StudentManagement.API/Dockerfile",
   "workspaceFolder": "/workspaces/StudentManagement",
 
   "forwardPorts": [
@@ -17,7 +17,7 @@
     "3306": { "label": "MySQL Database" }
   },
 
-  "postCreateCommand": "dotnet restore",
+  "postCreateCommand": "dotnet restore backend/src/StudentManagement.API/StudentManagement.API.csproj",
   "postStartCommand": "dotnet run --project backend/src/StudentManagement.API/StudentManagement.API.csproj & npm start --prefix frontend",
 
   "customizations": {
