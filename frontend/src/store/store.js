@@ -21,7 +21,13 @@ export const store = configureStore({
     // students: studentReducer, // Example for later
   },
   // Optional: Add middleware (e.g., for async actions, logging)
-  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    thunk: {
+      extraArgument: {
+        apiBaseUrl: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+      },
+    },
+  }),
   // Enable Redux DevTools extension support (enabled by default in development)
   devTools: process.env.NODE_ENV !== 'production',
 });

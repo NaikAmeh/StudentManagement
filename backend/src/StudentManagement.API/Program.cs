@@ -293,7 +293,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(MyAllowSpecificOrigins);
 
-var folderPath = Path.Combine("D:\\Projects\\Core\\StudentManagement\\CodeBase\\Resources\\Images\\Students");
+var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Resources", "Images", "Students");
 if (!Directory.Exists(folderPath))
 {
     Directory.CreateDirectory(folderPath);

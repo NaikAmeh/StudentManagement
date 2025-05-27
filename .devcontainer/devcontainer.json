@@ -1,22 +1,15 @@
 {
-  "name": "My .NET Core + React App",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app", // The name of your app service in docker-compose.yml
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "name": "StudentManagement Codespace",
+  "dockerFile": "backend/src/StudentManagement.API/Dockerfile",
+  "workspaceFolder": "/workspaces/StudentManagement",
 
-  // Ports your application listens on. Codespaces will dynamically forward them.
   "forwardPorts": [
-    // Common .NET backend ports (adjust if your backend uses different ones)
-    5000, // HTTP
-    5001, // HTTPS
-    // React development server port
+    5000,
+    5001,
     3000,
-    // MySQL port (forwarded from the 'db' service if you need to connect with an external tool)
-    // Not strictly necessary for app-to-db communication, but useful for inspection.
-    3306 
+    3306
   ],
 
-  // Label forwarded ports in the VS Code UI for clarity
   "portsAttributes": {
     "5000": { "label": "Backend API (HTTP)" },
     "5001": { "label": "Backend API (HTTPS)" },
@@ -24,32 +17,33 @@
     "3306": { "label": "MySQL Database" }
   },
 
-  // Lifecycle scripts
-  "postCreateCommand": "bash .devcontainer/postCreateCommands.sh",
-  // "postAttachCommand": "", // Runs every time you attach to the Codespace
+  "postCreateCommand": "dotnet restore",
+  "postStartCommand": "dotnet run --project backend/src/StudentManagement.API/StudentManagement.API.csproj & npm start --prefix frontend",
 
   "customizations": {
     "vscode": {
       "settings": {
         "terminal.integrated.shell.linux": "/bin/bash"
-        // Add any default VS Code settings you want
       },
       "extensions": [
         "ms-dotnettools.csharp",
-        "ms-vscode.vscode-node-azure-pack", // Good general Node.js pack
+        "ms-vscode.vscode-node-azure-pack",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "ms-azuretools.vscode-docker",
-        "GitHub.copilot", // If you use Copilot
-        "GitHub.codespaces", // Usually pre-installed
-        "cweijan.vscode-mysql-client2" // A MySQL client for VS Code
+        "GitHub.copilot",
+        "GitHub.codespaces",
+        "cweijan.vscode-mysql-client2",
+        "msjsdiag.debugger-for-chrome"
       ]
     }
   },
 
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // Use 'postStartCommand' to run commands after the container is created and started.
-  // Use 'postAttachCommand' to run commands after VS Code attaches to the container.
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
 
-  "remoteUser": "vscode" // Ensure we run as the non-root user defined in Dockerfile
+  "remoteUser": "vscode"
 }

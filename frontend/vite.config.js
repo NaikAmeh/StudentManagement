@@ -1,5 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // https://vite.dev/config/
 // export default defineConfig({
@@ -24,9 +28,11 @@ export default defineConfig({
     include: [/src\/.*\.(js|jsx)$/],
     exclude: [],
   },
-  // esbuild: {
-  //   loader: 'jsx',
-  //   include: /.*\.js$/, ///(js|jsx)$/, // match both .js and .jsx files
-  // },
+  server: {
+    port: 3000,
+  },
+  define: {
+    'process.env': process.env, // Make environment variables accessible
+  },
 });
 //VITE_API_BASE_URL=https://localhost:7145
