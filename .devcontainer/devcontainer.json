@@ -51,5 +51,5 @@
   },
 
   // User to run as inside the Codespace container.
-  "remoteUser": "vscode"
+  "remoteUser": "root"
 }
