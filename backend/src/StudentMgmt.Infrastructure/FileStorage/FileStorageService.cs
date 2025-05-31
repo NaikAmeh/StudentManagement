@@ -116,5 +116,35 @@ namespace StudentMgmt.Infrastructure.FileStorage
             }
             return Task.CompletedTask; // Return completed task
         }
+
+        public byte[]? GetFileBytes(string relativePath)
+        {
+            var containerName = _settings.StudentPhotoContainer;
+
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                _logger.LogWarning("GetFileBytes called with empty path.");
+                return null;
+            }
+
+            try
+            {
+                // Convert relative path (e.g., "student-photos/filename.jpg") to absolute path
+                string absolutePath = Path.Combine(_basePath, containerName, relativePath.Replace('/', Path.DirectorySeparatorChar));
+                if (!File.Exists(absolutePath))
+                {
+                    _logger.LogWarning("File not found at path: {AbsolutePath}", absolutePath);
+                    return null;
+                }
+
+                return File.ReadAllBytes(absolutePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error reading file bytes from path: {RelativePath}", relativePath);
+                return null;
+            }
+        }
     }
+
 }

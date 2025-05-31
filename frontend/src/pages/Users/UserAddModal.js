@@ -83,7 +83,7 @@ function UserAddModal({ onClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         dispatch(clearUserSubmitError()); // Correct action
-        const createUserDto = { username, email, role };
+        const createUserDto = { username, email, roleId: role }; // Pass roleId instead of role name
         dispatch(addUser(createUserDto))
             .unwrap()
             .then(() => {

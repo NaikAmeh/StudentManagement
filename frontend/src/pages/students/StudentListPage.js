@@ -311,6 +311,28 @@ debugger;
     } finally { setIsGeneratingPdf(false); }
   }, [selectedStudents, students, selectedSchool]);
 
+  const handleDownloadAllIdsPdf = useCallback(async () => {
+    console.log("Downloading ID cards for all students in the list...");
+    if (!students || students.length === 0) {
+      alert("No students found to generate ID cards.");
+      return;
+    }
+  
+    setIsGeneratingPdf(true); // Indicate that the PDF generation is in progress
+    alert(`Generating ID cards for all ${students.length} students...`);
+  
+    try {
+      // Use the same utility function to generate the PDF for all students
+      await generateSelectedStudentsPdf(students, selectedSchool);
+      alert("ID cards for all students have been successfully generated.");
+    } catch (error) {
+      console.error("Error during PDF generation for all students:", error);
+      alert(`Failed to generate ID cards: ${error.message}`);
+    } finally {
+      setIsGeneratingPdf(false); // Reset the loading state
+    }
+  }, [students, selectedSchool]);
+
   const handleDeleteStudent = useCallback((studentId, studentName) => {
       if (window.confirm(`Delete ${studentName} (ID: ${studentId})?`)) {
         setDeletingId(studentId);
@@ -402,6 +424,7 @@ debugger;
           onExportExcel={handleExportExcel}
           onDownloadBulkPdf={handleDownloadBulkPdf}
           onDownloadSelectedPdf={handleDownloadSelectedPdf}
+          onDownloadAllIdsPdf={handleDownloadAllIdsPdf} // Add this new action
           onSaveAllPhotos={handleSaveAllPhotos}
           stagedPhotosCount={Object.keys(stagedPhotos).length}
           selectedStudentsCount={selectedStudents.length}

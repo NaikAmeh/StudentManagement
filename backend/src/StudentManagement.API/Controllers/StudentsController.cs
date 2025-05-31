@@ -40,7 +40,7 @@ namespace StudentManagement.API.Controllers
             }
 
             // Admins can access all schools
-            if (User.IsInRole("Admin")) return true;
+            //if (User.IsInRole("Admin")) return true;
 
             // Check if the user is linked to the school
             return await _schoolService.IsUserAssignedToSchoolAsync(userId, schoolId);
@@ -64,11 +64,11 @@ namespace StudentManagement.API.Controllers
             _logger.LogInformation("Executing {ActionName} for School ID: {SchoolId}", nameof(GetStudentsBySchool), schoolId);
 
             // --- Authorization Check ---
-            if (!await CanUserAccessSchool(schoolId))
-            {
-                _logger.LogWarning("Forbidden access attempt: User tried to access students for School ID {SchoolId}", schoolId);
-                return Forbid(); // Return 403 Forbidden
-            }
+            //if (!await CanUserAccessSchool(schoolId))
+            //{
+            //    _logger.LogWarning("Forbidden access attempt: User tried to access students for School ID {SchoolId}", schoolId);
+            //    return Forbid(); // Return 403 Forbidden
+            //}
             // --- End Authorization Check ---
 
             try

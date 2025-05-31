@@ -30,18 +30,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- CORS Configuration (remains the same) ---
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                      policy =>
-//                      {
-//                          policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
-//                                .AllowAnyHeader()
-//                                .AllowAnyMethod()
-//                                .WithExposedHeaders("Content-Disposition"); // Optional: Expose additional headers if needed
-//                      });
-//});
-
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
                      ?? Array.Empty<string>();
 
@@ -50,7 +38,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins(allowedOrigins)
+                          policy.AllowAnyOrigin()
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .WithExposedHeaders("Content-Disposition");
@@ -60,14 +48,12 @@ builder.Services.AddCors(options =>
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
 
-// Add services to the container.
 
-// Add this line to load environment variables into configuration
+// Add services to the container.
 builder.Configuration.AddEnvironmentVariables();
 
-// Example for MySQL with Pomelo.EntityFrameworkCore.MySql
+// --- Database Context Configuration ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-// Replace placeholders if they weren't picked up directly
 connectionString = connectionString
     .Replace("${DB_HOST}", Environment.GetEnvironmentVariable("DB_HOST"))
     .Replace("${DB_PORT}", Environment.GetEnvironmentVariable("DB_PORT"))
@@ -75,33 +61,17 @@ connectionString = connectionString
     .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER"))
     .Replace("${DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD"));
 
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
-// --- Database Context Configuration ---
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-//                     ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), // Use AutoDetect
-//        mySqlOptions => mySqlOptions.EnableRetryOnFailure( // Optional: Add resilience
-//            maxRetryCount: 5,
-//            maxRetryDelay: TimeSpan.FromSeconds(30),
-//            errorNumbersToAdd: null)
-//    )
-//    // Optional: Add logging in development
-//    .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
-//    .EnableDetailedErrors(builder.Environment.IsDevelopment())
-//);
-
-
-//var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-//                     ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), // Use AutoDetect
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure( // Optional: Add resilience
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null)
+    )
+    // Optional: Add logging in development
+    .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
+    .EnableDetailedErrors(builder.Environment.IsDevelopment())
+);
 
 
 // --- Register Application & Identity Services ---
@@ -208,20 +178,6 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.FromLogContext()); // Enable LogContext enrichment
                                // --- End Serilog Config ---
 
-//var frontendUrls = builder.Configuration.GetSection("AllowedFrontendUrls").Get<string[]>()
-//                   ?? new[] { "http://localhost:3000" };
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowMyReactApp",
-//        policy =>
-//        {
-//            policy.WithOrigins(frontendAppUrl)
-//                  .AllowAnyHeader()
-//                  .AllowAnyMethod();
-//        });
-//});
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -269,15 +225,6 @@ QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
-}
-
-
-app.Urls.Add($"http://*:{port}");
-
 // --- Add Serilog Request Logging Middleware ---
 // Logs details about each incoming HTTP request (method, path, status code, timing)
 // Place it early in the pipeline, but after exception handling/routing if possible.
@@ -291,22 +238,33 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseCors(MyAllowSpecificOrigins);
 
-var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Resources", "Images", "Students");
-if (!Directory.Exists(folderPath))
+// Use a fixed server path for storing student images (e.g., /var/appdata/student-images on Linux, or C:\AppData\StudentImages on Windows)
+//var serverImagePath = Environment.OSVersion.Platform == PlatformID.Win32NT
+//    ? @"D:\Projects\Core\StudentManagement\CodeBase\Resources\Images\Students"
+//    : "/var/appdata/student-images";
+
+var serverImagePath = Path.Combine(builder.Configuration.GetSection("FileStorageSettings")["LocalStorageBasePath"], "Students");
+
+
+//var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Resources", "Images", "Students");
+if (!Directory.Exists(serverImagePath))
 {
-    Directory.CreateDirectory(folderPath);
+    Directory.CreateDirectory(serverImagePath);
 }
 // IMPORTANT: This enables serving static files from wwwroot
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(folderPath),//User config
+    FileProvider = new PhysicalFileProvider(serverImagePath),//User config
     RequestPath = "/uploads"
 });
+
 app.UseHttpsRedirection();
 
 app.UseRouting();
+//app.UseCors(MyAllowSpecificOrigins);
 
 // --- Add Authentication and Authorization Middleware ---
 // IMPORTANT: Call UseAuthentication() BEFORE UseAuthorization()

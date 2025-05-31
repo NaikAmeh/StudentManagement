@@ -577,7 +577,7 @@ namespace StudentManagement.Application.Services
                 return Array.Empty<byte>();
             }
 
-            return await _pdfService.GenerateBulkIdCardsAsync(studentDetails);
+            return await _pdfService.GenerateBulkIdCardsAsync(studentDetails, PhotoContainerName);
         }
     }
 }

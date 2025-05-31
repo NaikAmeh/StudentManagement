@@ -4,6 +4,8 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using StudentManagement.Application.Features.Students;
 using StudentManagement.Application.Interfaces.Infrastructure;
+using StudentManagement.Domain.Entities;
+using StudentMgmt.Infrastructure.FileStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +55,7 @@ namespace StudentMgmt.Infrastructure.FileProcessing
         }
 
         /// <inheritdoc />
-        public Task<byte[]> GenerateBulkIdCardsAsync(IEnumerable<VmStudentDetail> studentsData)
+        public Task<byte[]> GenerateBulkIdCardsAsync(IEnumerable<VmStudentDetail> studentsData, string photoContainerName)
         {
             _logger.LogInformation("Generating bulk ID card PDF for {StudentCount} students.", studentsData.Count());
             if (!studentsData.Any())
@@ -216,7 +218,7 @@ namespace StudentMgmt.Infrastructure.FileProcessing
                         {
                             row.Spacing(10);
                             row.RelativeItem(1).MaxWidth(100).MaxHeight(120).AlignCenter().Border(1).Padding(2)
-                                .Image(GetStudentPhotoData(student.PhotoPath)) // Use helper
+                                .Image(GetStudentPhotoData(student.PhotoName)) // Use helper
                                 .FitArea();
                             row.RelativeItem(2).Column(detailsCol =>
                             {
@@ -233,9 +235,89 @@ namespace StudentMgmt.Infrastructure.FileProcessing
             }
         }
 
+        private byte[] GetStudentPhotoData(string? photoName)
+        {
+            if (string.IsNullOrWhiteSpace(photoName))
+            {
+                _logger.LogWarning("Photo path is missing. Using placeholder image.");
+                return GetPlaceholderImage();
+            }
+
+            var imageBytes = _fileStorage.GetFileBytes(photoName);
+            if (imageBytes == null || imageBytes.Length == 0)
+            {
+                _logger.LogWarning("Student photo not found or empty at path: {PhotoPath}. Using placeholder image.", photoName);
+                return GetPlaceholderImage();
+            }
+
+            return imageBytes;
+        }
+
         // Share or duplicate helper methods from single card document
-        private byte[] GetStudentPhotoData(string? photoPath) { /* ... Same logic as above ... */ return Array.Empty<byte>(); }
-        private byte[] GetPlaceholderImage() { return Array.Empty<byte>(); }
-        private void GenerateBarcodePlaceholder(IContainer container, int studentId) { container.AlignCenter().Text($"[Barcode for {studentId}]").FontSize(8); }
+        //private byte[] GetStudentPhotoData(string? photoPath)
+        //{
+        //    if (string.IsNullOrWhiteSpace(photoPath))
+        //    {
+        //        //_logger.LogWarning("Photo path is missing for Student ID: {StudentId}. Using placeholder.", _student.StudentId);
+        //        return GetPlaceholderImage(); // Return placeholder image bytes
+        //    }
+
+        //    try
+        //    {
+        //        // Try to load the image from the file storage service.
+        //        // Assume photoPath is a relative or absolute path to the image file.
+        //        // If your IFileStorageService has a method to get a file as a stream or byte array, use it here.
+        //        // For demonstration, let's assume a synchronous helper exists:
+        //        // byte[] imageBytes = _fileStorage.GetFileBytes(photoPath);
+
+        //        // If IFileStorageService does not provide a synchronous method, you may need to make this async.
+        //        // For now, try to load from disk as a fallback (if running locally):
+        //        if (File.Exists(photoPath))
+        //        {
+        //            return File.ReadAllBytes(photoPath);
+        //        }
+
+        //        _logger.LogWarning("Photo file not found at path: {PhotoPath}. Using placeholder image.", photoPath);
+        //        return GetPlaceholderImage();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Failed to load student photo from path: {PhotoPath}. Using placeholder image.", photoPath);
+        //        return GetPlaceholderImage();
+        //    }
+
+        //    //// --- TODO: Implement actual image loading ---
+        //    //// This depends heavily on where/how photos are stored.
+        //    //// If LocalFileStorageService is used and path is relative like "students/guid.jpg":
+        //    //// var fullPath = Path.Combine(_fileStorage.GetBasePath(), photoPath.Replace('/', Path.DirectorySeparatorChar)); // Need GetBasePath() on storage service
+        //    //// if (File.Exists(fullPath)) { return File.ReadAllBytes(fullPath); }
+
+        //    //// If using cloud storage, need methods on IFileStorageService to get file stream/bytes
+        //    //// For now, return placeholder:
+        //    //_logger.LogWarning("Photo loading from storage not fully implemented. Using placeholder for path: {PhotoPath}", photoPath);
+        //    //return GetPlaceholderImage();
+        //}
+        private byte[] GetPlaceholderImage() 
+        {
+            // Return a valid 1x1 transparent PNG as a placeholder image.
+            // This is a minimal, standards-compliant PNG that will not cause QuestPDF to throw.
+            // It is optimal for size and compatibility.
+            return new byte[]
+            {
+        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+        0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
+        0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4,
+        0x89, 0x00, 0x00, 0x00, 0x0A, 0x49, 0x44, 0x41,
+        0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00,
+        0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00,
+        0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE,
+        0x42, 0x60, 0x82
+            };
+        }
+        private void GenerateBarcodePlaceholder(IContainer container, int studentId) 
+        { 
+            container.AlignCenter().Text($"[Barcode for {studentId}]").FontSize(8); 
+        }
     }
 }

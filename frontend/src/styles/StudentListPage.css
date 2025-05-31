@@ -1,13 +1,82 @@
-/* src/pages/students/StudentListPage.module.css */
-
-/* --- Base Styles --- */
-
+/* --- General Container Styles --- */
 .listContainer {
-  padding: 15px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f8f9fa; /* Light background for better readability */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
+/* --- Header Styles --- */
+h2 {
+  font-size: 1.8em;
+  color: #343a40; /* Dark gray for better contrast */
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #dee2e6; /* Underline for emphasis */
+  padding-bottom: 10px;
+}
+
+/* --- Error Message Styles --- */
+.errorMessage {
+  color: #dc3545; /* Red for errors */
+  background-color: #f8d7da; /* Light red background */
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* --- Loading Indicator Styles --- */
+.loadingIndicator {
+  text-align: center;
+  font-size: 1.2em;
+  color: #6c757d; /* Neutral gray */
+  margin: 20px 0;
+}
+
+/* --- Action Buttons --- */
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.actionButton {
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.actionButton.primary {
+  background-color: #0d6efd; /* Blue */
+  color: white;
+}
+
+.actionButton.primary:hover {
+  background-color: #0b5ed7;
+  transform: scale(1.05);
+}
+
+.actionButton.secondary {
+  background-color: #6c757d; /* Gray */
+  color: white;
+}
+
+.actionButton.secondary:hover {
+  background-color: #5c636a;
+  transform: scale(1.05);
+}
+
+/* --- Table Styles --- */
 .tableContainer {
-  overflow-x: auto; /* Add horizontal scroll for smaller screens */
+  overflow-x: auto;
   margin-top: 15px;
 }
 
@@ -15,346 +84,163 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
-  table-layout: fixed; /* Important for fixed column widths */
-  font-size: 0.95em; /* Slightly smaller font for tables */
+  table-layout: fixed;
+  font-size: 0.95em;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.th, /* Define base th before composing */
-.td { /* Define base td before composing */
+.table th,
+.table td {
   border: 1px solid #dee2e6;
-  padding: 8px 10px;
+  padding: 12px 15px;
   text-align: left;
   vertical-align: middle;
   word-break: break-word;
 }
 
-.th {
-  /* Inherit base th/td styles implicitly via selector list above, */
-  /* then add specific th styles */
+.table th {
   background-color: #f8f9fa;
-  position: sticky;
-  top: 0; /* Stick to the top on scroll */
-  z-index: 1;
   font-weight: 600;
-}
-
-/* --- Input Styles --- */
-
-.filterInput {
-  width: 95%;
-  padding: 4px 6px;
-  box-sizing: border-box;
-  margin-top: 4px;
-  font-size: 0.9em;
-  border: 1px solid #ced4da;
-  border-radius: 3px;
-}
-
-/* --- Button Styles --- */
-
-.buttonContainer {
-  margin-bottom: 20px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-/* Base button - define before composing */
-.button {
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 3px;
-  border: 1px solid transparent;
-  font-size: 0.9em;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-  /* Ensure disabled state is handled */
-}
-.button:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-.primaryButton {
-  composes: button; /* Correct: composes from .button in the same file */
-  background-color: #0d6efd;
-  color: white;
-  border-color: #0d6efd;
-}
-.primaryButton:hover:not(:disabled) {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
-}
-
-.secondaryButton {
-  composes: button;
-  background-color: #6c757d;
-  color: white;
-  border-color: #6c757d;
-}
-.secondaryButton:hover:not(:disabled) {
-  background-color: #5c636a;
-  border-color: #565e64;
-}
-
-.successButton {
-  composes: button;
-  background-color: #198754;
-  color: white;
-  border-color: #198754;
-}
-.successButton:hover:not(:disabled) {
-  background-color: #157347;
-  border-color: #146c43;
-}
-
-.dangerButton {
-  composes: button;
-  background-color: #dc3545;
-  color: white;
-  border-color: #dc3545;
-  padding: 2px 5px; /* Override base padding */
-  margin-left: 5px; /* Keep specific margin */
-}
-.dangerButton:hover:not(:disabled) {
-  background-color: #bb2d3b;
-  border-color: #b02a37;
-}
-
-.infoButton {
-  composes: button;
-  background-color: #0dcaf0;
-  color: black;
-  border-color: #0dcaf0;
-  padding: 2px 5px; /* Override base padding */
-  margin-left: 5px; /* Keep specific margin */
-}
-.infoButton:hover:not(:disabled) {
-  background-color: #31d2f2;
-  border-color: #25cff2;
-}
-
-/* --- Table Cell Specializations --- */
-
-.photoCell {
-  /* No composes needed if inheriting from '.td' selector above */
-  /* If you want explicit composition (safer): */
-  /* composes: td; */
-  width: 90px;
+  color: #495057;
   text-align: center;
 }
 
-.actionsCell {
-  /* composes: td; */
-  width: 180px; /* Adjust as needed */
-  text-align: center;
+.table td {
+  color: #343a40;
 }
 
-.checkboxCell {
-  /* composes: td; */
-  width: 50px;
-  text-align: center;
+.table tr:nth-child(even) {
+  background-color: #f8f9fa; /* Alternate row color */
 }
 
-/* --- Table Header Cell Specializations --- */
-/* Ensure these align visually with body cells */
-
-.photoHeaderCell {
-  /* composes: th; */ /* Use if .th base styles aren't sufficient */
-  width: 90px; /* Match photoCell */
-  text-align: center;
-}
-.actionsHeaderCell {
-  /* composes: th; */
-  width: 180px; /* Match actionsCell */
-  text-align: center;
-}
-.checkboxHeaderCell {
-  /* composes: th; */
-  width: 50px; /* Match checkboxCell */
-  text-align: center;
-}
-/* Specific Header Cells (if needed beyond base .th) */
-.nameHeaderCell { /* composes: th; */ }
-.addressHeaderCell { /* composes: th; */ }
-.rollNumberHeaderCell { /* composes: th; */ }
-.statusHeaderCell { /* composes: th; */ }
-
-
-/* --- Image/Preview Styles --- */
-
-.photoPreview {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  vertical-align: middle;
-  border: 1px solid #ccc;
+.table tr:hover {
+  background-color: #e9ecef; /* Highlight on hover */
 }
 
-.stagedPreview {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #0d6efd; /* Blue border for staged */
-  vertical-align: middle;
-}
-
-/* --- Dropzone Styles --- */
-
-.dropzoneBase {
-  width: 70px;
-  height: 70px;
-  border: 2px dashed #adb5bd;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  padding: 5px;
-  transition: border .24s ease-in-out, background-color .24s ease-in-out;
-  margin: auto;
-  box-sizing: border-box;
-  vertical-align: middle; /* Align with text in cell */
-}
-
-.dropzoneFocused { /* This class applies ON TOP of dropzoneBase via JS */
-  border-color: #0d6efd;
-}
-
-.dropzoneAccept { /* This class applies ON TOP of dropzoneBase via JS */
-  border-color: #198754;
-  background-color: #e9f7ef;
-}
-
-.dropzoneReject { /* This class applies ON TOP of dropzoneBase via JS */
-  border-color: #dc3545;
-  background-color: #f8d7da;
-}
-
-.dropzoneUploading { /* This class applies ON TOP of dropzoneBase via JS */
-  border-color: #6c757d;
-  background-color: #e9ecef;
-  cursor: progress;
-}
-
-.dropzoneText {
-  font-size: 0.7em;
-  margin: 0;
-  color: #6c757d;
-}
-.dropzoneWaitText {
-  font-size: 0.8em;
-  margin: 0;
-}
-
-/* --- Import Styles --- */
-
-.importSection {
-  border: 1px solid #dee2e6;
-  padding: 10px 15px;
-  border-radius: 5px;
-  background-color: #f8f9fa;
-  /* Add other styles as needed */
-}
-
-.importResultsContainer {
-  margin: 20px 0;
-  border: 1px solid #ffc107;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: #fff3cd;
-}
-
-.importResultsTable {
-  composes: table; /* Inherit base table styles */
-  font-size: 0.9em;
-  margin-top: 10px; /* Add some margin */
-}
-
-.importErrorRow {
-  background-color: #f8d7da;
-}
-.importSuccessRow {
- /* Default background is fine */
-}
-.importErrorText {
-  color: #dc3545;
-  font-weight: bold; /* Make errors stand out */
-}
-.importWarningText {
-  color: #ff9800; /* Use a warning color (e.g., orange/amber) */
-  font-weight: bold;
-}
-.importSuccessText {
-  color: #198754;
-  font-weight: bold;
-}
-
-/* --- General/Utility Styles --- */
-
-.errorMessage {
-    color: #dc3545;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
+/* --- Pagination Controls --- */
 .paginationContainer {
   margin-top: 20px;
   text-align: center;
 }
 
-/* Define base pagination button before active state */
 .paginationButton {
-    composes: button; /* Reuse base button style */
-    margin: 0 5px;
-    background-color: #f8f9fa; /* Light background */
-    border-color: #dee2e6;
-    color: #212529;
-    padding: 4px 8px; /* Slightly smaller padding for pagination */
-    font-size: 0.85em;
-}
-.paginationButton:hover:not(:disabled) {
-    background-color: #e2e6ea;
-    border-color: #dae0e5;
-}
-
-/* Define active state after base */
-.paginationButtonActive {
-    composes: paginationButton; /* Compose base first */
-    font-weight: bold;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    color: white;
-}
-.paginationButtonActive:hover:not(:disabled) {
-    /* Optional: Define specific hover for active state if needed */
-    background-color: #0b5ed7;
-    border-color: #0a58ca;
-}
-
-.sortIcon {
+  padding: 8px 12px;
+  margin: 0 5px;
+  font-size: 0.9em;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  color: #495057;
   cursor: pointer;
-  margin-left: 5px;
-  color: #6c757d; /* Default color */
-  display: inline-block; /* Prevents layout shifts */
-  width: 1em; /* Ensure space is reserved */
-  vertical-align: middle; /* Align better with text */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.sortIconActive {
-  color: #0d6efd; /* Active color */
+.paginationButton:hover {
+  background-color: #e2e6ea;
+  transform: scale(1.1);
 }
 
-.linkStyle {
-    margin-right: 5px;
-    color: #0d6efd;
-    text-decoration: none;
-    vertical-align: middle; /* Align better with adjacent buttons */
+.paginationButtonActive {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+  font-weight: bold;
 }
-.linkStyle:hover {
-    text-decoration: underline;
+
+.paginationButtonActive:hover {
+  background-color: #0b5ed7;
+}
+
+/* --- Dropdown Styles --- */
+.dropdown {
+  margin-bottom: 10px;
+}
+
+.dropdown label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.dropdown select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #495057;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+.dropdown select:focus {
+  border-color: #0d6efd;
+  outline: none;
+}
+
+/* --- Filter Popup Styles --- */
+.filterPopup {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.filterPopup h4 {
+  margin: 0 0 10px;
+  font-size: 1.1em;
+  color: #343a40;
+}
+
+.filterPopup button {
+  padding: 8px 12px;
+  margin-right: 10px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filterPopup button:first-of-type {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.filterPopup button:first-of-type:hover {
+  background-color: #0b5ed7;
+  transform: scale(1.05);
+}
+
+.filterPopup button:last-of-type {
+  background-color: #6c757d;
+  color: white;
+}
+
+.filterPopup button:last-of-type:hover {
+  background-color: #5c636a;
+  transform: scale(1.05);
+}
+
+input[type="text"] {
+  font-weight: bold;
+  border: 2px solid #ced4da;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #495057;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #0d6efd;
+  outline: none;
 }

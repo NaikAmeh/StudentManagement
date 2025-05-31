@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import StudentPhotoDropzone from "../students/StudentPhotoDropzone"; // Import the dropzone
+const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 // --- Styles ---
 const thTdStyle = {
@@ -38,7 +39,7 @@ console.log("StudentTableRow", studentId, fullName, studentIdentifier, isActive,
 debugger;
   // Construct the photo URL using localhost
   const photoUrl = photoName
-    ? `https://localhost:62376/uploads/${photoName}?t=${new Date().getTime()}`
+    ? `${API_IMAGE_URL}${photoName}?t=${new Date().getTime()}`
     : null;
 
   const handleSelect = (e) => {

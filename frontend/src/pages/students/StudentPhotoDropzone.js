@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useDropzone } from "react-dropzone"; // Import useDropzone
+const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 const dropzoneBaseStyle = {
   width: "70px",
@@ -84,7 +85,7 @@ const StudentPhotoDropzone = ({
 
   // Construct the photo URL using photoName
   const currentPhotoSrc = photoName
-    ? `https://localhost:62376/uploads/${photoName}` // Replace with your backend URL
+    ? `${API_IMAGE_URL}${photoName}` // Replace with your backend URL
     : null;
 
   return (

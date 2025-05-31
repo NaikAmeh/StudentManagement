@@ -24,6 +24,6 @@ namespace StudentManagement.Application.Interfaces.Infrastructure
         /// </summary>
         /// <param name="studentsData">A list of DTOs containing student details.</param>
         /// <returns>A byte array representing the PDF file content.</returns>
-        Task<byte[]> GenerateBulkIdCardsAsync(IEnumerable<VmStudentDetail> studentsData);
+        Task<byte[]> GenerateBulkIdCardsAsync(IEnumerable<VmStudentDetail> studentsData, string photoContainerName);
     }
 }

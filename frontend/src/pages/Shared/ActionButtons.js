@@ -26,7 +26,8 @@ const disabledButtonStyle = { ...buttonStyle, cursor: "not-allowed", opacity: 0.
 const ActionButtons = ({
     onAddStudent,
     onExportExcel,
-    onDownloadBulkPdf,
+    onDownloadBulkPdf,//onDownloadBulkPdf,
+    onDownloadAllIdsPdf,
     onDownloadSelectedPdf,
     onSaveAllPhotos,
     stagedPhotosCount,
@@ -61,7 +62,7 @@ const ActionButtons = ({
         Export Filtered
       </button>
       <button
-        onClick={onDownloadBulkPdf}
+        onClick={onDownloadAllIdsPdf}//onDownloadBulkPdf
         style={bulkPdfButtonStyle}
         disabled={isLoading || !canDownloadBulk}
         title={!canDownloadBulk ? "No students in list to generate IDs for" : "Download ID cards for all students in list"}

@@ -12,7 +12,7 @@ const thTdStyle = {
 };
 const thStyle = {
   ...thTdStyle,
-  backgroundColor: "#f8f9fa",
+  backgroundColor: "#0d6efd",//f8f9fa
   position: "sticky",
   top: 0,
   zIndex: 1,

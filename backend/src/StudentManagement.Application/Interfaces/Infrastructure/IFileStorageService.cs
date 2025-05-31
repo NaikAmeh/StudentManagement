@@ -26,6 +26,8 @@ namespace StudentManagement.Application.Interfaces.Infrastructure
         /// <returns>A task representing the asynchronous operation.</returns>
         Task DeleteFileAsync(string containerName, string fileName);
 
+        byte[]? GetFileBytes(string relativePath);
+
         // Potentially add GetFileAsync or GetPresignedUrlAsync if needed later
     }
 
@@ -34,6 +36,7 @@ namespace StudentManagement.Application.Interfaces.Infrastructure
     {
         public string StorageType { get; set; } = "Local"; // "Local", "AzureBlob", "S3" etc.
         public string LocalStorageBasePath { get; set; } = string.Empty; // Base path for local storage
+        public string StudentPhotoContainer { get; set; } 
         // Add settings for Azure Blob (ConnectionString, ContainerName) or S3 (AccessKey, SecretKey, BucketName) if used
     }
 }

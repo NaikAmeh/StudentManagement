@@ -5,7 +5,9 @@ import DatePickerWithIcon from "../Shared/DatePickerWithIcon";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
+import CustomDatePicker from "../Shared/CustomDatePicker";
 import { useSelector, useDispatch } from "react-redux";
+import { format, parse } from "date-fns"; // For date formatting and parsing
 import {
   fetchStudentDetails,
   addStudent,
@@ -25,10 +27,11 @@ import {
 } from "../../store/slices/studentSlice";
 import { selectSelectedSchoolId, selectSelectedSchool } from '../../store/slices/schoolSlice';
 import api from '../../services/api'; // For fetching common data
+const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 // --- Styles ---
 const formContainerStyle = {
-  maxWidth: "600px",
+  //maxWidth: "600px",
   margin: "20px auto",
   padding: "20px",
   border: "1px solid #ccc",
@@ -43,10 +46,16 @@ const labelStyle = {
 };
 const inputStyle = {
   width: "100%",
-  padding: "8px",
+  padding: "8px 0", // Remove padding on the sides
   boxSizing: "border-box",
-  border: "1px solid #ccc",
-  borderRadius: "3px",
+  border: "none", // Remove the default border
+  borderBottom: "2px solid #ccc", // Add only a bottom border
+  borderRadius: "0", // Remove border radius
+  fontWeight: "bold", // Bold text
+  fontSize: "1rem", // Adjust font size
+  outline: "none", // Remove outline on focus
+  transition: "border-color 0.3s ease", // Smooth transition for border color
+  backgroundColor: "transparent"
 };
 const errorStyle = { color: "#dc3545", marginTop: "5px", fontSize: "0.9em" }; // Use Bootstrap danger color
 const buttonStyle = {
@@ -89,8 +98,19 @@ const previewStyle = {
   border: "1px dotted #0d6efd",
 };
 const photoErrorStyle = { ...errorStyle, marginTop: "10px" }; // Specific style if needed
-const inputErrorStyle = { ...inputStyle, borderColor: '#dc3545', outlineColor: '#dc3545' }; // Red outline for errors
-const gridStyle = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }; // For two-column layout
+const inputErrorStyle = {
+  ...inputStyle,
+  borderBottom: "2px solid #dc3545", // Red bottom border for errors
+};
+const gridStyle = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr", // Two columns
+  gap: "15px", // Space between fields
+};
+
+const fullWidthStyle = {
+  gridColumn: "1 / -1", // Span both columns
+};
 
 function StudentAddEditPage({ mode = "add" }) {
   const { id } = useParams();
@@ -480,7 +500,7 @@ const handleChange = useCallback(
     <div style={formContainerStyle}>
       <h2>
         {isEditMode
-          ? `Edit Student - ${formData.firstName} ${formData.lastName}`
+          ? `Edit Student - ${formData.fullName}`
           : "Add New Student"}
       </h2>
 
@@ -489,6 +509,7 @@ const handleChange = useCallback(
       <form onSubmit={handleSubmit}>
         {/* --- Form Fields --- */}
         {/*<div style={gridStyle}>  Two-column layout for form fields */}
+        <div style={gridStyle}>
         <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="fullName">Full Name:</label>
                         <input style={getInputClass('fullName')} type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} disabled={isLoading} />
@@ -496,7 +517,21 @@ const handleChange = useCallback(
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="dateOfBirth">Date of Birth:</label>
-                        <input style={getInputClass('dateOfBirth')} type="date" id="dateOfBirth" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} disabled={isLoading} />
+                        <CustomDatePicker
+    selected={formData.dateOfBirth ? new Date(formData.dateOfBirth) : null} // Convert ISO string to Date object
+    onChange={(date) => {
+      handleChange({
+        target: {
+          name: "dateOfBirth",
+          value: date ? date.toISOString().split("T")[0] : "", // Save in ISO format
+        },
+      });
+    }}
+    placeholder="dd/MM/yyyy"
+    maxDate={new Date()} // Disable current and future dates
+    disabled={isLoading} // Disable if loading
+  />
+                        
                          {hasAttemptedSubmit && formErrors.dateOfBirth && <small style={errorStyle}>{formErrors.dateOfBirth}</small>}
                     </div>
                     <div style={formGroupStyle}>
@@ -508,7 +543,11 @@ const handleChange = useCallback(
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="email">Email:</label>
-                        <input style={getInputClass('email')} type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={isLoading} />
+                        <input style={{
+                                ...getInputClass('email'),
+                                borderBottom: formErrors.email ? '2px solid #dc3545' : '2px solid #ccc', // Red underline if validation fails
+                                }} 
+                                type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={isLoading} />
                          {hasAttemptedSubmit && formErrors.email && <small style={errorStyle}>{formErrors.email}</small>}
                     </div>
                     <div style={formGroupStyle}>
@@ -521,7 +560,23 @@ const handleChange = useCallback(
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="enrollmentDate">Enrollment Date:</label>
-                        <input style={getInputClass('enrollmentDate')} type="date" id="enrollmentDate" name="enrollmentDate" value={formData.enrollmentDate} onChange={handleChange} disabled={isLoading} />
+                        <CustomDatePicker
+    selected={formData.enrollmentDate ? new Date(formData.enrollmentDate) : null} // Convert ISO string to Date object
+    onChange={(date) => {
+      handleChange({
+        target: {
+          name: "enrollmentDate",
+          value: date ? date.toISOString().split("T")[0] : "", // Save in ISO format
+        },
+      });
+    }}
+    placeholder="dd/MM/yyyy"
+    maxDate={new Date()} // Disable current and future dates
+    disabled={isLoading} // Disable if loading
+  />
+  {hasAttemptedSubmit && formErrors.enrollmentDate && (
+    <small style={errorStyle}>{formErrors.enrollmentDate}</small>
+  )}
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="standard">Standard/Class:</label>
@@ -598,7 +653,7 @@ const handleChange = useCallback(
                      <input style={inputStyle} type="text" value={isEditMode ? currentStudent?.schoolId : formData.schoolId} disabled />
                      {!isEditMode && !formData.schoolId && <span style={{fontSize: '0.8em', color: 'orange'}}> (Select a school in the header first)</span>}
                  </div> */}
-
+</div>
         {/* --- Photo Section --- */}
         <div style={fileInputContainerStyle}>
           <h4>{isEditMode ? "Update" : "Add"} Student Photo</h4>
@@ -608,7 +663,7 @@ const handleChange = useCallback(
   <div>
     <label style={labelStyle}>Current Photo:</label>
     <img
-      src={`https://localhost:62376/uploads/${currentStudent.photoName}`} // Replace localhost:5000 with your backend URL
+      src={`${API_IMAGE_URL}${currentStudent.photoName}`} // Replace localhost:5000 with your backend URL
       alt="Current"
       style={currentPhotoStyle}
       onError={(e) => {

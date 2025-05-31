@@ -16,6 +16,16 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
   //const location = useLocation(); // For active link styling
 
   const [isSwitchSchoolPopupOpen, setIsSwitchSchoolPopupOpen] = useState(false);
+  const [isStudentsMenuOpen, setIsStudentsMenuOpen] = useState(false); // State for Students dropdown
+
+  const toggleStudentsMenu = () => {
+    setIsStudentsMenuOpen((prev) => !prev); // Toggle the dropdown menu
+  };
+
+  const handleOptionSelect = () => {
+    setIsStudentsMenuOpen(false); // Collapse the dropdown after selecting an option
+  };
+
   // const [availableSchools, setAvailableSchools] = useState([
   //   { id: 1, name: 'School A' },
   //   { id: 2, name: 'School B' },
@@ -61,11 +71,24 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
     return null; // Or a loading spinner if auth state is still resolving
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".dropdown")) {
+        setIsStudentsMenuOpen(false); // Collapse the dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="layout-container">
       <header className="layout-header">
         <div className="header-title">
-          <h3>Student ID Management</h3>
+          <h3>Student Management</h3>
           {user && (
             <span className="user-info">
               Welcome, {user.username} ({user.role})
@@ -74,16 +97,38 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
         </div>
         <nav className="layout-nav">
           <Link to="/">Home</Link>
-          <Link to="/students">Students</Link>
-          <Link to="/students/new">Add Student</Link>
+          <div className="dropdown">
+            <span
+              className="dropdown-header"
+              onClick={toggleStudentsMenu}
+              style={{ cursor: "pointer" }} // Show hand cursor on hover
+            >
+              Students <span style={{ marginLeft: "5px" }}>▼</span>
+            </span>
+            {isStudentsMenuOpen && (
+              <div
+                className="dropdown-menu"
+                style={{
+                  display: "flex",
+                  flexDirection: "column", // Ensure options are stacked vertically
+                  position: "absolute",
+                  backgroundColor: "#0d6efd", // Transparent background
+                  //border: "1px solid #ccc",
+                  padding: "10px",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  zIndex: 1000,
+                }}
+              >
+                <Link to="/students" style={{ marginBottom: "5px" }} onClick={handleOptionSelect}>View Students</Link>
+                <Link to="/students/new" onClick={handleOptionSelect}>Add Student</Link>
+              </div>
+            )}
+          </div>
           {/* Add User Management link for Admin users */}
           {user?.role === 'Admin' && <Link to="/users">User Management</Link>}
-          <SchoolSelector /> {/* Ensure this uses Redux */}
-          <button className="logout-button" onClick={handleLogout}>
-            Logout
-          </button>
+           {/*<SchoolSelector /> Ensure this uses Redux */}
           <div className="school-info">
-            <span>Current School: {selectedSchool?.name || 'None'}</span>
+            {/* <span>Current School: {selectedSchool?.name || 'None'}</span> */}
             <button
               className="switch-school-button"
               onClick={() => setIsSwitchSchoolPopupOpen(true)}
@@ -91,6 +136,9 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
               Switch School
             </button>
           </div>
+          <button className="logout-button" onClick={handleLogout}>
+            Logout
+          </button>
         </nav>
       </header>
       <main className="layout-main">

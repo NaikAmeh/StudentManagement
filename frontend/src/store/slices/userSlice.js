@@ -78,6 +78,7 @@ export const addUser = createAsyncThunk(
     'users/addUser',
     async (createUserDto, { rejectWithValue }) => {
         try {
+            debugger;
             const response = await api.post('/api/users', createUserDto); // Endpoint for adding user
             return response.data; // Expects UserDto of created user
         } catch (error) {

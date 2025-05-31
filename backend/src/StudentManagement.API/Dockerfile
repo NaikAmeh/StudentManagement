@@ -9,17 +9,17 @@ WORKDIR /app
 # Paths are relative to the build context (the 'backend' folder)
 
 # Copy the solution file
-COPY StudentManagement.Sln ./StudentManagement.Sln
+COPY StudentManagement.sln ./StudentManagement.sln
 
 # Copy .csproj files for each project in the solution
 COPY src/StudentManagement.API/StudentManagement.API.csproj ./src/StudentManagement.API/
 COPY src/StudentManagement.Application/StudentManagement.Application.csproj ./src/StudentManagement.Application/
-COPY src/StudentManagement.Domains/StudentManagement.Domains.csproj ./src/StudentManagement.Domains/
+COPY src/StudentManagement.Domains/StudentManagement.Domain.csproj ./src/StudentManagement.Domains/
 COPY src/StudentMgmt.Infrastructure/StudentMgmt.Infrastructure.csproj ./src/StudentMgmt.Infrastructure/
 # Add COPY lines for any other projects under backend/src/ that are part of the solution
 
 # Restore NuGet packages for the entire solution
-RUN dotnet restore "StudentManagement.Sln"
+RUN dotnet restore "StudentManagement.sln"
 
 # Copy the entire 'src' directory from the build context (backend/src/)
 # This brings in all C# source code files.
@@ -40,6 +40,10 @@ COPY --from=build-env /app/publish .
 # Create a non-root user and an uploads directory
 RUN useradd -m myappuser
 RUN mkdir -p /app/uploads && chown -R myappuser:myappuser /app/uploads
+
+# Create Resources directory and set permissions
+RUN mkdir -p /app/Resources && chown -R myappuser:myappuser /app/Resources
+
 USER myappuser
 
 # Expose the port the application will listen on

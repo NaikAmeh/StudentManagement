@@ -27,7 +27,7 @@ import { selectSelectedSchoolId } from "../../store/slices/schoolSlice";
 
 // --- Styles ---
 const formContainerStyle = {
-  maxWidth: "600px",
+ // maxWidth: "600px",
   margin: "20px auto",
   padding: "20px",
   border: "1px solid #ccc",
