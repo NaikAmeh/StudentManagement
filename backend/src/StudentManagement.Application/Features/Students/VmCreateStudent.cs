@@ -30,9 +30,10 @@ namespace StudentManagement.Application.Features.Students
         public int RollNo { get; set; }
         public int? BloodGroupId { get; set; }
         public int? HouseId { get; set; }
+        public int StudentStatusID { get; set; } = 1; // Default to Active status (ID: 1)
+        public bool isActive { get; set; }
         //public string photoPath { get; set; }
         //public string photoName { get; set; }
-        public bool isActive { get; set; }
         //public int schoolId { get; set; }
 
         [Required]

@@ -43,46 +43,43 @@ const StudentTable = ({
   standardOptions,
   divisionOptions
 }) => {
-
   const isAllSelected = selectedStudents.length > 0 && selectedStudents.length === totalFilteredCount;
-debugger;
-  const [popupField, setPopupField] = useState(""); // Field being filtered
-  const [tempFilter, setTempFilter] = useState(""); // Temporary filter value
-  const [popupPosition, setPopupPosition] = useState(null); // Popup position
-  const popupRef = useRef(null); // Ref for the popup
+  const [popupField, setPopupField] = useState("");
+  const [tempFilter, setTempFilter] = useState("");
+  const [popupPosition, setPopupPosition] = useState(null);
+  const popupRef = useRef(null);
 
-
-  // Handle opening the filter popup
   const handleOpenFilterPopup = (field, event) => {
-    setPopupField(field); // Set the field being filtered
-    setTempFilter(filters[field] || ""); // Reset the temporary filter value
-    const rect = event.target.getBoundingClientRect(); // Get the position of the header
-    setPopupPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX }); // Position the popup
+    setPopupField(field);
+    setTempFilter(filters[field] || "");
+    const rect = event.target.getBoundingClientRect();
+    setPopupPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
   };
 
-  // Handle closing the filter popup
+// Handle closing the filter popup
   const handleCloseFilterPopup = () => {
     setPopupField(""); // Clear the field being filtered
     setPopupPosition(null); // Hide the popup
   };
 
-  // Handle applying the filter
+// Handle applying the filter
   const handleApplyFilter = () => {
-    if (popupField === "standard" || popupField === "division") {
-      onFilterChange({ target: { name: popupField, value: tempFilter } });
-    } else {
-      onFilterChange({ target: { name: popupField, value: tempFilter } });
-    }
-    handleCloseFilterPopup(); // Close the popup
+    onFilterChange({ 
+      target: { 
+        name: popupField, 
+        value: tempFilter 
+      } 
+    });
+    handleCloseFilterPopup();
   };
 
-  // Handle canceling the filter
+// Handle canceling the filter
   const handleCancelFilter = () => {
     onFilterChange({ target: { name: popupField, value: "" } });
     handleCloseFilterPopup(); // Close the popup without applying the filter
   };
 
-  // Close the popup on outside click
+// Close the popup on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -94,7 +91,7 @@ debugger;
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-console.log("Studentssss:", students);
+
   return (
     <div style={tableContainerStyle}>
       <table style={tableStyle}>
@@ -107,7 +104,7 @@ console.log("Studentssss:", students);
           isAllSelected={isAllSelected}
           numSelected={selectedStudents.length}
           totalFilteredCount={totalFilteredCount}
-          onOpenFilterPopup={handleOpenFilterPopup} 
+          onOpenFilterPopup={handleOpenFilterPopup}
         />
         <tbody>
           {students.length > 0 ? (
@@ -134,57 +131,92 @@ console.log("Studentssss:", students);
           )}
         </tbody>
       </table>
-       {/* Render the popup outside the table */}
-       {popupPosition && (
+{/* Render the popup outside the table */}
+      {popupPosition && (
         <div
           ref={popupRef}
           style={{
-            position: "absolute",
+            position: "fixed",
             top: popupPosition.top,
             left: popupPosition.left,
             backgroundColor: "white",
             border: "1px solid #ccc",
-            padding: "10px",
-            zIndex: 1000,
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            padding: "15px",
+            zIndex: 9999,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            borderRadius: "4px",
           }}
         >
-          <h4>Filter by {popupField}</h4>
+          <h4 style={{ margin: "0 0 15px 0" }}>Filter by {popupField}</h4>
           {popupField === "standard" && (
-          <Dropdown
-            label="Select Standard"
-            options={standardOptions.map((option) => ({
-              id: option.standardId, // Map studentId to id
-              name: option.name,    // Keep the name field as is
-            }))}
-            value={tempFilter}
-            onChange={(e) => setTempFilter(e.target.value)}
-          />
-        )}
-        {popupField === "division" && (
-          <Dropdown
-            label="Select Division"
-            options={divisionOptions.map((option) => ({
-              id: option.divisionId, // Map studentId to id
-              name: option.name,    // Keep the name field as is
-            }))}
-            value={tempFilter}
-            onChange={(e) => setTempFilter(e.target.value)}
-          />
-        )}
-        {popupField !== "standard" && popupField !== "division" && (
-          <input
-            type="text"
-            value={tempFilter}
-            onChange={(e) => setTempFilter(e.target.value)}
-            placeholder={`Enter ${popupField}`}
-          />
-        )}
-          <div style={{ marginTop: "10px" }}>
-            <button onClick={handleApplyFilter} style={{ marginRight: "10px" }}>
-              Confirm
+            <Dropdown
+              label="Select Standard"
+              options={standardOptions.map((option) => ({
+                id: option.standardId,
+                name: option.name,
+              }))}
+              value={tempFilter}
+              onChange={(e) => setTempFilter(e.target.value)}
+            />
+          )}
+          {popupField === "division" && (
+            <Dropdown
+              label="Select Division"
+              options={divisionOptions.map((option) => ({
+                id: option.divisionId,
+                name: option.name,
+              }))}
+              value={tempFilter}
+              onChange={(e) => setTempFilter(e.target.value)}
+            />
+          )}
+          {popupField !== "standard" && popupField !== "division" && (
+            <input
+              type="text"
+              value={tempFilter}
+              onChange={(e) => setTempFilter(e.target.value)}
+              placeholder={`Enter ${popupField}`}
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "15px",
+                borderRadius: "4px",
+                border: "1px solid #ced4da"
+              }}
+            />
+          )}
+          <div style={{ 
+            marginTop: "15px",
+            display: "flex",
+            gap: "10px",
+            justifyContent: "flex-end"
+          }}>
+            <button 
+              onClick={handleApplyFilter} 
+              style={{ 
+                padding: "6px 12px",
+                backgroundColor: "#0d6efd",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+            >
+              Apply
             </button>
-            <button onClick={handleCancelFilter}>Cancel</button>
+            <button 
+              onClick={handleCancelFilter}
+              style={{ 
+                padding: "6px 12px",
+                backgroundColor: "#6c757d",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+            >
+              Clear
+            </button>
           </div>
         </div>
       )}

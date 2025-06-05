@@ -30,6 +30,10 @@ namespace StudentManagement.Domain.Entities
         // Foreign key for House
         public int? HouseID { get; protected set; }
         public virtual House House { get; protected set; }
+        
+        // Foreign key for StudentStatus
+        public int StudentStatusID { get; protected set; }
+        public virtual StudentStatus StudentStatus { get; protected set; }
 
         public virtual int RollNo { get; protected set; }
         public virtual string StudentIdentifier { get; protected set; } // School-specific ID
@@ -52,7 +56,7 @@ namespace StudentManagement.Domain.Entities
         }
 
         public Student(string fullName, DateTime? dateOfBirth, string gender, string email, string phoneNo, string address, DateTime enrollmentDate,
-            int standardId, int divisionId, int rollNo, string studentIdentifier, string photoPath, string photoName, bool isActive, School school, string emergencyContactNo, int? bloodGroupId = null, int? houseId = null)
+            int standardId, int divisionId, int rollNo, string studentIdentifier, string photoPath, string photoName, bool isActive, School school, string emergencyContactNo, int? bloodGroupId = null, int? houseId = null, int studentStatusID = 1)
         {
             FullName = fullName;
             DateOfBirth = dateOfBirth;
@@ -72,6 +76,7 @@ namespace StudentManagement.Domain.Entities
             EmergencyContactNo = emergencyContactNo;
             BloodGroupID = bloodGroupId;
             HouseID = houseId;
+            StudentStatusID = studentStatusID;
         }
 
         public virtual void UpdatePhoto(string photoName, string photoPath)

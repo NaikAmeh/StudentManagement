@@ -23,6 +23,7 @@ namespace StudentMgmt.Infrastructure.Data.DBContext
         public DbSet<Division> Division { get; set; } = null!; // New
         public DbSet<BloodGroup> BloodGroups { get; set; }
         public DbSet<House> Houses { get; set; }
+        public DbSet<StudentStatus> StudentStatuses { get; set; } // Add StudentStatus to DbContext
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

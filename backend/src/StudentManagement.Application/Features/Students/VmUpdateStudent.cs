@@ -30,6 +30,7 @@ namespace StudentManagement.Application.Features.Students
         public string? EmergencyContactNo { get; set; }
         public int? BloodGroupId { get; set; }
         public int? HouseId { get; set; }
+        public int StudentStatusID { get; set; } // Student Status ID
 
         [Required]
         [StringLength(50)]

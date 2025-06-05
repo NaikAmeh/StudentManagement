@@ -31,20 +31,6 @@ namespace StudentManagement.Application.ViewModelMap
             // Map User to VmUserDetail
             CreateMap<User, VmUserDetail>()
                  .ForMember(dest => dest.AssignedSchools, opt => opt.MapFrom(src => src.SchoolLinks.Select(sl => sl.School))); // Map schools from link table
-                                                                                                                               //.ForMember(dest => dest.AssignedSchools, opt => opt.MapFrom(src => src.SchoolLinks.Select(link => link.School)))
-                                                                                                                               //.ForMember(dest => dest.DefaultSchoolId, opt => opt.MapFrom(src => src.DefaultSchoolId));
-
-            //CreateMap<VmCreateUser, User>()
-            //    .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
-            //    .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
-            //    .ForMember(dest => dest.UserId, opt => opt.Ignore())
-            //    .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true)) // Default to active
-            //    .ForMember(dest => dest.IsPasswordChangeRequired, opt => opt.MapFrom(src => true)) // Default to TRUE on creation
-            //    .ForMember(dest => dest.DefaultSchoolId, opt => opt.Ignore()) // Set separately if needed, or via UpdateUser later
-            //    .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-            //    .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
-
-            //use below one for createuser
 
             // Map VmUser to User (for updates)
             CreateMap<VmUser, User>()
@@ -66,7 +52,6 @@ namespace StudentManagement.Application.ViewModelMap
                   .ForMember(dest => dest.SchoolLinks, opt => opt.Ignore()) // Managed explicitly in service
                   .ForMember(dest => dest.DefaultSchool, opt => opt.Ignore()); // Ignore navigation property
 
-
             // Map Register DTO to User Entity. Password handled separately.
             CreateMap<VmRegisterUser, User>()
                  .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()) // Ignore hash/salt during mapping
@@ -77,30 +62,23 @@ namespace StudentManagement.Application.ViewModelMap
                  .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
             // --- End User Mappings ---
 
-            // Add Mappings for User, Student, etc.
-            // Example:
-            // CreateMap<Student, StudentSummaryDto>();
-            // CreateMap<CreateStudentDto, Student>();
-            // CreateMap<UpdateStudentDto, Student>().ForMember(dest => dest.StudentId, opt => opt.Ignore());
-            // CreateMap<User, UserDto>();
-            // CreateMap<RegisterUserDto, User>(); // Handle password hashing separately in service
-
             // --- Add Student Mappings ---
             CreateMap<Student, VmStudentSummary>()
                 // Map SchoolName from the navigation property
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
                 // Logic for PhotoThumbnailPath might be more complex, depends on storage strategy
                 .ForMember(dest => dest.PhotoThumbnailPath, opt => opt.MapFrom(src => src.PhotoPath)) // Or specific thumbnail logic
-            .ForMember(dest => dest.StandardName, opt => opt.MapFrom(src => src.Standard != null ? src.Standard.Name : string.Empty)) // Map from navigation property
-            .ForMember(dest => dest.DivisionName, opt => opt.MapFrom(src => src.Division != null ? src.Division.Name : string.Empty)); // Map from navigation property
-            
+                .ForMember(dest => dest.StandardName, opt => opt.MapFrom(src => src.Standard != null ? src.Standard.Name : string.Empty)) // Map from navigation property
+                .ForMember(dest => dest.DivisionName, opt => opt.MapFrom(src => src.Division != null ? src.Division.Name : string.Empty)); // Map from navigation property
+
             CreateMap<Student, VmStudentDetail>()
                 // Map SchoolName from the navigation property
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
                 .ForMember(dest => dest.StandardName, opt => opt.MapFrom(src => src.Standard != null ? src.Standard.Name : string.Empty))
                 .ForMember(dest => dest.DivisionName, opt => opt.MapFrom(src => src.Division != null ? src.Division.Name : string.Empty))
-             .ForMember(dest => dest.BloodGroupName, opt => opt.MapFrom(src => src.BloodGroup != null ? src.BloodGroup.BloodGroupName : null))
-            .ForMember(dest => dest.HouseName, opt => opt.MapFrom(src => src.House != null ? src.House.HouseName : null));
+                .ForMember(dest => dest.BloodGroupName, opt => opt.MapFrom(src => src.BloodGroup != null ? src.BloodGroup.BloodGroupName : null))
+                .ForMember(dest => dest.HouseName, opt => opt.MapFrom(src => src.House != null ? src.House.HouseName : null))
+                .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StudentStatus != null ? src.StudentStatus.StatusName : "Unknown"));
 
             CreateMap<VmCreateStudent, Student>()
                 .ForMember(dest => dest.Standard, opt => opt.Ignore())
@@ -113,7 +91,8 @@ namespace StudentManagement.Application.ViewModelMap
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.School, opt => opt.Ignore())
                 .ForMember(dest => dest.BloodGroup, opt => opt.Ignore()) // Ignore navigation property
-            .ForMember(dest => dest.House, opt => opt.Ignore());    // Ignore navigation property
+                .ForMember(dest => dest.House, opt => opt.Ignore())      // Ignore navigation property
+                .ForMember(dest => dest.StudentStatus, opt => opt.Ignore()); // Ignore navigation property
 
             CreateMap<VmUpdateStudent, Student>()
                 .ForMember(dest => dest.StudentId, opt => opt.Ignore())
@@ -124,16 +103,17 @@ namespace StudentManagement.Application.ViewModelMap
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.Standard, opt => opt.Ignore())
                 .ForMember(dest => dest.Division, opt => opt.Ignore())
-                 .ForMember(dest => dest.BloodGroup, opt => opt.Ignore())
-            .ForMember(dest => dest.House, opt => opt.Ignore());
+                .ForMember(dest => dest.BloodGroup, opt => opt.Ignore())
+                .ForMember(dest => dest.House, opt => opt.Ignore())
+                .ForMember(dest => dest.StudentStatus, opt => opt.Ignore()); // Ignore navigation property
 
             CreateMap<Standard, VmStandard>();
-            //.ForMember(dest => dest.id, opt => opt.MapFrom(src => src.StandardId)); to map diff namesexplicitly
+            //.ForMember(dest => dest.id, opt => opt.MapFrom(src => src.StandardId)); to map diff names explicitly
             CreateMap<Division, VmDivision>();
-            // --- End Student Mappings ---
 
-            CreateMap<BloodGroup, VmBloodGroup>(); 
+            CreateMap<BloodGroup, VmBloodGroup>();
             CreateMap<House, VmHouse>();
+            CreateMap<StudentStatus, VmStudentStatus>(); // Add mapping for StudentStatus
         }
     }
 }

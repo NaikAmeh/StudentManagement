@@ -10,5 +10,6 @@ namespace StudentManagement.Application.Interfaces.Services
         Task<IReadOnlyList<VmDivision>> GetAllDivisionsAsync(int? schoolId = null); // Optional school filter
         Task<IReadOnlyList<VmBloodGroup>> GetAllBloodGroupsAsync();
         Task<IReadOnlyList<VmHouse>> GetAllHousesAsync(int? schoolId = null);
+        Task<IReadOnlyList<VmStudentStatus>> GetAllStudentStatusesAsync(); // New method for student statuses
     }
 }

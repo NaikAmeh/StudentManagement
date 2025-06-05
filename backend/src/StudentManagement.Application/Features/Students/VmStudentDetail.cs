@@ -29,7 +29,9 @@ namespace StudentManagement.Application.Features.Students
         public int? BloodGroupId { get; set; }
         public string? BloodGroupName { get; set; } // For display
         public int? HouseId { get; set; }
-        public string? HouseName { get; set; }      // For displ
+        public string? HouseName { get; set; }      // For display
+        public int StudentStatusID { get; set; }   // Student Status ID
+        public string StatusName { get; set; }     // Student Status Name for display
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 

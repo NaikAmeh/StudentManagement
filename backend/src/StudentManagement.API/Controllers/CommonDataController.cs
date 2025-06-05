@@ -43,5 +43,12 @@ namespace StudentManagement.API.Controllers
             var houses = await _commonDataService.GetAllHousesAsync(schoolId);
             return Ok(houses);
         }
+
+        [HttpGet("studentstatuses")]
+        public async Task<IActionResult> GetStudentStatuses()
+        {
+            var statuses = await _commonDataService.GetAllStudentStatusesAsync();
+            return Ok(statuses);
+        }
     }
 }

@@ -27,6 +27,9 @@ import {
 } from "../../store/slices/studentSlice";
 import { selectSelectedSchoolId, selectSelectedSchool } from '../../store/slices/schoolSlice';
 import api from '../../services/api'; // For fetching common data
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 // --- Styles ---
@@ -156,12 +159,14 @@ function StudentAddEditPage({ mode = "add" }) {
     standardId: '', 
     divisionId: '', 
     rollNo: '', 
+    studentStatus: '',
     studentIdentifier: '',
     isActive: true, 
     schoolId: '',
     bloodGroupId: '', 
     houseId: '', 
-    emergencyContactNo: ''
+      emergencyContactNo: '',
+      studentStatusID: 1 // Default to Active status (ID: 1)
   };
 const [formData, setFormData] = useState(initialFormData);
   const [selectedPhotoFile, setSelectedPhotoFile] = useState(null); // Holds the File object
@@ -170,11 +175,13 @@ const [formData, setFormData] = useState(initialFormData);
   const [pageError, setPageError] = useState(""); // General page errors
   
   const [loadingMasters, setLoadingMasters] = useState(false);
+  const [originalFormData, setOriginalFormData] = useState(null);
   
   const [standards, setStandards] = useState([]); // For dropdown
   const [divisions, setDivisions] = useState([]); // For dropdown
   const [houses, setHouses] = useState([]); // For dropdown
-  const [bloodGroups, setBloodGroups] = useState([]); // For blood group dropdown
+    const [bloodGroups, setBloodGroups] = useState([]); // For blood group dropdown
+    const [studentStatuses, setStudentStatuses] = useState([]);
 
    // --- Local Validation State ---
    const [formErrors, setFormErrors] = useState({}); // { fieldName: "Error message" }
@@ -193,18 +200,20 @@ const [formData, setFormData] = useState(initialFormData);
           setStandards([]);
           setDivisions([]);
           setHouses([]);
-          setBloodGroups([]);
+            setBloodGroups([]);
+            setStudentStatuses([]);
         }
         return;
       }
       
       setLoadingMasters(true);
       try {
-        const [standardsRes, divisionsRes, bloodGroupsRes, housesRes] = await Promise.all([
+          const [standardsRes, divisionsRes, bloodGroupsRes, housesRes, studentStatusesRes] = await Promise.all([
           api.get(`/api/commondata/standards?schoolId=${schoolIdForMasters}`),
           api.get(`/api/commondata/divisions?schoolId=${schoolIdForMasters}`),
           api.get(`/api/commondata/bloodgroups`),
-          api.get(`/api/commondata/houses?schoolId=${schoolIdForMasters}`)
+            api.get(`/api/commondata/houses?schoolId=${schoolIdForMasters}`),
+            api.get(`/api/commondata/studentstatuses`) // New API call for student statuses
         ]);
 
         // Update states only if data has changed
@@ -219,7 +228,10 @@ const [formData, setFormData] = useState(initialFormData);
         }
         if (JSON.stringify(houses) !== JSON.stringify(housesRes.data)) {
           setHouses(housesRes.data || []);
-        }
+          }
+          if (JSON.stringify(studentStatuses) !== JSON.stringify(studentStatusesRes.data)) {
+              setStudentStatuses(studentStatusesRes.data || []);
+          }
       } catch (err) {
         setPageError("Could not load dropdown options.");
       } finally {
@@ -293,18 +305,20 @@ useEffect(() => {
         schoolId: currentStudent.schoolId,
         bloodGroupId: currentStudent.bloodGroupId?.toString() || '',
         houseId: currentStudent.houseId?.toString() || '',
-        emergencyContactNo: currentStudent.emergencyContactNo || ''
+          emergencyContactNo: currentStudent.emergencyContactNo || '',
+          studentStatusID: currentStudent.studentStatusID || 1 
       };
 
-      // Only update formData if it has changed
-      if (JSON.stringify(formData) !== JSON.stringify(updatedFormData)) {
-        setFormData(updatedFormData);
-      }
-      setPhotoPreviewUrl(null);
-      setSelectedPhotoFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      setFormData(updatedFormData);
+      setOriginalFormData(updatedFormData); // Store original data for comparison
     }
   }, [currentStudent, isEditMode]);
+
+  // Add function to check if form has changes
+  const hasFormChanges = useCallback(() => {
+    if (!originalFormData) return true;
+    return JSON.stringify(originalFormData) !== JSON.stringify(formData);
+  }, [originalFormData, formData]);
 
   // Effect to handle Page Errors (e.g., failed details fetch)
   useEffect(() => {
@@ -330,9 +344,12 @@ useEffect(() => {
   // --- Client-Side Validation Logic ---
   const validateField = useCallback((name, value) => {
     let error = '';
-    const isRequired = ['fullName', 'standardId', 'divisionId', 'rollNo'].includes(name);
+    const isRequired = ['fullName', 'standardId', 'divisionId', 'rollNo', 'studentStatus'].includes(name);
     
     switch (name) {
+        case 'studentStatus':
+            if (!value && isRequired) error = 'Student Status is required.';
+            break;
         case 'fullName':
             if (!value && isRequired) error = 'Full Name is required.';
             else if (value && value.length > 100) error = 'Full Name max 100 chars.';
@@ -470,6 +487,11 @@ const handleChange = useCallback(
       e.preventDefault();
       setHasAttemptedSubmit(true); // Set this first to trigger validation display
       
+      if (isEditMode && !hasFormChanges()) {
+        toast.info('No changes made to update');
+        return;
+      }
+
       // Validate the entire form
       const isValid = validateForm();
       if (!isValid) {
@@ -502,11 +524,15 @@ const handleChange = useCallback(
             rollNo: formData.rollNo ? parseInt(formData.rollNo, 10) : null,
             studentIdentifier: formData.studentIdentifier,
             isActive: formData.isActive,
-            bloodGroupId: formData.bloodGroupId,
-            houseId: formData.houseId,
+              studentStatusID: formData.studentStatusID,
+            bloodGroupId: formData.bloodGroupId ? parseInt(formData.bloodGroupId, 10) : null,
+            houseId: formData.houseId ? parseInt(formData.houseId, 10) : null,
             emergencyContactNo: formData.emergencyContactNo
           };
-          await dispatch(updateStudent({ id: studentIdToUse, updateStudentDto: updateDtoFields })).unwrap();
+          await dispatch(updateStudent({ 
+            id: studentIdToUse, 
+            updateStudentDto: updateDtoFields 
+          })).unwrap();
         } else {
           if (!dtoData.schoolId) {
             console.log("School ID is missing");
@@ -541,7 +567,7 @@ const handleChange = useCallback(
         navigate("/students");
       }
     },
-    [dispatch, formData, id, isEditMode, navigate, selectedPhotoFile, validateForm]
+    [dispatch, formData, id, isEditMode, navigate, selectedPhotoFile, validateForm, hasFormChanges]
   );
 
   // Handles navigation back to the list page
@@ -594,6 +620,7 @@ const handleChange = useCallback(
   // --- Main Form Render ---
   return (
     <div style={formContainerStyle}>
+      <ToastContainer position="top-right" />
       <h2>
         {isEditMode
           ? `Edit Student - ${formData.fullName}`
@@ -701,7 +728,7 @@ const handleChange = useCallback(
                             style={getInputClass('division')}
                             id="division"
                             name="divisionId"
-                            value={formData.divisionId || ''} // Ensure value is correctly bound
+                            value={formData.divisionId || ''} 
                             onChange={handleChange}
                             disabled={isLoading || loadingMasters}
                         >
@@ -715,6 +742,30 @@ const handleChange = useCallback(
                             <small style={errorStyle}>{formErrors.divisionId}</small>
                         )}
                     </div>
+                  <div style={formGroupStyle}>
+                      <label style={labelStyle} htmlFor="studentStatusID">Student Status:</label>
+                      <select
+                          style={getInputClass('studentStatusID')}
+                          id="studentStatusID"
+                          name="studentStatusID"
+                          value={formData.studentStatusID || ''}
+                          onChange={handleChange}
+                          disabled={isLoading || loadingMasters}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur}
+                      >
+                          <option value="">-- Select Status --</option>
+                          {loadingMasters && <option disabled>Loading...</option>}
+                          {studentStatuses.map((status) => (
+                              <option key={status.studentStatusID} value={status.studentStatusID}>
+                                  {status.statusName}
+                              </option>
+                          ))}
+                      </select>
+                      {hasAttemptedSubmit && formErrors.studentStatusID && (
+                          <small style={errorStyle}>{formErrors.studentStatusID}</small>
+                      )}
+                  </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="rollNo">Roll No:</label>
                         <input style={getInputClass('rollNo')} type="number" id="rollNo" name="rollNo" value={formData.rollNo} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />

@@ -77,5 +77,13 @@ namespace StudentManagement.Application.Services
 
             return houses;
         }
+
+        public async Task<IReadOnlyList<VmStudentStatus>> GetAllStudentStatusesAsync()
+        {
+            _logger.LogInformation("Fetching all Student Statuses");
+            var query = _unitOfWork.Repository<StudentStatus>().GetQueryable();
+            var statuses = await query.OrderBy(s => s.StatusName).ToListAsync();
+            return _mapper.Map<IReadOnlyList<VmStudentStatus>>(statuses);
+        }
     }
 }

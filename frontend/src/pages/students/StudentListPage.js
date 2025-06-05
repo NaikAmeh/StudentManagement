@@ -123,24 +123,38 @@ debugger;
 
   // --- Memoized Data Processing ---
   const sortedAndFilteredStudents = useMemo(() => {
-     if (!Array.isArray(students)) return [];
-     const filtered = students.filter(
-       (student) =>
-         (!filters.fullName || student.fullName?.toLowerCase().includes(filters.fullName.toLowerCase())) &&
-         (!filters.studentIdentifier || student.studentIdentifier?.toLowerCase().includes(filters.studentIdentifier.toLowerCase())) 
-         && (!filters.standard || student.standardId === filters.standard) &&
-         (!filters.division || student.divisionId === filters.division)
-     );
-     if (sortConfig.key) {
-       filtered.sort((a, b) => {
-         const aValue = a[sortConfig.key]?.toString().toLowerCase() || "";
-         const bValue = b[sortConfig.key]?.toString().toLowerCase() || "";
-         if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
-         if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
-         return 0;
-       });
-     }
-     return filtered;
+    if (!Array.isArray(students)) return [];
+    
+    const filtered = students.filter((student) => {
+      // Name filter
+      const nameMatch = !filters.fullName || 
+        student.fullName?.toLowerCase().includes(filters.fullName.toLowerCase());
+      
+      // Student ID filter
+      const idMatch = !filters.studentIdentifier || 
+        student.studentIdentifier?.toLowerCase().includes(filters.studentIdentifier.toLowerCase());
+      
+      // Standard filter - compare as numbers
+      const standardMatch = !filters.standard || 
+        student.standardId?.toString() === filters.standard?.toString();
+      
+      // Division filter - compare as numbers
+      const divisionMatch = !filters.division || 
+        student.divisionId?.toString() === filters.division?.toString();
+      
+      return nameMatch && idMatch && standardMatch && divisionMatch;
+    });
+
+    if (sortConfig.key) {
+      filtered.sort((a, b) => {
+        const aValue = a[sortConfig.key]?.toString().toLowerCase() || "";
+        const bValue = b[sortConfig.key]?.toString().toLowerCase() || "";
+        if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    return filtered;
   }, [students, filters, sortConfig]);
 
   const totalFilteredCount = sortedAndFilteredStudents.length;
@@ -372,7 +386,7 @@ debugger;
         // alert(`Import failed: ${error}`);
     } else {
         // Handle cases where the API call was successful, but no *new* students were added (e.g., all rows had errors or were duplicates)
-        console.log("StudentListPage: Import finished, but no new students were added.");
+        console.log("StudentListPage: Import finished, but no new students are added.");
         // The StudentImport component shows the row-by-row results.
         // You might provide a generic message here too.
         alert("Import process finished. Please check the results section below for details on each row.");
