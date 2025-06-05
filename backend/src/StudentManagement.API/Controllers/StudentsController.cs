@@ -204,7 +204,7 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var success = true; //await _studentService.UpdateStudentAsync(id, updateStudentDto);
+                var success = await _studentService.UpdateStudentAsync(id, updateStudentDto);
                 // Service already returned false if not found during its own check, but double-check here
                 if (!success)
                 {

@@ -25,6 +25,11 @@ namespace StudentManagement.Application.Features.Students
         public string? PhotoName { get; set; }
         public string? PhotoPath { get; set; } // Path/URL to the full-size image
         public bool IsActive { get; set; }
+        public string? EmergencyContactNo { get; set; }
+        public int? BloodGroupId { get; set; }
+        public string? BloodGroupName { get; set; } // For display
+        public int? HouseId { get; set; }
+        public string? HouseName { get; set; }      // For displ
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 

@@ -14,15 +14,24 @@ namespace StudentManagement.Domain.Entities
         public virtual string? Gender { get; protected set; }
         public virtual string? Email { get; protected set; }
         public virtual string? PhoneNo { get; protected set; }
+        public virtual string? EmergencyContactNo { get; protected set; }
         public virtual string? Address { get; protected set; }
         public virtual DateTime? EnrollmentDate { get; protected set; }
 
         // --- Changed to Foreign Keys ---
         public virtual int StandardId { get; protected set; } // Foreign Key to Standards table
         public virtual int DivisionId { get; protected set; } // Foreign Key to Divisions table
-        // --- End Foreign Key Changes ---
+                                                              // --- End Foreign Key Changes ---
 
-        public virtual int RollNo { get; set; }
+        // Foreign key for Blood Group
+        public int? BloodGroupID { get; protected set; }
+        public virtual BloodGroup BloodGroup { get; protected set; }
+
+        // Foreign key for House
+        public int? HouseID { get; protected set; }
+        public virtual House House { get; protected set; }
+
+        public virtual int RollNo { get; protected set; }
         public virtual string StudentIdentifier { get; protected set; } // School-specific ID
         public virtual string? PhotoPath { get; protected set; } // Relative path or identifier
         public string? PhotoName { get; protected set; }
@@ -43,7 +52,7 @@ namespace StudentManagement.Domain.Entities
         }
 
         public Student(string fullName, DateTime? dateOfBirth, string gender, string email, string phoneNo, string address, DateTime enrollmentDate,
-            int standardId, int divisionId, int rollNo, string studentIdentifier, string photoPath, string photoName, bool isActive, School school)
+            int standardId, int divisionId, int rollNo, string studentIdentifier, string photoPath, string photoName, bool isActive, School school, string emergencyContactNo, int? bloodGroupId = null, int? houseId = null)
         {
             FullName = fullName;
             DateOfBirth = dateOfBirth;
@@ -60,6 +69,9 @@ namespace StudentManagement.Domain.Entities
             PhotoName = photoName;
             IsActive = isActive;
             School = school;
+            EmergencyContactNo = emergencyContactNo;
+            BloodGroupID = bloodGroupId;
+            HouseID = houseId;
         }
 
         public virtual void UpdatePhoto(string photoName, string photoPath)

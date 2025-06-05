@@ -49,5 +49,33 @@ namespace StudentManagement.Application.Services
             var divisions = await query.OrderBy(d => d.Name).ToListAsync();
             return _mapper.Map<IReadOnlyList<VmDivision>>(divisions);
         }
+
+        public async Task<IReadOnlyList<VmBloodGroup>> GetAllBloodGroupsAsync()
+        {
+            _logger.LogInformation("Fetching all Blood Groups");
+            var query = _unitOfWork.Repository<BloodGroup>().GetQueryable();
+            var bloodGroups = await _unitOfWork.Repository<BloodGroup>().GetAllAsync(); // Get all
+            return _mapper.Map<IReadOnlyList<VmBloodGroup>>(bloodGroups);
+        }
+
+        public async Task<IReadOnlyList<VmHouse>> GetAllHousesAsync(int? schoolId = null)
+        {
+            var query = _unitOfWork.Repository<House>().GetQueryable();
+
+            //if (schoolId.HasValue)
+            //{
+            //    query = query.Where(h => h.SchoolId == schoolId);
+            //}
+
+            var houses = await query
+                .Select(h => new VmHouse
+                {
+                    HouseId = h.HouseID,
+                    HouseName = h.HouseName
+                })
+                .ToListAsync();
+
+            return houses;
+        }
     }
 }

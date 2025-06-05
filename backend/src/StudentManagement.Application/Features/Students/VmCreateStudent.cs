@@ -19,6 +19,7 @@ namespace StudentManagement.Application.Features.Students
         [EmailAddress] 
         public string? Email { get; set; }
         public string? PhoneNo { get; set; }
+        public string? EmergencyContactNo { get; set; }
         public string? Address { get; set; }
         public DateTime? EnrollmentDate { get; set; }
         [Required(ErrorMessage = "Standard/Class is required.")]
@@ -27,6 +28,8 @@ namespace StudentManagement.Application.Features.Students
         public int DivisionId { get; set; } // Changed to ID
         [Required] 
         public int RollNo { get; set; }
+        public int? BloodGroupId { get; set; }
+        public int? HouseId { get; set; }
         //public string photoPath { get; set; }
         //public string photoName { get; set; }
         public bool isActive { get; set; }

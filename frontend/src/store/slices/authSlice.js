@@ -13,10 +13,13 @@ export const loginUser = createAsyncThunk(
             const response = await api.post('/api/auth/login', { usernameOrEmail, password });
            // debugger;
             if (response.data && response.data.success && response.data.token) {
+                const expiryTime = Date.now() + 60 * 60 * 1000; // Set expiry time to 1 hour (adjust as needed)
+                
                 // Store token and user data
                 localStorage.setItem('authToken', response.data.token);
                 localStorage.setItem('authUser', JSON.stringify(response.data.user));
                 localStorage.setItem('defaultSchoolId', response.data.defaultSchoolId || ''); // Store DefaultSchoolId
+                localStorage.setItem('authTokenExpiry', expiryTime);
 
                 // Return the relevant data to be stored in the Redux state
                 return {
@@ -53,6 +56,21 @@ export const forcePasswordChange = createAsyncThunk(
     }
 );
 
+// --- Function to Check Token Expiry ---
+const checkTokenExpiry = () => {
+    const expiryTime = localStorage.getItem('authTokenExpiry');
+    if (expiryTime && Date.now() > parseInt(expiryTime, 10)) {
+        // Token has expired, clear it
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authUser');
+        localStorage.removeItem('defaultSchoolId');
+        localStorage.removeItem('authTokenExpiry');
+        console.log('Auth token expired and removed.');
+        return true; // Indicate that the token has expired
+    }
+    return false; // Token is still valid
+};
+
 // --- Auth Slice Definition ---
 const initialState = {
     user: JSON.parse(localStorage.getItem('authUser') || 'null'), // Load initial state from storage
@@ -74,6 +92,8 @@ const authSlice = createSlice({
             state.error = null;
             localStorage.removeItem('authToken');
             localStorage.removeItem('authUser');
+            localStorage.removeItem('defaultSchoolId');
+            localStorage.removeItem('authTokenExpiry');
             console.log("User logged out via Redux.");
         },
         // You could add other sync reducers here if needed
@@ -125,6 +145,15 @@ const authSlice = createSlice({
         });
     },
 });
+
+// --- Middleware to Check Token Expiry ---
+export const checkTokenMiddleware = (store) => (next) => (action) => {
+    const tokenExpired = checkTokenExpiry();
+    if (tokenExpired) {
+        store.dispatch(authSlice.actions.logout());
+    }
+    return next(action);
+};
 
 // Export synchronous actions
 export const { logout, clearAuthError } = authSlice.actions;

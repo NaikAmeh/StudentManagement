@@ -21,6 +21,8 @@ namespace StudentMgmt.Infrastructure.Data.DBContext
         public DbSet<UserSchoolLink> UserSchoolLinks { get; set; }
         public DbSet<Standard> Standard { get; set; } = null!; // New
         public DbSet<Division> Division { get; set; } = null!; // New
+        public DbSet<BloodGroup> BloodGroups { get; set; }
+        public DbSet<House> Houses { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

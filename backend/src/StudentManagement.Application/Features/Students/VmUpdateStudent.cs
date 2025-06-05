@@ -27,6 +27,9 @@ namespace StudentManagement.Application.Features.Students
         public int DivisionId { get; set; } // Changed to ID
         [Required] 
         public int RollNo { get; set; }
+        public string? EmergencyContactNo { get; set; }
+        public int? BloodGroupId { get; set; }
+        public int? HouseId { get; set; }
 
         [Required]
         [StringLength(50)]

@@ -135,7 +135,7 @@ namespace StudentManagement.Application.Services
                 School school = await _unitOfWork.Repository<School>().GetByIdAsync(createDto.SchoolId);
                 await _unitOfWork.ExecuteInTransactionAsync(async () =>
                 {
-                    student = _objectFactory.GetFactory<IStudentFactory>().Create(createDto.FullName, createDto.DateOfBirth, createDto.Gender, createDto.Email, createDto.PhoneNo, createDto.Address, createDto.EnrollmentDate.Value, createDto.StandardId, createDto.DivisionId, createDto.RollNo, createDto.StudentIdentifier, null, null, createDto.isActive, school);
+                    student = _objectFactory.GetFactory<IStudentFactory>().Create(createDto.FullName, createDto.DateOfBirth, createDto.Gender, createDto.Email, createDto.PhoneNo, createDto.Address, createDto.EnrollmentDate.Value, createDto.StandardId, createDto.DivisionId, createDto.RollNo, createDto.StudentIdentifier, null, null, createDto.isActive, school, createDto.EmergencyContactNo, createDto.BloodGroupId, createDto.HouseId);
 
                     await _unitOfWork.Repository<Student>().AddAsync(student);
                     await _unitOfWork.CompleteAsync();

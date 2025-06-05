@@ -1,7 +1,7 @@
 // src/store/store.js
 import { configureStore } from '@reduxjs/toolkit';
 // Import slice reducers here
-import authReducer from './slices/authSlice';
+import authReducer, { checkTokenMiddleware } from './slices/authSlice'; // Import middleware
 import schoolReducer from './slices/schoolSlice';
 import studentReducer from './slices/studentSlice';
 import userReducer from './slices/userSlice'; // Import
@@ -21,13 +21,14 @@ export const store = configureStore({
     // students: studentReducer, // Example for later
   },
   // Optional: Add middleware (e.g., for async actions, logging)
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    thunk: {
-      extraArgument: {
-        apiBaseUrl: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: {
+          apiBaseUrl: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+        },
       },
-    },
-  }),
+    }),//.concat(checkTokenMiddleware), // Add token expiry middleware
   // Enable Redux DevTools extension support (enabled by default in development)
   devTools: process.env.NODE_ENV !== 'production',
 });

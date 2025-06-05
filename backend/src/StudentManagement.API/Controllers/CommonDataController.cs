@@ -29,5 +29,19 @@ namespace StudentManagement.API.Controllers
             var divisions = await _commonDataService.GetAllDivisionsAsync(schoolId);
             return Ok(divisions);
         }
+
+        [HttpGet("bloodgroups")]
+        public async Task<IActionResult> GetBloodGroups()
+        {
+            var bloodGroups = await _commonDataService.GetAllBloodGroupsAsync();
+            return Ok(bloodGroups);
+        }
+
+        [HttpGet("houses")]
+        public async Task<IActionResult> GetHouses([FromQuery] int? schoolId)
+        {
+            var houses = await _commonDataService.GetAllHousesAsync(schoolId);
+            return Ok(houses);
+        }
     }
 }

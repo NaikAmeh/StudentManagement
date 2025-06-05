@@ -38,7 +38,7 @@ namespace StudentManagement.Application.Interfaces.Services
         /// <param name="updateDto">The data transfer object containing the updated information.</param>
         /// <returns>True if the update was successful; otherwise, false (e.g., if the student was not found).</returns>
         /// <exception cref="ArgumentException">Thrown if validation fails (e.g., duplicate StudentIdentifier in school).</exception>
-       // Task<bool> UpdateStudentAsync(int id, VmUpdateStudent updateDto);
+        Task<bool> UpdateStudentAsync(int id, VmUpdateStudent updateDto);
 
         /// <summary>
         /// Deletes a student by their ID.

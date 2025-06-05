@@ -91,6 +91,18 @@ namespace StudentMgmt.Infrastructure.Mappings
                    .IsUnique()
                    .HasFilter("[StudentIdentifier] IS NOT NULL"); // SQL Server Syntax, adjust for MySQL
                                                                   // For MySQL, you might need raw SQL in migration or a different approach if filter not supported directly
+
+            builder.HasOne(s => s.BloodGroup)
+    .WithMany()
+    .HasForeignKey("BloodGroupID") // Use string for shadow property
+    .IsRequired(false)
+    .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(s => s.House)
+                .WithMany(h => h.Students) // Assuming House doesn't need a collection of Students
+                .HasForeignKey(s => s.HouseID)
+                .IsRequired(false) // Since HouseID is nullable
+                .OnDelete(DeleteBehavior.SetNull); // If a house is deleted, set Student.HouseID to NULL
         }
     }
 }
