@@ -66,6 +66,7 @@ namespace StudentManagement.Application.ViewModelMap
             CreateMap<Student, VmStudentSummary>()
                 // Map SchoolName from the navigation property
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 // Logic for PhotoThumbnailPath might be more complex, depends on storage strategy
                 .ForMember(dest => dest.PhotoThumbnailPath, opt => opt.MapFrom(src => src.PhotoPath)) // Or specific thumbnail logic
                 .ForMember(dest => dest.StandardName, opt => opt.MapFrom(src => src.Standard != null ? src.Standard.Name : string.Empty)) // Map from navigation property

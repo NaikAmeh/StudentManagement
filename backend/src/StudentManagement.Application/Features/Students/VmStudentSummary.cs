@@ -21,5 +21,6 @@ namespace StudentManagement.Application.Features.Students
         public bool IsActive { get; set; }
         public int SchoolId { get; set; }
         public string SchoolName { get; set; } = string.Empty; // Include school name for display
+        public string? Address { get; set; } // Added property for student address
     }
 }

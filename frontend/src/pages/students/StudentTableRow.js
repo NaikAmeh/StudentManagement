@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { RiDeleteBinLine } from "react-icons/ri";
 import StudentPhotoDropzone from "../students/StudentPhotoDropzone"; // Import the dropzone
 const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
@@ -14,8 +15,18 @@ const thTdStyle = {
 const photoCellStyle = { ...thTdStyle, width: "90px", textAlign: "center" };
 const actionsCellStyle = { ...thTdStyle, width: "180px", textAlign: "center" };
 const dangerButtonStyle = {
-  backgroundColor: "#dc3545", color: "white", borderColor: "#dc3545",
-  padding: "2px 5px", marginLeft: "5px", cursor: "pointer", borderRadius: "3px", border: "1px solid transparent", fontSize: "0.9em"
+  backgroundColor: "transparent", 
+  color: "#dc3545", 
+  border: "none",
+  padding: "2px 5px", 
+  marginLeft: "5px", 
+  cursor: "pointer", 
+  borderRadius: "3px",
+  fontSize: "0.9em",
+  transition: "color 0.2s ease",
+  ":hover": {
+    color: "#bb2d3b"
+  }
 };
 const infoButtonStyle = {
   backgroundColor: "#0dcaf0", color: "black", borderColor: "#0dcaf0",
@@ -90,6 +101,15 @@ debugger;
       <td style={thTdStyle}>{studentIdentifier || "N/A"}</td>
       <td style={thTdStyle}>{standardName || "N/A"}</td>
       <td style={thTdStyle}>{divisionName || "N/A"}</td>
+      <td style={{ ...thTdStyle, position: "relative" }}>
+        <div title={student.address || ""}> {/* This creates the hover effect */}
+          {student.address ? (
+            student.address.length > 20 
+              ? `${student.address.substring(0, 20)}...` 
+              : student.address
+          ) : "N/A"}
+        </div>
+      </td>
       <td style={thTdStyle}>{isActive ? "Active" : "Inactive"}</td>
       <td style={actionsCellStyle}>
         <Link
@@ -109,8 +129,9 @@ debugger;
           onClick={handleDelete}
           disabled={isDeleting}
           style={dangerButtonStyle}
+          title="Delete student"
         >
-          {isDeleting ? "..." : "Del"}
+          {isDeleting ? "..." : <RiDeleteBinLine size={18} />}
         </button>
       </td>
     </tr>

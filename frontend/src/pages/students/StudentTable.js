@@ -145,78 +145,81 @@ const StudentTable = ({
             zIndex: 9999,
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
             borderRadius: "4px",
+            minWidth: "320px"
           }}
         >
           <h4 style={{ margin: "0 0 15px 0" }}>Filter by {popupField}</h4>
-          {popupField === "standard" && (
-            <Dropdown
-              label="Select Standard"
-              options={standardOptions.map((option) => ({
-                id: option.standardId,
-                name: option.name,
-              }))}
-              value={tempFilter}
-              onChange={(e) => setTempFilter(e.target.value)}
-            />
-          )}
-          {popupField === "division" && (
-            <Dropdown
-              label="Select Division"
-              options={divisionOptions.map((option) => ({
-                id: option.divisionId,
-                name: option.name,
-              }))}
-              value={tempFilter}
-              onChange={(e) => setTempFilter(e.target.value)}
-            />
-          )}
-          {popupField !== "standard" && popupField !== "division" && (
-            <input
-              type="text"
-              value={tempFilter}
-              onChange={(e) => setTempFilter(e.target.value)}
-              placeholder={`Enter ${popupField}`}
-              style={{
-                width: "100%",
-                padding: "8px",
-                marginBottom: "15px",
-                borderRadius: "4px",
-                border: "1px solid #ced4da"
-              }}
-            />
-          )}
-          <div style={{ 
-            marginTop: "15px",
-            display: "flex",
-            gap: "10px",
-            justifyContent: "flex-end"
-          }}>
-            <button 
-              onClick={handleApplyFilter} 
-              style={{ 
-                padding: "6px 12px",
-                backgroundColor: "#0d6efd",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer"
-              }}
-            >
-              Apply
-            </button>
-            <button 
-              onClick={handleCancelFilter}
-              style={{ 
-                padding: "6px 12px",
-                backgroundColor: "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer"
-              }}
-            >
-              Clear
-            </button>
+          <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
+            <div style={{ flex: 1 }}>
+              {popupField === "standard" && (
+                <Dropdown
+                  label="Select Standard"
+                  options={standardOptions.map((option) => ({
+                    id: option.standardId,
+                    name: option.name,
+                  }))}
+                  value={tempFilter}
+                  onChange={(e) => setTempFilter(e.target.value)}
+                />
+              )}
+              {popupField === "division" && (
+                <Dropdown
+                  label="Select Division"
+                  options={divisionOptions.map((option) => ({
+                    id: option.divisionId,
+                    name: option.name,
+                  }))}
+                  value={tempFilter}
+                  onChange={(e) => setTempFilter(e.target.value)}
+                />
+              )}
+              {popupField !== "standard" && popupField !== "division" && (
+                <div>
+                  <input
+                    type="text"
+                    value={tempFilter}
+                    onChange={(e) => setTempFilter(e.target.value)}
+                    placeholder={`Enter ${popupField}`}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ced4da"
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div style={{ display: "flex", gap: "6px" }}>
+              <button 
+                onClick={handleApplyFilter} 
+                style={{ 
+                  padding: "8px 12px",
+                  backgroundColor: "#0d6efd",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap"
+                }}
+              >
+                Apply
+              </button>
+              <button 
+                onClick={handleCancelFilter}
+                style={{ 
+                  padding: "8px 12px",
+                  backgroundColor: "#6c757d",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap"
+                }}
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -29,6 +29,7 @@ import { selectSelectedSchoolId, selectSelectedSchool } from '../../store/slices
 import api from '../../services/api'; // For fetching common data
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FIELD_LENGTHS, VALIDATION_MESSAGES } from '../../utils/validationConstants';
 
 const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
@@ -118,6 +119,12 @@ const inputFocusedStyle = {
   borderBottom: "2px solid #0d6efd"
 };
 
+const invalidInputStyle = {
+  ...inputStyle,
+  borderBottom: "2px solid #dc3545",
+  backgroundColor: "rgba(220, 53, 69, 0.05)"
+};
+
 const gridStyle = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr", // Two columns
@@ -126,6 +133,29 @@ const gridStyle = {
 
 const fullWidthStyle = {
   gridColumn: "1 / -1", // Span both columns
+};
+
+const isNumericInputKey = (event) => {
+  // Allow: backspace, delete, tab, escape, enter, decimal point
+  if (
+      event.key === 'Backspace' ||
+      event.key === 'Delete' ||
+      event.key === 'Tab' ||
+      event.key === 'Escape' ||
+      event.key === 'Enter' ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.ctrlKey === true && ['a', 'c', 'v', 'x'].indexOf(event.key.toLowerCase()) !== -1) ||
+      // Allow: home, end, left, right
+      event.key === 'Home' ||
+      event.key === 'End' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+  ) {
+      return true;
+  }
+  
+  // Ensure that it is a number and stop the keypress if it's not
+  return !isNaN(Number(event.key));
 };
 
 function StudentAddEditPage({ mode = "add" }) {
@@ -187,6 +217,11 @@ const [formData, setFormData] = useState(initialFormData);
    const [formErrors, setFormErrors] = useState({}); // { fieldName: "Error message" }
    const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
    const [focusedField, setFocusedField] = useState(null);
+   const [originalStudentName, setOriginalStudentName] = useState('');
+
+  // --- New State for Invalid Input Indication ---
+  const [phoneNoInvalid, setPhoneNoInvalid] = useState(false);
+  const [emergencyContactInvalid, setEmergencyContactInvalid] = useState(false);
 
   // --- Effects ---
 
@@ -285,6 +320,9 @@ useEffect(() => {
   // Effect to populate form when currentStudent data arrives (edit mode)
   useEffect(() => {
     if (isEditMode && currentStudent) {
+      // Store original name when student data is loaded
+      setOriginalStudentName(currentStudent.fullName || '');
+      
       const updatedFormData = {
         fullName: currentStudent.fullName || '',
         dateOfBirth: currentStudent.dateOfBirth
@@ -345,14 +383,14 @@ useEffect(() => {
   const validateField = useCallback((name, value) => {
     let error = '';
     const isRequired = ['fullName', 'standardId', 'divisionId', 'rollNo', 'studentStatus'].includes(name);
-    
+    console.log("full name length", FIELD_LENGTHS.FULL_NAME);
     switch (name) {
         case 'studentStatus':
             if (!value && isRequired) error = 'Student Status is required.';
             break;
         case 'fullName':
             if (!value && isRequired) error = 'Full Name is required.';
-            else if (value && value.length > 100) error = 'Full Name max 100 chars.';
+            else if (value && value.length > FIELD_LENGTHS.FULL_NAME) error = VALIDATION_MESSAGES.FULL_NAME;
             break;
         case 'standardId':
             if (!value && isRequired) error = 'Standard is required.';
@@ -366,7 +404,7 @@ useEffect(() => {
             break;
         case 'email':
             if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Invalid email format.';
-            break;
+                        break;
         case 'phoneNo':
             if (value && !/^\d{10}$/.test(value)) error = 'Phone number must be 10 digits.';
             break;
@@ -388,7 +426,7 @@ useEffect(() => {
             }
             break;
         case 'studentIdentifier':
-            if (value && value.length > 50) error = 'Registration ID max 50 chars.';
+            if (value && value.length > FIELD_LENGTHS.STUDENT_IDENTIFIER) error = VALIDATION_MESSAGES.STUDENT_IDENTIFIER;
             break;
         case 'emergencyContactNo':
             if (value && !/^\d{10}$/.test(value)) error = 'Emergency contact must be 10 digits.';
@@ -399,7 +437,7 @@ useEffect(() => {
 }, []);
 
 const validateForm = useCallback(() => {
-    const newErrors = {};
+        const newErrors = {};
     let allValid = true;
 
     Object.keys(formData).forEach((key) => {
@@ -422,10 +460,10 @@ const handleChange = useCallback(
   (e) => {
     const { name, value } = e.target;
 
-    // Update the formData state
+    // Update form state
     setFormData((prev) => ({
       ...prev,
-      [name]: value, // Update the correct field in formData
+      [name]: value,
     }));
 
     if (hasAttemptedSubmit) {
@@ -519,19 +557,19 @@ const handleChange = useCallback(
             phoneNo: formData.phoneNo,
             address: formData.address,
             enrollmentDate: formData.enrollmentDate || null,
-            standardId: formData.standardId,
-            divisionId: formData.divisionId,
+            standardId: formData.standardId ? parseInt(formData.standardId, 10) : null,
+            divisionId: formData.divisionId ? parseInt(formData.divisionId, 10) : null,
             rollNo: formData.rollNo ? parseInt(formData.rollNo, 10) : null,
             studentIdentifier: formData.studentIdentifier,
-            isActive: formData.isActive,
-              studentStatusID: formData.studentStatusID,
+            isActive: Boolean(formData.isActive),
+            studentStatusID: formData.studentStatusID ? parseInt(formData.studentStatusID, 10) : null,
             bloodGroupId: formData.bloodGroupId ? parseInt(formData.bloodGroupId, 10) : null,
             houseId: formData.houseId ? parseInt(formData.houseId, 10) : null,
             emergencyContactNo: formData.emergencyContactNo
           };
           await dispatch(updateStudent({ 
             id: studentIdToUse, 
-            updateStudentDto: updateDtoFields 
+            updateStudentDto: updateDtoFields//{ updateStudentDto: updateDtoFields }  // Wrap in updateStudentDto object
           })).unwrap();
         } else {
           if (!dtoData.schoolId) {
@@ -623,7 +661,7 @@ const handleChange = useCallback(
       <ToastContainer position="top-right" />
       <h2>
         {isEditMode
-          ? `Edit Student - ${formData.fullName}`
+          ? `Edit Student - ${originalStudentName}`
           : "Add New Student"}
       </h2>
 
@@ -635,7 +673,19 @@ const handleChange = useCallback(
         <div style={gridStyle}>
         <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="fullName">Full Name:</label>
-                        <input style={getInputClass('fullName')} type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />
+                        <input 
+              style={getInputClass('fullName')} 
+              type="text" 
+              id="fullName" 
+              name="fullName" 
+              value={formData.fullName} 
+              onChange={handleChange} 
+              disabled={isLoading} 
+              onFocus={handleFocus} 
+              onBlur={handleBlur}
+              maxLength={FIELD_LENGTHS.FULL_NAME}
+              required
+            />
                         {hasAttemptedSubmit && formErrors.fullName && <small style={errorStyle}>{formErrors.fullName}</small>}
                     </div>
                     <div style={formGroupStyle}>
@@ -666,20 +716,110 @@ const handleChange = useCallback(
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="email">Email:</label>
-                        <input style={{
-                                ...getInputClass('email'),
-                                borderBottom: formErrors.email ? '2px solid #dc3545' : '2px solid #ccc', // Red underline if validation fails
-                                }} 
-                                type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />
+                        <input 
+              style={getInputClass('email')} 
+              type="email" 
+              id="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              disabled={isLoading} 
+              onFocus={handleFocus} 
+              onBlur={handleBlur}
+              maxLength={FIELD_LENGTHS.EMAIL}
+            />
                          {hasAttemptedSubmit && formErrors.email && <small style={errorStyle}>{formErrors.email}</small>}
                     </div>
                     <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="phoneNo">Phone No:</label>
-                        <input style={getInputClass('phoneNo')} type="tel" id="phoneNo" name="phoneNo" value={formData.phoneNo} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />
-                    </div>
+    <label style={labelStyle} htmlFor="phoneNo">Phone No:</label>
+    <div style={{ position: 'relative' }}>
+        <input 
+            style={phoneNoInvalid ? invalidInputStyle : getInputClass('phoneNo')} 
+            type="tel" 
+            id="phoneNo" 
+            name="phoneNo" 
+            value={formData.phoneNo} 
+            onChange={handleChange} 
+            disabled={isLoading} 
+            onFocus={handleFocus} 
+            onBlur={(e) => {
+                handleBlur(e);
+                setPhoneNoInvalid(false);
+            }}
+            maxLength={FIELD_LENGTHS.PHONE}
+            pattern="[0-9]*"
+            inputMode="numeric"
+            onKeyDown={(e) => {
+                if (!isNumericInputKey(e)) {
+                    e.preventDefault();
+                    setPhoneNoInvalid(true);
+                    setTimeout(() => setPhoneNoInvalid(false), 500);
+                }
+            }}
+        />
+        {phoneNoInvalid && <span style={{ 
+            position: 'absolute', 
+            right: '8px', 
+            top: '50%', 
+            transform: 'translateY(-50%)',
+            color: '#dc3545',
+            fontWeight: 'bold'
+        }}>!</span>}
+    </div>
+    {hasAttemptedSubmit && formErrors.phoneNo && <small style={errorStyle}>{formErrors.phoneNo}</small>}
+</div>
+<div style={formGroupStyle}>
+    <label style={labelStyle} htmlFor="emergencyContactNo">Emergency Contact No:</label>
+    <div style={{ position: 'relative' }}>
+        <input 
+            style={emergencyContactInvalid ? invalidInputStyle : getInputClass('emergencyContactNo')} 
+            type="tel" 
+            id="emergencyContactNo" 
+            name="emergencyContactNo" 
+            value={formData.emergencyContactNo} 
+            onChange={handleChange} 
+            disabled={isLoading} 
+            onFocus={handleFocus} 
+            onBlur={(e) => {
+                handleBlur(e);
+                setEmergencyContactInvalid(false);
+            }}
+            maxLength={FIELD_LENGTHS.EMERGENCY_CONTACT}
+            pattern="[0-9]*"
+            inputMode="numeric"
+            onKeyDown={(e) => {
+                if (!isNumericInputKey(e)) {
+                    e.preventDefault();
+                    setEmergencyContactInvalid(true);
+                    setTimeout(() => setEmergencyContactInvalid(false), 500);
+                }
+            }}
+        />
+        {emergencyContactInvalid && <span style={{ 
+            position: 'absolute', 
+            right: '8px', 
+            top: '50%', 
+            transform: 'translateY(-50%)',
+            color: '#dc3545',
+            fontWeight: 'bold'
+        }}>!</span>}
+    </div>
+    {hasAttemptedSubmit && formErrors.emergencyContactNo && <small style={errorStyle}>{formErrors.emergencyContactNo}</small>}
+</div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="address">Address:</label>
-                        <input style={getInputClass('address')} type="text" id="address" name="address" value={formData.address} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />
+                        <input 
+              style={getInputClass('address')} 
+              type="text" 
+              id="address" 
+              name="address" 
+              value={formData.address} 
+              onChange={handleChange} 
+              disabled={isLoading} 
+              onFocus={handleFocus} 
+              onBlur={handleBlur}
+              maxLength={FIELD_LENGTHS.ADDRESS}
+            />
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="enrollmentDate">Enrollment Date:</label>
@@ -772,23 +912,19 @@ const handleChange = useCallback(
                          {hasAttemptedSubmit && formErrors.rollNo && <small style={errorStyle}>{formErrors.rollNo}</small>}
                     </div>
                     <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="studentIdentifier">Registration ID (School Specific):</label>
-                        <input style={getInputClass('studentIdentifier')} type="text" id="studentIdentifier" name="studentIdentifier" value={formData.studentIdentifier} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />
-                    </div>
-                    <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="emergencyContactNo">Emergency Contact No:</label>
+                        <label style={labelStyle} htmlFor="studentIdentifier">Registration ID (Institution Specific):</label>
                         <input 
-                            style={getInputClass('emergencyContactNo')} 
-                            type="tel" 
-                            id="emergencyContactNo" 
-                            name="emergencyContactNo" 
-                            value={formData.emergencyContactNo} 
-                            onChange={handleChange} 
-                            disabled={isLoading} 
-                            onFocus={handleFocus} 
-                            onBlur={handleBlur}
-                        />
-                        {hasAttemptedSubmit && formErrors.emergencyContactNo && <small style={errorStyle}>{formErrors.emergencyContactNo}</small>}
+              style={getInputClass('studentIdentifier')} 
+              type="text" 
+              id="studentIdentifier" 
+              name="studentIdentifier" 
+              value={formData.studentIdentifier} 
+              onChange={handleChange} 
+              disabled={isLoading} 
+              onFocus={handleFocus} 
+              onBlur={handleBlur}
+              maxLength={FIELD_LENGTHS.STUDENT_IDENTIFIER}
+            />
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="bloodGroupId">Blood Group:</label>
@@ -830,7 +966,7 @@ const handleChange = useCallback(
                             <small style={errorStyle}>{formErrors.houseId}</small>
                         )}
                     </div>
-                    {isEditMode && (
+                    {/* {isEditMode && (
           <div style={formGroupStyle}>
             <label htmlFor="isActive" style={{ marginRight: "10px" }}>
               <input
@@ -844,7 +980,7 @@ const handleChange = useCallback(
               Active
             </label>
           </div>
-        )}
+        )} */}
          {/* <div style={formGroupStyle}>
                      <label style={labelStyle}>School:</label>
                      <input style={inputStyle} type="text" value={selectedSchool?.name || (isEditMode ? currentStudent?.schoolName : 'Select school in header')} disabled />

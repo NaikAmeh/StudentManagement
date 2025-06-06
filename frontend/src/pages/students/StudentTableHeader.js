@@ -121,14 +121,22 @@ const StudentTableHeader = ({
           </span>
         </th>
         <th style={thStyle}>
+          <span
+            style={pointerStyle}
+            onClick={(e) => onOpenFilterPopup("address", e)}
+          >
+            Address
+          </span>
+          <span
+            onClick={() => onSort("address")}
+            style={{ cursor: "pointer", marginLeft: "5px", color: getSortIndicatorColor("address") }}
+          >
+            {getSortIndicator("address")}
+          </span>
+        </th>
+        <th style={thStyle}>
             Status
             {/* Optional: Add sorting by status if needed */}
-             {/* <span
-                onClick={() => onSort("isActive")}
-                style={{...sortIndicatorStyle, color: getSortIndicatorColor('isActive')}}
-             >
-                 {getSortIndicator("isActive")}
-             </span> */}
         </th>
         <th style={actionsCellStyle}>Actions</th>
       </tr>

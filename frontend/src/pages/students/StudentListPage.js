@@ -142,7 +142,11 @@ debugger;
       const divisionMatch = !filters.division || 
         student.divisionId?.toString() === filters.division?.toString();
       
-      return nameMatch && idMatch && standardMatch && divisionMatch;
+      // Address filter
+      const addressMatch = !filters.address || 
+        student.address?.toLowerCase().includes(filters.address.toLowerCase());
+      
+      return nameMatch && idMatch && standardMatch && divisionMatch && addressMatch;
     });
 
     if (sortConfig.key) {
