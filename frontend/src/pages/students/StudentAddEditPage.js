@@ -113,6 +113,12 @@ const inputErrorStyle = {
   backgroundColor: "rgba(220, 53, 69, 0.05)"
 };
 
+const requiredIndicatorStyle = {
+  color: '#dc3545',
+  marginLeft: '3px'
+};
+
+
 // Add style for focused state
 const inputFocusedStyle = {
   ...inputStyle,
@@ -627,6 +633,7 @@ const handleChange = useCallback(
   }, [hasAttemptedSubmit, validateField]);
 
   const getInputClass = (fieldName) => {
+    debugger;
     if (focusedField === fieldName) return inputFocusedStyle;
     return hasAttemptedSubmit && formErrors[fieldName] ? inputErrorStyle : inputStyle;
   };
@@ -672,9 +679,9 @@ const handleChange = useCallback(
         {/*<div style={gridStyle}>  Two-column layout for form fields */}
         <div style={gridStyle}>
         <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="fullName">Full Name:</label>
+                        <label style={labelStyle} htmlFor="fullName">Full Name<span style={requiredIndicatorStyle}>*</span>:</label>
                         <input 
-              style={getInputClass('fullName')} 
+              style={getInputClass('fullName')}
               type="text" 
               id="fullName" 
               name="fullName" 
@@ -842,10 +849,10 @@ const handleChange = useCallback(
   )}
                     </div>
                     <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="standard">Standard/Class:</label>
+                        <label style={labelStyle} htmlFor="standardId">Class<span style={requiredIndicatorStyle}>*</span>:</label>
                         <select
-                            style={getInputClass('standard')}
-                            id="standard"
+                            style={getInputClass('standardId')}
+                            id="standardId"
                             name="standardId"
                             value={formData.standardId || ''} // Ensure value is correctly bound
                             onChange={handleChange}
@@ -863,10 +870,10 @@ const handleChange = useCallback(
                     </div>
 
                     <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="division">Division:</label>
+                        <label style={labelStyle} htmlFor="divisionId">Division<span style={requiredIndicatorStyle}>*</span>:</label>
                         <select
-                            style={getInputClass('division')}
-                            id="division"
+                            style={getInputClass('divisionId')}
+                            id="divisionId"
                             name="divisionId"
                             value={formData.divisionId || ''} 
                             onChange={handleChange}
@@ -907,7 +914,7 @@ const handleChange = useCallback(
                       )}
                   </div>
                     <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="rollNo">Roll No:</label>
+                        <label style={labelStyle} htmlFor="rollNo">Roll No<span style={requiredIndicatorStyle}>*</span>:</label>
                         <input style={getInputClass('rollNo')} type="number" id="rollNo" name="rollNo" value={formData.rollNo} onChange={handleChange} disabled={isLoading} onFocus={handleFocus} onBlur={handleBlur} />
                          {hasAttemptedSubmit && formErrors.rollNo && <small style={errorStyle}>{formErrors.rollNo}</small>}
                     </div>
