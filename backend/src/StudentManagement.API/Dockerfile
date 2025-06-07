@@ -37,19 +37,27 @@ WORKDIR /app
 # Copy the published output from the build stage
 COPY --from=build-env /app/publish .
 
+# Copy the HTTPS certificate into the container
+COPY ../../aspnetapp.pfx /https/aspnetapp.pfx
+
+# Set permissions so the non-root user can read the certificate
+RUN chmod 644 /https/aspnetapp.pfx
+
 # Create a non-root user and an uploads directory
 RUN useradd -m myappuser
 RUN mkdir -p /app/uploads && chown -R myappuser:myappuser /app/uploads
 
 # Create Resources directory and set permissions
 RUN mkdir -p /app/Resources && chown -R myappuser:myappuser /app/Resources
+RUN mkdir -p /app/appdata && chmod 777 /app/appdata
 
 USER myappuser
 
 # Expose the port the application will listen on
-EXPOSE 8080
-# Define the URL Kestrel should listen on (all interfaces within container)
-ENV ASPNETCORE_URLS=http://+:8080
+#EXPOSE 8080
+EXPOSE 8081
+# Define the URL Kestrel should listen on (all interfaces within container) ;http://+:8080
+ENV ASPNETCORE_URLS=https://+:8081
 
 # Entry point for the application
 ENTRYPOINT ["dotnet", "StudentManagement.API.dll"]
