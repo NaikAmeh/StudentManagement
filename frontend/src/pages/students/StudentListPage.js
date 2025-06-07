@@ -441,7 +441,6 @@ downloadBlob(response.data, `students_school_${selectedSchoolId}.xlsx`);
   return (
     <div style={listContainerStyle}>
       <ToastContainer position="top-right" />
-      <h2>Student List {selectedSchool ? `- ${selectedSchool.name}` : ""}</h2>
 
       {/* Display general fetch error for the student list */}
       <ErrorMessage message={studentFetchError} />
