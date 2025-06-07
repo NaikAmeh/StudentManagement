@@ -38,7 +38,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.AllowAnyOrigin()
+                          policy.WithOrigins(allowedOrigins)
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .WithExposedHeaders("Content-Disposition");
@@ -242,22 +242,43 @@ if (app.Environment.IsDevelopment())
 app.UseCors(MyAllowSpecificOrigins);
 
 // Use a fixed server path for storing student images (e.g., /var/appdata/student-images on Linux, or C:\AppData\StudentImages on Windows)
-//var serverImagePath = Environment.OSVersion.Platform == PlatformID.Win32NT
-//    ? @"D:\Projects\Core\StudentManagement\CodeBase\Resources\Images\Students"
-//    : "/var/appdata/student-images";
+// var serverImagePath = Environment.OSVersion.Platform == PlatformID.Win32NT
+//     ? @"D:\Projects\Core\StudentManagement\CodeBase\Resources\Images\Students"
+//     : "/var/appdata/student-images";
 
-var serverImagePath = Path.Combine(builder.Configuration.GetSection("FileStorageSettings")["LocalStorageBasePath"], "Students");
+//var serverImagePath = Path.Combine(builder.Configuration.GetSection("FileStorageSettings")["LocalStorageBasePath"], "Students");
+
+// var config = builder.Configuration;
+// var storageBasePath = config.GetSection("FileStorageSettings")["LocalStorageBasePath"];
 
 
 //var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Resources", "Images", "Students");
+// if (!Directory.Exists(serverImagePath))
+// {
+//     Directory.CreateDirectory(serverImagePath);
+// }
+// IMPORTANT: This enables serving static files from wwwroot
+// app.UseStaticFiles(new StaticFileOptions
+// {
+//     FileProvider = new PhysicalFileProvider(serverImagePath),//User config
+//     RequestPath = "/uploads"
+// });
+
+var config = builder.Configuration;
+var storageBasePath = config.GetSection("FileStorageSettings")["LocalStorageBasePath"] ?? "/app/Resources";
+var studentPhotoContainer = config.GetSection("FileStorageSettings")["StudentPhotoContainer"] ?? "Students";
+var serverImagePath = Path.Combine(storageBasePath, studentPhotoContainer);
+
+// Ensure the directory exists
 if (!Directory.Exists(serverImagePath))
 {
     Directory.CreateDirectory(serverImagePath);
 }
-// IMPORTANT: This enables serving static files from wwwroot
+
+// Enable serving static files from the configured directory
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(serverImagePath),//User config
+    FileProvider = new PhysicalFileProvider(serverImagePath),
     RequestPath = "/uploads"
 });
 

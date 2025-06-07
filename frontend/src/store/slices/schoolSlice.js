@@ -54,13 +54,13 @@ export const fetchSchools = createAsyncThunk(
 
         try {
             let response;
-             if (auth.user?.role === 'Admin') {
+             //if (auth.user?.role === 'Admin') {
                  console.log("Redux fetching all schools for Admin");
-                 response = await api.get('/api/schools');
-             } else {
-                 console.log("Redux fetching assigned schools for StandardUser");
-                 response = await api.get('/api/users/me/schools');
-             }
+                 response = await api.get('/api/Schools');
+            //  } else {
+            //      console.log("Redux fetching assigned schools for StandardUser");
+            //      response = await api.get('/api/users/me/schools');
+            //  }
 
              if (response.data && Array.isArray(response.data)) {
                  return response.data; // Return the array of SchoolDto

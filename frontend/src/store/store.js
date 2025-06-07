@@ -6,7 +6,7 @@ import schoolReducer from './slices/schoolSlice';
 import studentReducer from './slices/studentSlice';
 import userReducer from './slices/userSlice'; // Import
 import standardDivisionSlice from "./slices/standardDivisionSlice"; // Import the new slice
-
+const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 // Import other slice reducers as you create them (e.g., studentReducer)
 
@@ -24,12 +24,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     thunk: {
       extraArgument: {
-        apiBaseUrl: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+        apiBaseUrl: API_IMAGE_URL || 'http://localhost:5000',
       },
     },
   }),
   // Enable Redux DevTools extension support (enabled by default in development)
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: import.meta.env.NODE_ENV !== 'production',
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

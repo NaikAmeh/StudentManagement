@@ -21,6 +21,6 @@ COPY . .
 EXPOSE 5173
 
 # The actual command to run the dev server will be specified in docker-compose.yml
-# CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "run", "dev", "--", "--host"]
 
     
