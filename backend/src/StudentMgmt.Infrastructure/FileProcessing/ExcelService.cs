@@ -20,33 +20,103 @@ namespace StudentMgmt.Infrastructure.FileProcessing
         }
 
         /// <inheritdoc />
+        //public Task<byte[]> GenerateExcelExportAsync<T>(IEnumerable<T> data, string sheetName = "Sheet1") where T : class
+        //{
+        //    _logger.LogInformation("Generating Excel export for {DataType} data.", typeof(T).Name);
+        //    try
+        //    {
+        //        using (var workbook = new XLWorkbook())
+        //        {
+        //            // ClosedXML can insert data directly from IEnumerable<T>
+        //            var worksheet = workbook.Worksheets.Add(sheetName);
+        //            worksheet.Cell(1, 1).InsertTable(data); // Assumes T properties match desired columns
+
+        //            // Optional: Adjust column widths
+        //            worksheet.Columns().AdjustToContents();
+
+        //            using (var stream = new MemoryStream())
+        //            {
+        //                workbook.SaveAs(stream);
+        //                _logger.LogInformation("Excel export generated successfully.");
+        //                return Task.FromResult(stream.ToArray());
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error generating Excel export for {DataType}", typeof(T).Name);
+        //        throw; // Re-throw to allow service layer/controller to handle
+        //    }
+        //}
+
         public Task<byte[]> GenerateExcelExportAsync<T>(IEnumerable<T> data, string sheetName = "Sheet1") where T : class
         {
-            _logger.LogInformation("Generating Excel export for {DataType} data.", typeof(T).Name);
-            try
+            using var stream = new MemoryStream();
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add(sheetName);
+
+            // Define column headers and their display names
+            var columnMappings = new Dictionary<string, string>
+    {
+        { "FullName", "Name" },
+        { "DateOfBirth", "Date of Birth" },
+        { "Gender", "Gender" },
+        { "Email", "Email" },
+        { "PhoneNo", "Mobile" },
+        { "Address", "Address" },
+        { "EnrollmentDate", "Enrollment Date" },
+        { "StandardName", "Class" },
+        { "DivisionName", "Division" },
+        { "RollNo", "Roll No" },
+        { "StudentIdentifier", "Reg. No." },
+        { "BloodGroupName", "Blood Group" },
+        { "HouseName", "House" },
+        { "PhotoPath", "Photo" }
+    };
+
+            // Set header row
+            int col = 1;
+            foreach (var mapping in columnMappings)
             {
-                using (var workbook = new XLWorkbook())
+                worksheet.Cell(1, col).Value = mapping.Value;
+                worksheet.Cell(1, col).Style.Font.Bold = true;
+                col++;
+            }
+
+            // Add data rows
+            int row = 2;
+            var properties = typeof(T).GetProperties();
+
+            foreach (var item in data)
+            {
+                col = 1;
+                foreach (var mapping in columnMappings)
                 {
-                    // ClosedXML can insert data directly from IEnumerable<T>
-                    var worksheet = workbook.Worksheets.Add(sheetName);
-                    worksheet.Cell(1, 1).InsertTable(data); // Assumes T properties match desired columns
-
-                    // Optional: Adjust column widths
-                    worksheet.Columns().AdjustToContents();
-
-                    using (var stream = new MemoryStream())
+                    var prop = properties.FirstOrDefault(p => p.Name == mapping.Key);
+                    if (prop != null)
                     {
-                        workbook.SaveAs(stream);
-                        _logger.LogInformation("Excel export generated successfully.");
-                        return Task.FromResult(stream.ToArray());
+                        var value = prop.GetValue(item);
+
+                        // Format dates as dd/MM/yyyy
+                        if (value is DateTime dateValue)
+                        {
+                            worksheet.Cell(row, col).Value = dateValue.ToString("dd/MM/yyyy");
+                        }
+                        else
+                        {
+                            worksheet.Cell(row, col).Value = value?.ToString() ?? string.Empty;
+                        }
                     }
+                    col++;
                 }
+                row++;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error generating Excel export for {DataType}", typeof(T).Name);
-                throw; // Re-throw to allow service layer/controller to handle
-            }
+
+            // Auto-fit columns
+            worksheet.Columns().AdjustToContents();
+
+            workbook.SaveAs(stream);
+            return Task.FromResult(stream.ToArray());
         }
 
 
