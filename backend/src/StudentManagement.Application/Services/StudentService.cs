@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StudentManagement.Application.Features.Schools.ViewModels;
@@ -455,23 +456,47 @@ namespace StudentManagement.Application.Services
             }
         }
 
-        public async Task<byte[]> ExportStudentsToExcelAsync(int schoolId)
+        public async Task<byte[]> ExportStudentsToExcelAsync(int schoolId, StudentExportFilter? filter = null)
         {
-            _logger.LogInformation("Generating Excel export for School ID: {SchoolId}", schoolId);
-            // Get summary data (adjust DTO if different fields needed for export)
-            var students = await GetStudentsBySchoolAsync(schoolId);
+            _logger.LogInformation("Generating Excel export for School ID: {SchoolId} with filters", schoolId);
+            
+            // Build query with filters
+            var query = _unitOfWork.Repository<Student>().GetQueryable()
+                .Where(s => s.SchoolId == schoolId);
+            
+            // Apply filters if provided
+            if (filter != null)
+            {
+                if (!string.IsNullOrWhiteSpace(filter.Name))
+                    query = query.Where(s => s.FullName.Contains(filter.Name));
+                    
+                if (!string.IsNullOrWhiteSpace(filter.StudentIdentifier))
+                    query = query.Where(s => s.StudentIdentifier.Contains(filter.StudentIdentifier));
+                    
+                if (filter.StandardId.HasValue)
+                    query = query.Where(s => s.StandardId == filter.StandardId.Value);
+                    
+                if (filter.DivisionId.HasValue)
+                    query = query.Where(s => s.DivisionId == filter.DivisionId.Value);
+                    
+                if (!string.IsNullOrWhiteSpace(filter.Address))
+                    query = query.Where(s => s.Address.Contains(filter.Address));
+            }
+            
+            // Include the School to get school name 
+            var students = await query
+                .Include(s => s.School)
+                .OrderBy(s => s.FullName)
+                .ToListAsync();
+                
             if (!students.Any())
             {
-                _logger.LogWarning("No students found for School ID {SchoolId} to export.", schoolId);
-                // Return empty Excel or throw? Returning empty seems better.
+                _logger.LogWarning("No students found for School ID {SchoolId} matching the filters to export.", schoolId);
+                // Return empty Excel file
             }
-
-            // Use a simplified DTO if StudentSummaryDto has too much/wrong info
-            // var exportData = _mapper.Map<IEnumerable<StudentExportDto>>(students);
-            // return await _excelService.GenerateExcelExportAsync(exportData, $"School_{schoolId}_Students");
-
-            // Using StudentSummaryDto for now:
-            return await _excelService.GenerateExcelExportAsync(students, $"School_{schoolId}_Students");
+            
+            var studentDtos = _mapper.Map<IReadOnlyList<VmStudentSummary>>(students);
+            return await _excelService.GenerateExcelExportAsync(studentDtos, $"School_{schoolId}_Students");
         }
 
         /// <inheritdoc />

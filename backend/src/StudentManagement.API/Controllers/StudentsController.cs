@@ -338,24 +338,42 @@ namespace StudentManagement.API.Controllers
         }
 
         /// <summary>
-        /// Exports student data for a specific school to an Excel file.
+        /// Exports student data for a specific school to an Excel file, with optional filters.
         /// </summary>
         /// <param name="schoolId">The ID of the school.</param>
+        /// <param name="name">Optional: Filter by student name (partial match).</param>
+        /// <param name="studentIdentifier">Optional: Filter by student identifier.</param>
+        /// <param name="standardId">Optional: Filter by standard ID.</param>
+        /// <param name="divisionId">Optional: Filter by division ID.</param>
+        /// <param name="address">Optional: Filter by address (partial match).</param>
         /// <returns>An Excel file containing student data.</returns>
-        // GET: api/schools/{schoolId}/students/export
         [HttpGet("/api/schools/{schoolId:int}/students/export")]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ExportStudents(int schoolId)
+        public async Task<IActionResult> ExportStudents(
+            int schoolId,
+            [FromQuery] string? name = null,
+            [FromQuery] string? studentIdentifier = null,
+            [FromQuery] int? standardId = null,
+            [FromQuery] int? divisionId = null,
+            [FromQuery] string? address = null)
         {
-            _logger.LogInformation("Executing {ActionName} for School ID: {SchoolId}", nameof(ExportStudents), schoolId);
+            _logger.LogInformation("Executing {ActionName} for School ID: {SchoolId} with filters", nameof(ExportStudents), schoolId);
             if (!await CanUserAccessSchool(schoolId)) return Forbid();
 
             try
             {
-                byte[] fileContents = await _studentService.ExportStudentsToExcelAsync(schoolId);
+                var filter = new StudentExportFilter
+                {
+                    Name = name,
+                    StudentIdentifier = studentIdentifier,
+                    StandardId = standardId,
+                    DivisionId = divisionId,
+                    Address = address
+                };
+                byte[] fileContents = await _studentService.ExportStudentsToExcelAsync(schoolId, filter);
                 string fileName = $"students_school_{schoolId}_{DateTime.UtcNow:yyyyMMddHHmmss}.xlsx";
                 return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }

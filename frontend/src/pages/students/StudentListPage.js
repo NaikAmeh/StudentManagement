@@ -294,24 +294,54 @@ debugger;
   };
 
   const handleExportExcel = useCallback(async () => {
-    if (!selectedSchoolId) return alert("Please select a school.");
-    if (totalFilteredCount === 0) return alert("No filtered students to export.");
-    console.log("Exporting Excel for school:", selectedSchoolId);
+    if (!selectedSchoolId) {
+      toast.warning("Please select a school first");
+      return;
+    }
+    
     try {
-      const response = await api.get(`/api/schools/${selectedSchoolId}/students/export`, { responseType: "blob" });
-      downloadBlob(response.data, `students_school_${selectedSchoolId}.xlsx`);
-    } catch (err) { console.error("Excel Export Failed:", err); alert("Failed to export Excel."); }
-  }, [selectedSchoolId, totalFilteredCount]);
+      // Create query params from current filters
+const params = new URLSearchParams();
+if (filters.fullName) params.append('name', filters.fullName);
+if (filters.studentIdentifier) params.append('studentIdentifier', filters.studentIdentifier);
+if (filters.standard) params.append('standardId', filters.standard);
+if (filters.division) params.append('divisionId', filters.division);
+if (filters.address) params.append('address', filters.address);
+
+const queryString = params.toString();
+const url = `/api/schools/${selectedSchoolId}/students/export${queryString ? `?${queryString}` : ''}`;
+
+const response = await api.get(url, { responseType: "blob" });
+downloadBlob(response.data, `students_school_${selectedSchoolId}.xlsx`);
+      toast.success("Excel export completed successfully");
+    } catch (err) { 
+      console.error("Excel Export Failed:", err); 
+      toast.error("Failed to export Excel file");
+    }
+  }, [selectedSchoolId, filters]);
 
   const handleDownloadBulkPdf = useCallback(async () => {
-    if (!selectedSchoolId) return alert("Please select a school.");
-    if (!students || students.length === 0) return alert("No students found.");
+    if (!selectedSchoolId) {
+      toast.warning("Please select a school");
+      return;
+    }
+    if (!students || students.length === 0) {
+      toast.warning("No students found");
+      return;
+    }
     console.log("Downloading Bulk PDF for school:", selectedSchoolId);
     try {
       const response = await api.get(`/api/schools/${selectedSchoolId}/students/idcards/bulk`, { responseType: "blob" });
-       if (response.status === 204 || response.data.size === 0) { alert("No student data."); return; }
+      if (response.status === 204 || response.data.size === 0) {
+        toast.warning("No student data available");
+        return;
+      }
       downloadBlob(response.data, `idcards_bulk_school_${selectedSchoolId}.pdf`);
-    } catch (err) { console.error("Bulk PDF Failed:", err); alert("Failed to download bulk PDF."); }
+      toast.success("PDF export completed successfully");
+    } catch (err) {
+      console.error("Bulk PDF Failed:", err);
+      toast.error("Failed to download bulk PDF");
+    }
   }, [selectedSchoolId, students]);
 
   const handleDownloadSinglePdf = useCallback(async (studentId) => {

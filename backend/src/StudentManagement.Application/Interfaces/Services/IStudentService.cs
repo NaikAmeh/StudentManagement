@@ -61,7 +61,17 @@ namespace StudentManagement.Application.Interfaces.Services
         /// <summary>
         /// Generates an Excel file byte array for students of a specific school.
         /// </summary>
-        Task<byte[]> ExportStudentsToExcelAsync(int schoolId);
+        /// <param name="schoolId">The ID of the school.</param>
+        /// <returns>Excel file as byte array.</returns>
+        //Task<byte[]> ExportStudentsToExcelAsync(int schoolId);
+
+        /// <summary>
+        /// Generates an Excel file byte array for students of a specific school with optional filters.
+        /// </summary>
+        /// <param name="schoolId">The ID of the school.</param>
+        /// <param name="filter">Optional filter criteria for the export.</param>
+        /// <returns>Excel file as byte array.</returns>
+        Task<byte[]> ExportStudentsToExcelAsync(int schoolId, StudentExportFilter? filter = null);
 
         /// <summary>
         /// Imports students from an Excel stream for a specific school, validates, and saves valid records.
