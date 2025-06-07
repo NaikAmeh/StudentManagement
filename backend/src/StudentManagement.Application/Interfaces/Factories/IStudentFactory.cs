@@ -11,7 +11,7 @@ namespace StudentManagement.Application.Interfaces.Factories
 {
     public interface IStudentFactory : IBaseFactory
     {
-        Student Create(string fullName, DateTime? dateOfBirth, string gender, string email, string phoneNo, string address, DateTime enrollmentDate,
-        int standardId, int divisionId, int rollNo, string studentIdentifier, string photoPath, string photoName, bool isActive, School school, string emergencyContactNo, int? bloodGroupId = null, int? houseId = null);
+        Student Create(string fullName, DateTime? dateOfBirth, string gender, string email, string phoneNo, string address, DateTime? enrollmentDate,
+        int standardId, int divisionId, int rollNo, string studentIdentifier, string photoPath, string photoName, bool isActive, School school, string emergencyContactNo, int? bloodGroupId = null, int? houseId = null, int studentStatusId = 1);
     }
 }

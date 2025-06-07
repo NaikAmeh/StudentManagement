@@ -8,6 +8,7 @@ const importResultsContainerStyle = {
   padding: "15px",
   borderRadius: "5px",
   backgroundColor: "#fff3cd",
+  position: "relative",
 };
 const tableStyle = {
   width: "100%",
@@ -29,8 +30,19 @@ const errorTextStyle = { color: "#dc3545" };
 const successTextStyle = { color: "#198754", fontWeight: 'bold' };
 const warningTextStyle = { color: "#ff9800", fontWeight: 'bold' };
 const fileErrorStyle = { color: "#dc3545", fontWeight: "bold", marginBottom: '10px' };
+const closeButtonStyle = {
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+  padding: "5px 10px",
+  border: "none",
+  background: "#dc3545",
+  color: "white",
+  borderRadius: "3px",
+  cursor: "pointer",
+};
 
-const ImportResultsDisplay = ({ results }) => {
+const ImportResultsDisplay = ({ results, onClose }) => {
   if (!results || results.length === 0) return null;
 
   const errorsExist = results.some((r) => !r.success);
@@ -39,6 +51,7 @@ const ImportResultsDisplay = ({ results }) => {
 
   return (
     <div style={importResultsContainerStyle}>
+      <button onClick={onClose} style={closeButtonStyle}>×</button>
       <h4>Import Results:</h4>
       {globalError && (
         <p style={fileErrorStyle}>
@@ -69,9 +82,8 @@ const ImportResultsDisplay = ({ results }) => {
               <th style={{...thStyle, width: '60px'}}>Row #</th>
               <th style={{...thStyle, width: '80px'}}>Status</th>
               <th style={thStyle}>Errors</th>
-              <th style={thStyle}>First Name</th>
-              <th style={thStyle}>Last Name</th>
-              <th style={thStyle}>Identifier</th>
+              <th style={thStyle}>Student Name</th>
+              <th style={thStyle}>Registration ID</th>
             </tr>
           </thead>
           <tbody>
@@ -90,10 +102,7 @@ const ImportResultsDisplay = ({ results }) => {
                     </span>
                   </td>
                   <td style={thTdStyle}>
-                    {result.importedData?.firstName || ""}
-                  </td>
-                  <td style={thTdStyle}>
-                    {result.importedData?.lastName || ""}
+                    {result.importedData?.fullName || ""}
                   </td>
                   <td style={thTdStyle}>
                     {result.importedData?.studentIdentifier || ""}

@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using StudentManagement.Application.Interfaces.Services;
+using StudentManagement.Application.Features.Schools.ViewModels;
+using StudentManagement.Application.Features.Students;
 using StudentManagement.Application.Interfaces;
+using StudentManagement.Application.Interfaces.Factories;
+using StudentManagement.Application.Interfaces.Infrastructure;
+using StudentManagement.Application.Interfaces.Services;
 using StudentManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using StudentManagement.Application.Features.Students;
-using StudentManagement.Application.Interfaces.Infrastructure;
-using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
-using StudentManagement.Application.Interfaces.Factories;
-using StudentManagement.Application.Features.Schools.ViewModels;
 
 namespace StudentManagement.Application.Services
 {
@@ -119,10 +120,20 @@ namespace StudentManagement.Application.Services
                 bool idExists = await DoesStudentIdentifierExistInSchoolAsync(createDto.SchoolId, createDto.StudentIdentifier, null);
                 if (idExists)
                 {
-                    string msg = $"Cannot add student: Student Identifier '{createDto.StudentIdentifier}' already exists in School ID {createDto.SchoolId}.";
+                    string msg = $"Cannot add student: Registration ID '{createDto.StudentIdentifier}' already exists.";
                     _logger.LogWarning(msg);
                     throw new ArgumentException(msg, nameof(createDto.StudentIdentifier));
                 }
+            }
+
+            // 3. Check for duplicate Roll Number within the same standard and division in the school
+            bool rollExists = await DoesRollNumberExistInStandardAndDivisionAsync(
+                createDto.SchoolId, createDto.StandardId, createDto.DivisionId, createDto.RollNo, null);
+            if (rollExists)
+            {
+                string msg = $"Cannot add student: Roll number {createDto.RollNo} already exists in this standard and division.";
+                _logger.LogWarning(msg);
+                throw new ArgumentException(msg, nameof(createDto.RollNo));
             }
             // --- End Validation ---
 
@@ -135,7 +146,27 @@ namespace StudentManagement.Application.Services
                 School school = await _unitOfWork.Repository<School>().GetByIdAsync(createDto.SchoolId);
                 await _unitOfWork.ExecuteInTransactionAsync(async () =>
                 {
-                    student = _objectFactory.GetFactory<IStudentFactory>().Create(createDto.FullName, createDto.DateOfBirth, createDto.Gender, createDto.Email, createDto.PhoneNo, createDto.Address, createDto.EnrollmentDate.Value, createDto.StandardId, createDto.DivisionId, createDto.RollNo, createDto.StudentIdentifier, null, null, createDto.isActive, school, createDto.EmergencyContactNo, createDto.BloodGroupId, createDto.HouseId);
+                    student = _objectFactory.GetFactory<IStudentFactory>().Create(
+                        createDto.FullName,
+                        createDto.DateOfBirth.HasValue ? createDto.DateOfBirth.Value : null, // Ensure non-null DateTime
+                        createDto.Gender,
+                        createDto.Email,
+                        createDto.PhoneNo,
+                        createDto.Address,
+                        createDto.EnrollmentDate.HasValue ? createDto.EnrollmentDate.Value : null, // Ensure non-null DateTime
+                        createDto.StandardId,
+                        createDto.DivisionId,
+                        createDto.RollNo,
+                        createDto.StudentIdentifier,
+                        null,
+                        null,
+                        createDto.isActive,
+                        school,
+                        !string.IsNullOrWhiteSpace(createDto.EmergencyContactNo) ? createDto.EmergencyContactNo : null,
+                        createDto.BloodGroupId,
+                        createDto.HouseId,
+                        createDto.StudentStatusID
+                    );
 
                     await _unitOfWork.Repository<Student>().AddAsync(student);
                     await _unitOfWork.CompleteAsync();
@@ -182,6 +213,21 @@ namespace StudentManagement.Application.Services
                     string msg = $"Cannot update student: Student Identifier '{updateDto.StudentIdentifier}' already exists in School ID {studentEntity.SchoolId}.";
                     _logger.LogWarning(msg);
                     throw new ArgumentException(msg, nameof(updateDto.StudentIdentifier));
+                }
+            }
+
+            // Check for duplicate Roll Number within the same standard and division (if changed)
+            if (updateDto.RollNo != studentEntity.RollNo || 
+                updateDto.StandardId != studentEntity.StandardId || 
+                updateDto.DivisionId != studentEntity.DivisionId)
+            {
+                bool rollExists = await DoesRollNumberExistInStandardAndDivisionAsync(
+                    studentEntity.SchoolId, updateDto.StandardId, updateDto.DivisionId, updateDto.RollNo, id);
+                if (rollExists)
+                {
+                    string msg = $"Cannot update student: Roll number {updateDto.RollNo} already exists in this standard and division.";
+                    _logger.LogWarning(msg);
+                    throw new ArgumentException(msg, nameof(updateDto.RollNo));
                 }
             }
             // --- End Validation ---
@@ -283,7 +329,44 @@ namespace StudentManagement.Application.Services
 
             return await _unitOfWork.Repository<Student>().AnyAsync(predicate);
         }
-        //implement 
+
+        /// <summary>
+        /// Checks if a roll number already exists within a specific standard and division in a school, excluding a given student ID.
+        /// </summary>
+        /// <param name="schoolId">The school ID to check</param>
+        /// <param name="standardId">The standard/class ID to check</param>
+        /// <param name="divisionId">The division ID to check</param>
+        /// <param name="rollNo">The roll number to check</param>
+        /// <param name="excludeStudentId">Optional: Student ID to exclude from the check (useful when updating)</param>
+        /// <returns>True if the roll number exists for another student in the same standard and division</returns>
+        private async Task<bool> DoesRollNumberExistInStandardAndDivisionAsync(int schoolId, int standardId, int divisionId, int rollNo, int? excludeStudentId)
+        {
+            _logger.LogInformation("Checking if roll number {RollNo} exists in School ID {SchoolId}, Standard ID {StandardId} and Division ID {DivisionId}", 
+                rollNo, schoolId, standardId, divisionId);
+
+            // Build the predicate dynamically
+            Expression<Func<Student, bool>> predicate = s =>
+                s.SchoolId == schoolId &&
+                s.StandardId == standardId &&
+                s.DivisionId == divisionId &&
+                s.RollNo == rollNo;
+
+            // If excludeStudentId has a value, add condition to exclude that student
+            if (excludeStudentId.HasValue)
+            {
+                Expression<Func<Student, bool>> excludePredicate = s => s.StudentId != excludeStudentId.Value;
+                // Combine predicates using Expression Trees
+                var param = Expression.Parameter(typeof(Student), "s");
+                var body = Expression.AndAlso(
+                    Expression.Invoke(predicate, param),
+                    Expression.Invoke(excludePredicate, param)
+                );
+                predicate = Expression.Lambda<Func<Student, bool>>(body, param);
+            }
+
+            return await _unitOfWork.Repository<Student>().AnyAsync(predicate);
+        }
+
         public async Task<string?> UpdateStudentPhotoAsync(int studentId, Stream photoStream, string contentType, string originalFileName)
         {
             _logger.LogInformation("Attempting to update photo for Student ID: {StudentId}", studentId);
@@ -394,9 +477,14 @@ namespace StudentManagement.Application.Services
         /// <inheritdoc />
         public async Task<List<VmStudentImportResult>> ImportStudentsFromExcelAsync(int schoolId, Stream excelStream)
         {
+            var validStudentStatuses = await _unitOfWork.Repository<StudentStatus>().GetAllAsync();
+
             _logger.LogInformation("Starting Excel import process for School ID: {SchoolId}", schoolId);
             var results = new List<VmStudentImportResult>();
             var validStudentsToCreate = new List<Student>();
+            var validStudentsToUpdate = new List<Student>();
+            var vmStudentsToCreate = new VmCreateStudent();
+            var vmStudentsToUpdate = new VmUpdateStudent();
 
             // 1. Check if school exists
             var schoolExists = await _unitOfWork.Repository<School>().AnyAsync(s => s.SchoolId == schoolId);
@@ -439,6 +527,7 @@ namespace StudentManagement.Application.Services
             {
                 var result = new VmStudentImportResult { RowNumber = dto.RowNumber, ImportedData = dto };
                 results.Add(result);
+                bool isExistingStudent = false; //give proper name 
 
                 // Basic DTO Validation
                 var validationResult = await _importValidator.ValidateAsync(dto);
@@ -450,23 +539,126 @@ namespace StudentManagement.Application.Services
                     continue;
                 }
 
+                Student? student = null;
                 // Business Validation: Unique Student Identifier
                 if (!string.IsNullOrWhiteSpace(dto.StudentIdentifier))
                 {
                     // Check against existing DB identifiers
                     if (existingIdentifiers.Contains(dto.StudentIdentifier!))
                     {
-                        result.Success = false;
-                        result.Errors.Add($"Student Identifier '{dto.StudentIdentifier}' already exists in this school.");
+                        isExistingStudent = true;
+
+                        // Fix for CS8600: Converting null literal or possible null value to non-nullable type.
+                        student = await _unitOfWork.Repository<Student>().FirstOrDefaultAsync(
+                            s => s.SchoolId == schoolId && s.StudentIdentifier == dto.StudentIdentifier
+                        ) ?? throw new InvalidOperationException($"Student with identifier '{dto.StudentIdentifier}' not found.");
+
+                        //result.Success = false;
+                        //result.Errors.Add($"Registration ID '{dto.StudentIdentifier}' already exists in this school.");
                     }
                     // Check against identifiers already added in this batch (prevent duplicates within the file)
                     else if (validStudentsToCreate.Any(s => s.StudentIdentifier != null && s.StudentIdentifier.Equals(dto.StudentIdentifier, StringComparison.OrdinalIgnoreCase)))
                     {
                         result.Success = false;
-                        result.Errors.Add($"Duplicate Student Identifier '{dto.StudentIdentifier}' found within the import file.");
+                        result.Errors.Add($"Duplicate Registration ID '{dto.StudentIdentifier}' found within the import file.");
+                        continue;
                     }
                 }
+                else
+                {
+                    result.Success = false;
+                    result.Errors.Add("Registration ID is required.");
+                    continue;
+                }
 
+                if (string.IsNullOrWhiteSpace(dto.FullName))
+                {
+                    result.Success = false;
+                    result.Errors.Add("Student Name is required.");
+                    continue;
+                }
+
+                // Validate Standard and Division exist in school
+                int standardId = 0;
+                int divisionId = 0;
+
+                // Try to get StandardId from StandardName
+                if (!string.IsNullOrWhiteSpace(dto.StandardName))
+                {
+                    var standard = await _unitOfWork.Repository<Standard>().FirstOrDefaultAsync(
+                        s => s.Name == dto.StandardName && (s.SchoolId == null || s.SchoolId == schoolId));
+                        
+                    if (standard == null)
+                    {
+                        result.Success = false;
+                        result.Errors.Add($"Standard '{dto.StandardName}' does not exist in this school.");
+                        continue;
+                    }
+                    standardId = standard.StandardID;
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Errors.Add("Standard is required.");
+                    continue;
+                }
+
+                // Try to get DivisionId from DivisionName
+                if (!string.IsNullOrWhiteSpace(dto.DivisionName))
+                {
+                    var division = await _unitOfWork.Repository<Division>().FirstOrDefaultAsync(
+                        d => d.Name == dto.DivisionName && (d.SchoolId == null || d.SchoolId == schoolId));
+                        
+                    if (division == null)
+                    {
+                        result.Success = false;
+                        result.Errors.Add($"Division '{dto.DivisionName}' does not exist in this school.");
+                        continue;
+                    }
+                    divisionId = division.DivisionID;
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Errors.Add("Division is required.");
+                    continue;
+                }
+
+                
+                    // Validate Roll Number
+                    if (!string.IsNullOrWhiteSpace(dto.RollNo) && int.TryParse(dto.RollNo, out int rollNo))
+                    {
+                        // Check for duplicate roll numbers within the same standard and division in the database
+                        bool rollExistsInDb = await DoesRollNumberExistInStandardAndDivisionAsync(
+                            schoolId, standardId, divisionId, rollNo, isExistingStudent ? student?.StudentId : null);
+
+                        if (rollExistsInDb)
+                        {
+                            result.Success = false;
+                            result.Errors.Add($"Roll number {rollNo} already exists in this standard and division.");
+                            continue;
+                        }
+
+                        // Check for duplicate roll numbers within the same standard and division in the current import file
+                        bool rollExistsInImport = validStudentsToCreate.Any(s =>
+                            s.StandardId == standardId &&
+                            s.DivisionId == divisionId &&
+                            s.RollNo == rollNo);
+
+                        if (rollExistsInImport)
+                        {
+                            result.Success = false;
+                            result.Errors.Add($"Duplicate roll number {rollNo} for standard {dto.StandardName} and division {dto.DivisionName} found in the import file.");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        result.Success = false;
+                        result.Errors.Add("Valid Roll Number is required.");
+                        continue;
+                    }
+                
                 // Add more business validations if needed...
 
                 // If still valid after all checks
@@ -474,25 +666,141 @@ namespace StudentManagement.Application.Services
                 {
                     try
                     {
-                        // Map to Entity (handle DateOfBirth parsing)
-                        var studentEntity = _mapper.Map<Student>(dto);
-                        //studentEntity.SchoolId = schoolId;
-                        //studentEntity.IsActive = true;
-                        if (!string.IsNullOrWhiteSpace(dto.DateOfBirth) && DateOnly.TryParse(dto.DateOfBirth, out var dob))
-                        {
-                            //studentEntity.DateOfBirth = dob.ToDateTime(TimeOnly.MinValue); // Convert DateOnly if needed
-                        }
-                        else if (!string.IsNullOrWhiteSpace(dto.DateOfBirth))
-                        {
-                            // If parsing failed but validator didn't catch it (shouldn't happen with validator above)
-                            result.Success = false;
-                            result.Errors.Add($"Invalid date format for DateOfBirth: '{dto.DateOfBirth}'");
-                            continue; // Skip adding this student
-                        }
-                        //var student = _objectFactory.GetFactory<IStudentFactory>().Create(dto.FullName, dto.DateOfBirth, dto.Gender, dto.Email, dto.PhoneNo, dto.Address, dto.EnrollmentDate.Value, dto.StandardId, createDto.DivisionId, createDto.RollNo, createDto.StudentIdentifier, null, null, createDto.isActive, school);
+                        //TODO: SP
+                        ////// Create an object for bulk operation
+                        ////var bulkStudent = new VmStudentBulkImport
+                        ////{
+                        ////    IsExistingStudent = isExistingStudent,
+                        ////    FullName = dto.FullName,
+                        ////    Gender = dto.Gender,
+                        ////    Email = dto.Email,
+                        ////    PhoneNo = dto.PhoneNo,
+                        ////    Address = dto.Address,
+                        ////    SchoolId = schoolId,
+                        ////    StudentIdentifier = dto.StudentIdentifier,
+                        ////    DateOfBirth = dto.DateOfBirth,
+                        ////    EnrollmentDate = dto.EnrollmentDate,
+                        ////    StudentStatusID = isExistingStudent ? 0 : 1 // Default to Active for new students
+                        ////};
 
+                        ////// Handle lookups and conversions
+                        ////if (!string.IsNullOrWhiteSpace(dto.StandardName))
+                        ////{
+                        ////    var standard = await _unitOfWork.Repository<Standard>().FirstOrDefaultAsync(
+                        ////        s => s.Name == dto.StandardName && (s.SchoolId == null || s.SchoolId == schoolId));
+                        ////    if (standard != null)
+                        ////        bulkStudent.StandardId = standard.StandardID;
+                        ////}
 
-                        validStudentsToCreate.Add(studentEntity);
+                        ////if (!string.IsNullOrWhiteSpace(dto.DivisionName))
+                        ////{
+                        ////    var division = await _unitOfWork.Repository<Division>().FirstOrDefaultAsync(
+                        ////        d => d.Name == dto.DivisionName && (d.SchoolId == null || d.SchoolId == schoolId));
+                        ////    if (division != null)
+                        ////        bulkStudent.DivisionId = division.DivisionID;
+                        ////}
+
+                        ////if (!string.IsNullOrWhiteSpace(dto.RollNo) && int.TryParse(dto.RollNo, out int rollNo))
+                        ////{
+                        ////    bulkStudent.RollNo = rollNo;
+                        ////}
+
+                        ////validStudentsForBulkOperation.Add(bulkStudent);
+                        ////result.Success = true;
+
+                        //// Map to Entity (handle DateOfBirth parsing)
+                        //var studentEntity = _mapper.Map<VmCreateStudent>(dto);
+                        ////studentEntity.SchoolId = schoolId;
+                        ////studentEntity.IsActive = true;
+                        //if (!string.IsNullOrWhiteSpace(dto.DateOfBirth) && DateOnly.TryParse(dto.DateOfBirth, out var dob))
+                        //{
+                        //    studentEntity.DateOfBirth = dob.ToDateTime(TimeOnly.MinValue); // Convert DateOnly if needed
+                        //}
+                        //else if (!string.IsNullOrWhiteSpace(dto.DateOfBirth))
+                        //{
+                        //    // If parsing failed but validator didn't catch it (shouldn't happen with validator above)
+                        //    result.Success = false;
+                        //    result.Errors.Add($"Invalid date format for DateOfBirth: '{dto.DateOfBirth}'");
+                        //    continue; // Skip adding this student
+                        //}
+                        ////var student = _objectFactory.GetFactory<IStudentFactory>().Create(dto.FullName, dto.DateOfBirth, dto.Gender, dto.Email, dto.PhoneNo, dto.Address, dto.EnrollmentDate.Value, dto.StandardId, createDto.DivisionId, createDto.RollNo, createDto.StudentIdentifier, null, null, createDto.isActive, school);
+
+                        if (isExistingStudent)
+                        {
+                            VmUpdateStudent details = _mapper.Map<VmUpdateStudent>(dto);
+                            details.StandardId = standardId;
+                            details.DivisionId = divisionId;
+                            //details.SchoolId = schoolId;
+                            var dateFormats = new[] { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+
+                            if (!string.IsNullOrWhiteSpace(dto.DateOfBirth) &&
+                                DateOnly.TryParseExact(dto.DateOfBirth, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dob))
+                            {
+                                details.DateOfBirth = dob.ToDateTime(TimeOnly.MinValue);
+                            }
+                            else if (!string.IsNullOrWhiteSpace(dto.DateOfBirth))
+                            {
+                                // If parsing failed but validator didn't catch it (shouldn't happen with validator above)
+                                result.Success = false;
+                                result.Errors.Add($"Invalid date format for DateOfBirth: '{dto.DateOfBirth}'");
+                                continue; // Skip adding this student
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(dto.EnrollmentDate) &&
+                                DateOnly.TryParseExact(dto.EnrollmentDate, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var enrolDate))
+                            {
+                                details.EnrollmentDate = enrolDate.ToDateTime(TimeOnly.MinValue); // Convert DateOnly if needed
+                            }
+                            else if (!string.IsNullOrWhiteSpace(dto.EnrollmentDate))
+                            {
+                                // If parsing failed but validator didn't catch it (shouldn't happen with validator above)
+                                result.Success = false;
+                                result.Errors.Add($"Invalid date format for EnrollmentDate: '{dto.EnrollmentDate}'");
+                                continue; // Skip adding this student
+                            }
+
+                            details.StudentStatusID = student.StudentStatusID;
+                            validStudentsToUpdate.Add(_mapper.Map(details, student));
+                        }
+                        else
+                        {
+                            VmCreateStudent details = _mapper.Map<VmCreateStudent>(dto);
+                            details.StandardId = standardId;
+                            details.DivisionId = divisionId;
+                            details.SchoolId = schoolId;
+                            details.StudentStatusID = 1;
+
+                            var dateFormats = new[] { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+
+                            if (!string.IsNullOrWhiteSpace(dto.DateOfBirth) &&
+                                DateOnly.TryParseExact(dto.DateOfBirth, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dob))
+                            {
+                                details.DateOfBirth = dob.ToDateTime(TimeOnly.MinValue);
+                            }
+                            else if (!string.IsNullOrWhiteSpace(dto.DateOfBirth))
+                            {
+                                // If parsing failed but validator didn't catch it (shouldn't happen with validator above)
+                                result.Success = false;
+                                result.Errors.Add($"Invalid date format for DateOfBirth: '{dto.DateOfBirth}'");
+                                continue; // Skip adding this student
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(dto.EnrollmentDate) &&
+                                DateOnly.TryParseExact(dto.EnrollmentDate, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var enrolDate))
+                            {
+                                details.EnrollmentDate = enrolDate.ToDateTime(TimeOnly.MinValue); // Convert DateOnly if needed
+                            }
+                            else if (!string.IsNullOrWhiteSpace(dto.EnrollmentDate))
+                            {
+                                // If parsing failed but validator didn't catch it (shouldn't happen with validator above)
+                                result.Success = false;
+                                result.Errors.Add($"Invalid date format for EnrollmentDate: '{dto.EnrollmentDate}'");
+                                continue; // Skip adding this student
+                            }
+
+                            validStudentsToCreate.Add(_mapper.Map<Student>(details));
+                        }
+
                         result.Success = true;
                     }
                     catch (Exception mapEx)
@@ -508,12 +816,50 @@ namespace StudentManagement.Application.Services
                 }
             }
 
+            //// 5. Execute Bulk Operation
+            //if (validStudentsForBulkOperation.Any())
+            //{
+            //    _logger.LogInformation("Executing bulk operation for {Count} students in School ID: {SchoolId}",
+            //                          validStudentsForBulkOperation.Count, schoolId);
+            //    try
+            //    {
+            //        int affectedRows = await _dapperService.BulkInsertUpdateStudentsAsync(validStudentsForBulkOperation);
+            //        _logger.LogInformation("Bulk operation completed successfully. Affected rows: {AffectedRows}", affectedRows);
+            //    }
+            //    catch (Exception dbEx)
+            //    {
+            //        _logger.LogError(dbEx, "Database error during bulk operation for School ID: {SchoolId}", schoolId);
+
+            //        // Add a global error message
+            //        results.Insert(0, new VmStudentImportResult
+            //        {
+            //            RowNumber = 0,
+            //            Success = false,
+            //            Errors = { $"Database error saving records: {dbEx.Message}" }
+            //        });
+
+            //        // Mark all previously successful results as failed
+            //        results.Where(r => r.Success).ToList().ForEach(r => {
+            //            r.Success = false;
+            //            r.Errors.Add("Database save failed.");
+            //        });
+            //    }
+            //}
+            //else
+            //{
+            //    _logger.LogInformation("No valid student records found to save for School ID: {SchoolId}", schoolId);
+            //}
+
+
             // 5. Save Valid Records to Database
-            if (validStudentsToCreate.Any())
+            if (validStudentsToCreate.Count != 0)
             {
+                
                 _logger.LogInformation("Attempting to save {ValidCount} valid student records for School ID: {SchoolId}", validStudentsToCreate.Count, schoolId);
                 try
                 {
+                    //var studentEntities = _mapper.Map<List<Student>>(validStudentsToCreate,);
+                    //_mapper.Map(updateDto, studentEntity);
                     await _unitOfWork.Repository<Student>().AddRangeAsync(validStudentsToCreate);
                     await _unitOfWork.CompleteAsync();
                     _logger.LogInformation("Successfully saved {ValidCount} student records.", validStudentsToCreate.Count);
@@ -531,6 +877,31 @@ namespace StudentManagement.Application.Services
             else
             {
                 _logger.LogInformation("No valid student records found to save for School ID: {SchoolId}", schoolId);
+            }
+
+            if (validStudentsToUpdate.Count != 0)
+            {
+                _logger.LogInformation("Attempting to update {ValidCount} valid student records for School ID: {SchoolId}", validStudentsToUpdate.Count, schoolId);
+                try
+                {
+                    //var studentEntities = _mapper.Map<List<Student>>(validStudentsToUpdate);
+                     _unitOfWork.Repository<Student>().UpdateRange(validStudentsToUpdate);
+                    await _unitOfWork.CompleteAsync(); //ToDO: handle await
+                    _logger.LogInformation("Successfully updated {ValidCount} student records.", validStudentsToUpdate.Count);
+                }
+                catch (Exception dbEx)
+                {
+                    _logger.LogError(dbEx, "Database error updating imported students for School ID: {SchoolId}", schoolId);
+                    // Mark all successfully validated rows as failed due to DB error? Or return a global error?
+                    // Adding a global error message might be clearer.
+                    results.Insert(0, new VmStudentImportResult { RowNumber = 0, Success = false, Errors = { $"Database error updating valid records: {dbEx.Message}" } });
+                    // Optionally mark individual results as failed
+                    results.Where(r => r.Success).ToList().ForEach(r => { r.Success = false; r.Errors.Add("Database update failed."); });
+                }
+            }
+            else
+            {
+                _logger.LogInformation("No valid student records found to update for School ID: {SchoolId}", schoolId);
             }
 
             return results;

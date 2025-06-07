@@ -118,6 +118,11 @@ const StudentImport = ({
     }
   }, [selectedSchoolId, importFile, isImporting, onImportStart, onImportComplete]);
 
+  const handleCloseResults = useCallback(() => {
+    setImportResults([]);
+    setImportError("");
+  }, []);
+
   return (
     <div>
       {/* --- Import UI Section --- */}
@@ -137,7 +142,10 @@ const StudentImport = ({
 
       {/* --- Display Detailed Import Results --- */}
       {/* ImportResultsDisplay handles conditional rendering if results array is empty */}
-      <ImportResultsDisplay results={importResults} />
+      <ImportResultsDisplay 
+        results={importResults} 
+        onClose={handleCloseResults}
+      />
     </div>
   );
 };

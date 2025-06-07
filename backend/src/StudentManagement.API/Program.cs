@@ -23,6 +23,7 @@ using StudentMgmt.Infrastructure.FileProcessing;
 using StudentMgmt.Infrastructure.FileStorage;
 using StudentMgmt.Infrastructure.Identity;
 using StudentMgmt.Infrastructure.Repositories;
+using StudentMgmt.Infrastructure.Services;
 using StudentMgmt.Infrastructure.Utililty;
 using System.Text;
 
@@ -85,6 +86,7 @@ builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
 builder.Services.AddScoped<IStudentFactory, StudentFactory>();
 builder.Services.AddScoped<ICommonDataService, CommonDataService>();
+builder.Services.AddScoped<IDapperService, DapperService>();
 
 builder.Services.AddScoped<IGenericObjectFactory, GenericObjectFactory>();
 //builder.services.AddScoped<IValidator<VmStudentImport>, VmStudentImportValidator>();

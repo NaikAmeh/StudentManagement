@@ -31,6 +31,7 @@ namespace StudentManagement.Application.Interfaces
         Task AddRangeAsync(IEnumerable<T> entities);
 
         void Update(T entity); // Update is typically synchronous in EF Core change tracking
+        void UpdateRange(IEnumerable<T> entities);
 
         void Delete(T entity); // Delete is typically synchronous
         void DeleteRange(IEnumerable<T> entities);

@@ -115,6 +115,16 @@ namespace StudentMgmt.Infrastructure.Repositories
             _context.Entry(entity).State = EntityState.Modified;
         }
 
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                // Attach and mark each entity as modified
+                _dbSet.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+            }
+        }
+
         public void Delete(T entity)
         {
             // If entity is detached, attach it first

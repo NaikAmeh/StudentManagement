@@ -16,7 +16,6 @@ namespace StudentManagement.Application.Features.Students
 
         public DateTime? DateOfBirth { get; set; }
         public string? Gender { get; set; } // M, F, O
-        [EmailAddress] 
         public string? Email { get; set; }
         public string? PhoneNo { get; set; }
         public string? EmergencyContactNo { get; set; }

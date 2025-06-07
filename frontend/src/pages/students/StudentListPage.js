@@ -8,8 +8,10 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Redux Selectors and Actions
 import {
@@ -57,6 +59,7 @@ const listContainerStyle = { padding: "20px", maxWidth: '1200px', margin: '0 aut
 function StudentListPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // --- Redux State ---
   const selectedSchoolId = useSelector(selectSelectedSchoolId);
@@ -91,7 +94,7 @@ function StudentListPage() {
   const standardOptions = useSelector(selectAvailableStandards) || [];
   const divisionOptions = useSelector(selectAvailableDivisions) || [];
 debugger;
-  const recordsPerPage = 2;
+  const recordsPerPage = 10;
 
   // --- Data Fetching and Cleanup ---
   useEffect(() => {
@@ -273,8 +276,11 @@ debugger;
   }, [dispatch, stagedPhotos, selectedSchoolId]);
 
   const handleAddStudent = useCallback(() => {
-    if (selectedSchoolId) navigate(`/students/new`, { state: { schoolId: selectedSchoolId } });
-    else alert("Please select a school first.");
+    if (selectedSchoolId) {
+        navigate('/students/new');
+    } else {
+        toast.error("Please select a school first.");
+    }
   }, [navigate, selectedSchoolId]);
 
   const downloadBlob = (blob, defaultFilename) => {
@@ -370,66 +376,41 @@ debugger;
 
   const handleImportCompleted = useCallback(({ success, results, error }) => {
     console.log("StudentListPage: Import completed notification received.", { success, error });
-    setIsImportOperationUnderway(false); // Clear import progress state
+    setIsImportOperationUnderway(false);
 
-    // Determine if any rows were actually successfully imported from detailed results
     const successCount = results?.filter(r => r.success && r.rowNumber > 0).length ?? 0;
 
-    // Refresh the main student list if the import operation was successful overall
-    // AND at least one student row was successfully processed and added.
     if (success && successCount > 0) {
       console.log(`StudentListPage: Import successful with ${successCount} records, refreshing student list.`);
-      // Optional: Provide summary feedback to the user at the page level
-      alert(`Import process finished. ${successCount} student(s) were imported successfully. Check the results section below for row-by-row details.`);
-      dispatch(fetchStudentsBySchool(selectedSchoolId)); // Dispatch action to get updated list
-      setSelectedStudents([]); // Clear any table selections as the list content has changed
+      toast.success(`Successfully imported ${successCount} student(s)`);
+      dispatch(fetchStudentsBySchool(selectedSchoolId));
+      setSelectedStudents([]);
     } else if (!success && error) {
-        // Handle general failure (e.g., network error, file format error reported by backend)
-        console.log("StudentListPage: Import failed with general error:", error);
-        // The StudentImport component shows the specific error, but you could add page-level feedback if needed.
-        // alert(`Import failed: ${error}`);
+      console.log("StudentListPage: Import failed with general error:", error);
+      toast.error(`Import failed: ${error}`);
     } else {
-        // Handle cases where the API call was successful, but no *new* students were added (e.g., all rows had errors or were duplicates)
-        console.log("StudentListPage: Import finished, but no new students are added.");
-        // The StudentImport component shows the row-by-row results.
-        // You might provide a generic message here too.
-        alert("Import process finished. Please check the results section below for details on each row.");
+      console.log("StudentListPage: Import finished, but no new students are added.");
+      toast.warning("Import process finished but no new students were added");
     }
-
-  }, [dispatch, selectedSchoolId]); // Dependencies needed for the callback logic
+  }, [dispatch, selectedSchoolId]);
 
   // --- Aggregate Loading State ---
   // Use the new tracking state for import operation
   const isOverallLoading = loadingStudents || loadingDelete || isImportOperationUnderway || loadingPhotoUpload || loadingSchools || isGeneratingPdf;
 
-  // useEffect(() => {
-  //   // Fetch Standard options
-  //   const fetchStandards = async () => {
-  //     try {
-  //       const response = await api.get("/api/standards");
-  //       setStandardOptions(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch standards:", error);
-  //     }
-  //   };
-
-  //   // Fetch Division options
-  //   const fetchDivisions = async () => {
-  //     try {
-  //       const response = await api.get("/api/divisions");
-  //       setDivisionOptions(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch divisions:", error);
-  //     }
-  //   };
-
-  //   fetchStandards();
-  //   fetchDivisions();
-  // }, []);
+  useEffect(() => {
+    // Show success message if passed through navigation
+    if (location.state?.message) {
+        toast[location.state.type || 'success'](location.state.message);
+        // Clear the message from history state to prevent showing again on refresh
+        window.history.replaceState({}, document.title);
+    }
+}, [location]);
 
   // --- Render Logic ---
   return (
     <div style={listContainerStyle}>
+      <ToastContainer position="top-right" />
       <h2>Student List {selectedSchool ? `- ${selectedSchool.name}` : ""}</h2>
 
       {/* Display general fetch error for the student list */}

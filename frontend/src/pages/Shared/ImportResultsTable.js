@@ -39,9 +39,8 @@ const ImportResultsTable = ({ importResults }) => {
             <th>Row #</th>
             <th>Success</th>
             <th>Errors</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Identifier</th>
+            <th>Student Name</th>
+            <th>Registration Id</th>
           </tr>
         </thead>
         <tbody>
@@ -59,8 +58,7 @@ const ImportResultsTable = ({ importResults }) => {
                     {result.errors?.join(", ") || ""}
                   </span>
                 </td>
-                <td>{result.importedData?.firstName || ""}</td>
-                <td>{result.importedData?.lastName || ""}</td>
+                <td>{result.importedData?.fullName || ""}</td>
                 <td>{result.importedData?.studentIdentifier || ""}</td>
               </tr>
             ))}

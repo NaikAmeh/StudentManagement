@@ -8,53 +8,52 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 
 function SwitchSchoolPopup({ isOpen, availableSchools, onClose, onSelectSchool }) {
-  
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
-  
-    const [selectedSchoolId, setSelectedSchoolId] = useState('');
+  const navigate = useNavigate();
+  const [selectedSchoolId, setSelectedSchoolId] = useState('');
 
-    if (!isOpen) return null; // Don't render the popup if it's not open
+  if (!isOpen) return null;
 
-    const handleSchoolSelect = (schoolId) => {
-        setSelectedSchoolId(schoolId); // Update the selected school ID
-    };
+  const handleSchoolSelect = (schoolId) => {
+    setSelectedSchoolId(schoolId);
+  };
 
-    const handleConfirm = () => {
-      debugger;
-        const selectedSchool = availableSchools.find(
-            (school) => school.schoolId === parseInt(selectedSchoolId, 10)
-        );
-        if (selectedSchool) {
-          dispatch(setSelectedSchool(selectedSchool.schoolId)); // Set the selected school in Redux
-          onClose(); // Close the popup
-          navigate('/'); // Navigate to the home page
-        }
-    };
-
-    return ReactDOM.createPortal(
-        <div className="popup-overlay">
-            <div className="popup">
-                <SchoolSelector
-                    resetOnPopupOpen={isOpen}
-                    onSchoolSelect={handleSchoolSelect} // Pass the callback to SchoolSelector
-                />
-                <div className="popup-actions">
-                    <button
-                        className="confirm-button"
-                        onClick={handleConfirm}
-                        disabled={!selectedSchoolId}
-                    >
-                        Confirm
-                    </button>
-                    <button className="close-popup-button" onClick={onClose}>
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>,
-        document.body // Render the popup at the root of the DOM
+  const handleConfirm = () => {
+    const selectedSchool = availableSchools.find(
+      (school) => school.schoolId === parseInt(selectedSchoolId, 10)
     );
+    
+    if (selectedSchool) {
+      // First dispatch the action
+      dispatch(setSelectedSchool(selectedSchool.schoolId));
+      // Then close the popup
+      onClose();
+      // Finally navigate
+      setTimeout(() => {
+        navigate('/');
+      }, 0);
+    }
+  };
+
+  return ReactDOM.createPortal(
+    <div className="popup-overlay">
+      <div className="popup">
+        <SchoolSelector
+          resetOnPopupOpen={isOpen}
+          schools={availableSchools}
+          selectedSchoolId={selectedSchoolId}
+          onSchoolSelect={handleSchoolSelect}
+        />
+        <div className="popup-buttons">
+          <button onClick={onClose}>Cancel</button>
+          <button onClick={handleConfirm} disabled={!selectedSchoolId}>
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body // Render the popup at the root of the DOM
+  );
 }
 
 export default SwitchSchoolPopup;

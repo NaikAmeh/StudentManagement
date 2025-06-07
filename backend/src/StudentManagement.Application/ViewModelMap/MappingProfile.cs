@@ -108,6 +108,63 @@ namespace StudentManagement.Application.ViewModelMap
                 .ForMember(dest => dest.House, opt => opt.Ignore())
                 .ForMember(dest => dest.StudentStatus, opt => opt.Ignore()); // Ignore navigation property
 
+            // First, add missing mappings for VmStudentImport to VmCreateStudent and VmUpdateStudent
+            CreateMap<VmStudentImport, VmCreateStudent>()
+                .ForMember(dest => dest.DateOfBirth, opt => opt.Ignore()) // Will be set manually after parsing
+                .ForMember(dest => dest.EnrollmentDate, opt => opt.Ignore()) // Will be set manually after parsing
+                .ForMember(dest => dest.StandardId, opt => opt.Ignore()) // These are looked up by name in the service
+                .ForMember(dest => dest.DivisionId, opt => opt.Ignore())
+                .ForMember(dest => dest.RollNo, opt => opt.MapFrom(src => Convert.ToInt32(src.RollNo)))
+                .ForMember(dest => dest.SchoolId, opt => opt.MapFrom(src => 0)) // Set default, will be overridden in service
+                .ForMember(dest => dest.BloodGroupId, opt => opt.Ignore()) // Will be set based on lookup
+                .ForMember(dest => dest.HouseId, opt => opt.Ignore()); // Will be set based on lookup
+
+            CreateMap<VmStudentImport, VmUpdateStudent>()
+                .ForMember(dest => dest.DateOfBirth, opt => opt.Ignore()) // Will be set manually after parsing
+                .ForMember(dest => dest.EnrollmentDate, opt => opt.Ignore()) // Will be set manually after parsing
+                .ForMember(dest => dest.StandardId, opt => opt.Ignore()) // These are looked up by name in the service
+                .ForMember(dest => dest.DivisionId, opt => opt.Ignore())
+                .ForMember(dest => dest.RollNo, opt => opt.MapFrom(src => Convert.ToInt32(src.RollNo)))
+                //.ForMember(dest => dest.StudentId, opt => opt.Ignore()) // Will be set based on lookup
+                .ForMember(dest => dest.BloodGroupId, opt => opt.Ignore()) // Will be set based on lookup
+                .ForMember(dest => dest.HouseId, opt => opt.Ignore()); // Will be set based on lookup
+
+            // Now modify existing mappings to handle null for BloodGroup and House
+            CreateMap<VmCreateStudent, Student>()
+                .ForMember(dest => dest.Standard, opt => opt.Ignore())
+                .ForMember(dest => dest.Division, opt => opt.Ignore())
+                .ForMember(dest => dest.StudentId, opt => opt.Ignore())
+                .ForMember(dest => dest.PhotoPath, opt => opt.Ignore())
+                .ForMember(dest => dest.PhotoName, opt => opt.Ignore()) // Photo handled separately
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.School, opt => opt.Ignore())
+                .ForMember(dest => dest.BloodGroupID, opt => opt.MapFrom(src =>
+                    src.BloodGroupId.HasValue && src.BloodGroupId.Value > 0 ? src.BloodGroupId : null))
+                .ForMember(dest => dest.BloodGroup, opt => opt.Ignore()) // Ignore navigation property
+                .ForMember(dest => dest.HouseID, opt => opt.MapFrom(src =>
+                    src.HouseId.HasValue && src.HouseId.Value > 0 ? src.HouseId : null))
+                .ForMember(dest => dest.House, opt => opt.Ignore())      // Ignore navigation property
+                .ForMember(dest => dest.StudentStatus, opt => opt.Ignore()); // Ignore navigation property
+
+            CreateMap<VmUpdateStudent, Student>()
+                .ForMember(dest => dest.StudentId, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolId, opt => opt.Ignore())
+                .ForMember(dest => dest.School, opt => opt.Ignore())
+                .ForMember(dest => dest.PhotoPath, opt => opt.Ignore())
+                .ForMember(dest => dest.PhotoName, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Standard, opt => opt.Ignore())
+                .ForMember(dest => dest.Division, opt => opt.Ignore())
+                .ForMember(dest => dest.BloodGroupID, opt => opt.MapFrom(src =>
+                    src.BloodGroupId.HasValue && src.BloodGroupId.Value > 0 ? src.BloodGroupId : null))
+                .ForMember(dest => dest.BloodGroup, opt => opt.Ignore())
+                .ForMember(dest => dest.HouseID, opt => opt.MapFrom(src =>
+                    src.HouseId.HasValue && src.HouseId.Value > 0 ? src.HouseId : null))
+                .ForMember(dest => dest.House, opt => opt.Ignore())
+                .ForMember(dest => dest.StudentStatus, opt => opt.Ignore()); // Ignore navigation property
+
             CreateMap<Standard, VmStandard>();
             //.ForMember(dest => dest.id, opt => opt.MapFrom(src => src.StandardId)); to map diff names explicitly
             CreateMap<Division, VmDivision>();

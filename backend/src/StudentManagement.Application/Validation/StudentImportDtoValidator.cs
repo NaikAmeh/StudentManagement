@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using StudentManagement.Application.Features.Students;
+using System.Globalization;
 
 namespace StudentManagement.Application.Validation
 {
@@ -12,8 +13,13 @@ namespace StudentManagement.Application.Validation
                 .MaximumLength(100).WithMessage("FullName cannot exceed 100 characters.");
 
             RuleFor(x => x.DateOfBirth)
-                .Must(BeAValidDate).WithMessage("DateOfBirth must be a valid date (e.g., YYYY-MM-DD or MM/DD/YYYY).")
-                .When(x => !string.IsNullOrWhiteSpace(x.DateOfBirth)); // Only validate if provided
+    .Must(date =>
+    {
+        if (string.IsNullOrWhiteSpace(date)) return true; // Allow empty if not required
+        var formats = new[] { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+        return DateOnly.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+    })
+    .WithMessage("Date of Birth must be in dd/MM/yyyy format.");
 
             RuleFor(x => x.StudentIdentifier)
                 .MaximumLength(50).WithMessage("StudentIdentifier cannot exceed 50 characters.")

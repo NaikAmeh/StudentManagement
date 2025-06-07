@@ -360,9 +360,11 @@ useEffect(() => {
 
   // Add function to check if form has changes
   const hasFormChanges = useCallback(() => {
-    if (!originalFormData) return true;
-    return JSON.stringify(originalFormData) !== JSON.stringify(formData);
-  }, [originalFormData, formData]);
+  if (!originalFormData) return true;
+  // Consider photo changes as a form change
+  if (selectedPhotoFile) return true;
+  return JSON.stringify(originalFormData) !== JSON.stringify(formData);
+}, [originalFormData, formData, selectedPhotoFile]);
 
   // Effect to handle Page Errors (e.g., failed details fetch)
   useEffect(() => {
@@ -387,74 +389,77 @@ useEffect(() => {
 
   // --- Client-Side Validation Logic ---
   const validateField = useCallback((name, value) => {
+    console.log(`validateField called for ${name} with value:`, value);
     let error = '';
-    const isRequired = ['fullName', 'standardId', 'divisionId', 'rollNo', 'studentStatus'].includes(name);
-    console.log("full name length", FIELD_LENGTHS.FULL_NAME);
+    
+    const isRequired = ['fullName', 'standardId', 'divisionId', 'rollNo', 'studentStatusID', 'studentIdentifier'].includes(name);
+    
+    if (isRequired && (!value || value === '')) {
+        error = `${name.charAt(0).toUpperCase() + name.slice(1)} is required.`;
+        console.log(`Required field ${name} is empty`);
+        return error;
+    }
+
     switch (name) {
-        case 'studentStatus':
-            if (!value && isRequired) error = 'Student Status is required.';
-            break;
         case 'fullName':
-            if (!value && isRequired) error = 'Full Name is required.';
-            else if (value && value.length > FIELD_LENGTHS.FULL_NAME) error = VALIDATION_MESSAGES.FULL_NAME;
-            break;
-        case 'standardId':
-            if (!value && isRequired) error = 'Standard is required.';
-            break;
-        case 'divisionId':
-            if (!value && isRequired) error = 'Division is required.';
-            break;
-        case 'rollNo':
-            if (!value && isRequired) error = 'Roll No. is required.';
-            else if (value && (isNaN(Number(value)) || Number(value) <= 0)) error = 'Roll No. must be a positive number.';
-            break;
-        case 'email':
-            if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Invalid email format.';
-                        break;
-        case 'phoneNo':
-            if (value && !/^\d{10}$/.test(value)) error = 'Phone number must be 10 digits.';
-            break;
-        case 'address':
-            if (value && value.length > 200) error = 'Address max 200 chars.';
-            break;
-        case 'enrollmentDate':
-            if (value) {
-                const enrollDate = new Date(value);
-                const today = new Date();
-                if (enrollDate > today) error = 'Enrollment Date cannot be in the future.';
+            if (value && value.length > FIELD_LENGTHS.FULL_NAME) {
+                error = VALIDATION_MESSAGES.FULL_NAME;
             }
             break;
-        case 'dateOfBirth':
-            if (value) {
-                const dob = new Date(value);
-                const today = new Date();
-                if (dob > today) error = 'Date of Birth cannot be in the future.';
+        case 'email':
+          console.log(`Validating email: ${value}`);
+            // Email is optional, but if provided it must be valid
+            if (value && value.trim() !== '') {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(value)) {
+                    error = 'Please enter a valid email address.';
+                }
+            }
+            break;
+        case 'phoneNo':
+            if (value && !/^\d{10}$/.test(value)) {
+                error = 'Phone number must be 10 digits.';
+            }
+            break;
+        case 'rollNo':
+            if (value && (isNaN(Number(value)) || Number(value) <= 0)) {
+                error = 'Roll No. must be a positive number.';
             }
             break;
         case 'studentIdentifier':
-            if (value && value.length > FIELD_LENGTHS.STUDENT_IDENTIFIER) error = VALIDATION_MESSAGES.STUDENT_IDENTIFIER;
+            if (!value || value.trim() === '') {
+                error = 'Registration ID is required.';
+            } else if (value.length > FIELD_LENGTHS.STUDENT_IDENTIFIER) {
+                error = `Registration ID cannot exceed ${FIELD_LENGTHS.STUDENT_IDENTIFIER} characters.`;
+            }
             break;
-        case 'emergencyContactNo':
-            if (value && !/^\d{10}$/.test(value)) error = 'Emergency contact must be 10 digits.';
-            break;
-        default: break;
+    }
+    
+    if (error) {
+        console.log(`Validation error for ${name}:`, error);
     }
     return error;
 }, []);
 
 const validateForm = useCallback(() => {
-        const newErrors = {};
+    console.log('Starting form validation');
+    const newErrors = {};
     let allValid = true;
 
     Object.keys(formData).forEach((key) => {
         const value = formData[key];
+        console.log(`Validating field: ${key}, value:`, value);
         const error = validateField(key, value);
         if (error) {
+          debugger;
+            console.log(`Validation error for ${key}:`, error);
             newErrors[key] = error;
             allValid = false;
         }
     });
 
+    console.log('Validation errors:', newErrors);
+    console.log('Form is valid:', allValid);
     setFormErrors(newErrors);
     return allValid;
 }, [formData, validateField]);
@@ -510,6 +515,7 @@ const handleChange = useCallback(
         }
 
         if (error) {
+          debugger;
           // Set the error state in Redux for display
           dispatch(uploadStudentPhoto.rejected(error)); // Use the rejected action type pattern
           setSelectedPhotoFile(null); // Clear the local file state
@@ -528,91 +534,93 @@ const handleChange = useCallback(
   // Handles the main form submission (Add or Edit)
   const handleSubmit = useCallback(
     async (e) => {
-      e.preventDefault();
-      setHasAttemptedSubmit(true); // Set this first to trigger validation display
-      
-      if (isEditMode && !hasFormChanges()) {
-        toast.info('No changes made to update');
-        return;
-      }
+        console.log('handleSubmit called', e);
+        e.preventDefault();
+        console.log('Form data at submission:', formData);
+        setHasAttemptedSubmit(true);
 
-      // Validate the entire form
-      const isValid = validateForm();
-      if (!isValid) {
-        return; // Stop submission if validation fails
-      }
-  
-      let studentIdToUse = isEditMode ? parseInt(id, 10) : null;
-      let success = false;
-  
-      const dtoData = {
-        ...formData,
-        rollNo: parseInt(formData.rollNo, 10),
-        dateOfBirth: formData.dateOfBirth || null,
-        enrollmentDate: formData.enrollmentDate || null,
-      };
-  
-      try {
-        if (isEditMode && studentIdToUse) {
-          console.log("Updating student with ID:", studentIdToUse);
-          const { schoolId, ...updateDtoFields } = {
-            fullName: formData.fullName,
-            dateOfBirth: formData.dateOfBirth || null,
-            gender: formData.gender,
-            email: formData.email,
-            phoneNo: formData.phoneNo,
-            address: formData.address,
-            enrollmentDate: formData.enrollmentDate || null,
-            standardId: formData.standardId ? parseInt(formData.standardId, 10) : null,
-            divisionId: formData.divisionId ? parseInt(formData.divisionId, 10) : null,
-            rollNo: formData.rollNo ? parseInt(formData.rollNo, 10) : null,
-            studentIdentifier: formData.studentIdentifier,
-            isActive: Boolean(formData.isActive),
-            studentStatusID: formData.studentStatusID ? parseInt(formData.studentStatusID, 10) : null,
-            bloodGroupId: formData.bloodGroupId ? parseInt(formData.bloodGroupId, 10) : null,
-            houseId: formData.houseId ? parseInt(formData.houseId, 10) : null,
-            emergencyContactNo: formData.emergencyContactNo
-          };
-          await dispatch(updateStudent({ 
-            id: studentIdToUse, 
-            updateStudentDto: updateDtoFields//{ updateStudentDto: updateDtoFields }  // Wrap in updateStudentDto object
-          })).unwrap();
-        } else {
-          if (!dtoData.schoolId) {
-            console.log("School ID is missing");
-            setFormErrors((prev) => ({ ...prev, schoolId: "School ID is missing. Select school from header." }));
-            throw new Error("School ID is missing.");
-          }
-          console.log("Adding new student");
-          const createdStudent = await dispatch(addStudent(dtoData)).unwrap();
-          studentIdToUse = createdStudent?.studentId;
-          if (!studentIdToUse) throw new Error("Failed to get new student ID.");
+        // Skip change check only for add mode
+        if (isEditMode && !hasFormChanges()) {
+            console.log('No changes detected in edit mode');
+            toast.info('No changes made to update');
+            return;
         }
-  
-        if (selectedPhotoFile && studentIdToUse) {
-          console.log("Uploading photo for student ID:", studentIdToUse);
-          await dispatch(
-            uploadStudentPhoto({
-              studentId: studentIdToUse,
-              file: selectedPhotoFile,
-            })
-          ).unwrap();
+
+        // Validate school selection for Add mode
+        if (!isEditMode && !selectedSchoolIdFromContext) {
+            console.log('No school selected in add mode');
+            toast.error('Please select a school from the header first');
+            return;
         }
-  
-        success = true;
-      } catch (error) {
-        console.error("Error during student save/upload:", error);
-        success = false;
-      }
-  
-      if (success) {
-        console.log("Student save successful");
-        alert(`Student successfully ${isEditMode ? "updated" : "added"}!`);
-        navigate("/students");
-      }
+
+        // Validate form
+        const isValid = validateForm();
+        console.log('Form validation result:', isValid, 'Current errors:', formErrors);
+        if (!isValid) {
+            return;
+        }
+        try {
+            // Prepare common student data
+            const studentData = {
+                fullName: formData.fullName?.trim(),
+                dateOfBirth: formData.dateOfBirth ? new Date(formData.dateOfBirth).toISOString() : null,
+                gender: formData.gender?.trim(),
+                email: formData.email?.trim(),
+                phoneNo: formData.phoneNo?.trim(),
+                address: formData.address?.trim(),
+                enrollmentDate: formData.enrollmentDate ? new Date(formData.enrollmentDate).toISOString() : null,
+                standardId: formData.standardId ? parseInt(formData.standardId) : null,
+                divisionId: formData.divisionId ? parseInt(formData.divisionId) : null,
+                rollNo: formData.rollNo ? parseInt(formData.rollNo) : null,
+                emergencyContactNo: formData.emergencyContactNo?.trim(),
+                studentIdentifier: formData.studentIdentifier?.trim(),
+                studentStatusID: formData.studentStatusID ? parseInt(formData.studentStatusID) : 1,
+                bloodGroupId: formData.bloodGroupId ? parseInt(formData.bloodGroupId) : null,
+                houseId: formData.houseId ? parseInt(formData.houseId) : null,
+                schoolId: formData.schoolId ? parseInt(formData.schoolId) : null,
+            };
+
+            let studentIdToUse;
+            if (isEditMode) {
+                await dispatch(updateStudent({
+                    id: parseInt(id),
+                    updateStudentDto: studentData
+                })).unwrap();
+                studentIdToUse = parseInt(id);
+            } else {
+                const schoolIdToUse = selectedSchool?.schoolId || selectedSchoolIdFromContext;
+                const response = await dispatch(addStudent({ ...studentData, schoolId: schoolIdToUse })).unwrap();
+                studentIdToUse = response?.studentId;
+                console.log("New student added with ID:", response);
+            }
+            // Handle photo upload if there's a new photo
+            if (selectedPhotoFile) {
+                //const formData = new FormData();
+                //formData.append('photo', selectedPhotoFile);
+                //await dispatch(uploadStudentPhoto({ studentId: id || '', photo: formData })).unwrap();
+                console.log("Uploading photo for student ID:", studentIdToUse);
+                await dispatch(
+                    uploadStudentPhoto({
+                        studentId: studentIdToUse,
+                        file: selectedPhotoFile,
+                    })
+                ).unwrap();
+            }
+
+            // Navigate to list page after success with message
+            navigate('/students', { 
+                state: { 
+                    message: isEditMode ? 'Student updated successfully' : 'Student added successfully',
+                    type: 'success'
+                } 
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error(error.message || 'An error occurred while saving student data');
+        }
     },
-    [dispatch, formData, id, isEditMode, navigate, selectedPhotoFile, validateForm, hasFormChanges]
-  );
+    [dispatch, formData, id, isEditMode, selectedPhotoFile, selectedSchool, selectedSchoolIdFromContext, navigate, hasFormChanges, validateForm]
+);
 
   // Handles navigation back to the list page
   const handleCancel = useCallback(() => navigate("/students"), [navigate]);
@@ -674,7 +682,16 @@ const handleChange = useCallback(
 
  {pageError && <p style={errorStyle}>{pageError}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => {
+          console.log('Raw form submit event triggered');
+          const submitButton = e.target.querySelector('button[type="submit"]');
+          console.log('Submit button state:', {
+              disabled: submitButton?.disabled,
+              type: submitButton?.type,
+              innerHTML: submitButton?.innerHTML
+          });
+          handleSubmit(e);
+      }}>
         {/* --- Form Fields --- */}
         {/*<div style={gridStyle}>  Two-column layout for form fields */}
         <div style={gridStyle}>
@@ -735,7 +752,8 @@ const handleChange = useCallback(
               onBlur={handleBlur}
               maxLength={FIELD_LENGTHS.EMAIL}
             />
-                         {hasAttemptedSubmit && formErrors.email && <small style={errorStyle}>{formErrors.email}</small>}
+                         {/* Email field error should only show if there's a value and it's invalid */}
+{hasAttemptedSubmit && formData.email && formErrors.email && <small style={errorStyle}>{formErrors.email}</small>}
                     </div>
                     <div style={formGroupStyle}>
     <label style={labelStyle} htmlFor="phoneNo">Phone No:</label>
@@ -919,19 +937,22 @@ const handleChange = useCallback(
                          {hasAttemptedSubmit && formErrors.rollNo && <small style={errorStyle}>{formErrors.rollNo}</small>}
                     </div>
                     <div style={formGroupStyle}>
-                        <label style={labelStyle} htmlFor="studentIdentifier">Registration ID (Institution Specific):</label>
+                        <label style={labelStyle} htmlFor="studentIdentifier">Registration ID (Institution Specific)<span style={requiredIndicatorStyle}>*</span>:</label>
                         <input 
-              style={getInputClass('studentIdentifier')} 
-              type="text" 
-              id="studentIdentifier" 
-              name="studentIdentifier" 
-              value={formData.studentIdentifier} 
-              onChange={handleChange} 
-              disabled={isLoading} 
-              onFocus={handleFocus} 
-              onBlur={handleBlur}
-              maxLength={FIELD_LENGTHS.STUDENT_IDENTIFIER}
-            />
+        style={getInputClass('studentIdentifier')} 
+        type="text" 
+        id="studentIdentifier" 
+        name="studentIdentifier" 
+        value={formData.studentIdentifier} 
+        onChange={handleChange} 
+        disabled={isLoading} 
+        onFocus={handleFocus} 
+        onBlur={handleBlur}
+        maxLength={FIELD_LENGTHS.STUDENT_IDENTIFIER}
+    />
+    {hasAttemptedSubmit && formErrors.studentIdentifier && 
+        <small style={errorStyle}>{formErrors.studentIdentifier}</small>
+    }
                     </div>
                     <div style={formGroupStyle}>
                         <label style={labelStyle} htmlFor="bloodGroupId">Blood Group:</label>
@@ -1079,8 +1100,8 @@ const handleChange = useCallback(
         <div style={{ marginTop: "20px" }}>
           <button
             type="submit"
-            // Disable if loading OR if in Add mode and no school is selected
-            //disabled={isLoading || (!isEditMode)}//&& !formData.schoolId
+            onClick={() => console.log('Submit button clicked')}
+            disabled={isLoading}
             style={submitButtonStyle}
           >
             {/* Show specific loading state */}

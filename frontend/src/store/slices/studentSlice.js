@@ -134,6 +134,7 @@ export const uploadStudentPhoto = createAsyncThunk(
     const formData = new FormData();
     formData.append("file", file);
     try {
+      debugger;
       console.log(`Redux Thunk: Uploading photo for Student ID: ${studentId}`);
       const response = await api.post(
         `/api/students/${studentId}/photo`,
@@ -142,7 +143,6 @@ export const uploadStudentPhoto = createAsyncThunk(
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      debugger;
       if (response.data && response.data.photoPath) {
         console.log(
           "Redux Thunk: Photo uploaded, path:",

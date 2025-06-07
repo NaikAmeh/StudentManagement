@@ -24,6 +24,8 @@ namespace StudentManagement.Application.Features.Students
         public string? DivisionName { get; set; } // Expect name from Excel
         public string? RollNo { get; set; } // Read as string for parsing
         public string? StudentIdentifier { get; set; }
+        public string? BloodGroup { get; set; }
+        public string? House { get; set; }
         // Add other fields if importing them
     }
 }
