@@ -52,9 +52,9 @@ const StudentTableRow = ({
           />
       </td>
       <td>{fullName}</td>
-      <td>{studentIdentifier || "N/A"}</td>
-      <td>{standardName || "N/A"}</td>
-      <td>{divisionName || "N/A"}</td>
+      <td className="reg-no-cell">{studentIdentifier || "N/A"}</td>
+      <td className="standard-cell">{standardName || "N/A"}</td>
+      <td className="division-cell">{divisionName || "N/A"}</td>
       <td>
         <div title={student.address || ""}>
           {student.address ? (
@@ -64,7 +64,7 @@ const StudentTableRow = ({
           ) : "N/A"}
         </div>
       </td>
-      <td>
+      {/* <td>
         <span style={{ 
           backgroundColor: isActive ? 'var(--success)' : 'var(--danger)',
           color: 'var(--text-light)',
@@ -74,7 +74,7 @@ const StudentTableRow = ({
         }}>
           {isActive ? "Active" : "Inactive"}
         </span>
-      </td>
+      </td> */}
       <td className="actions-cell">
         <div className="action-buttons">
           <Link

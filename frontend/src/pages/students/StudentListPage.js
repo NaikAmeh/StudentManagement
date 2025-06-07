@@ -94,7 +94,7 @@ function StudentListPage() {
   const standardOptions = useSelector(selectAvailableStandards) || [];
   const divisionOptions = useSelector(selectAvailableDivisions) || [];
 debugger;
-  const recordsPerPage = 10;
+  const recordsPerPage = 100;
 
   // --- Data Fetching and Cleanup ---
   useEffect(() => {

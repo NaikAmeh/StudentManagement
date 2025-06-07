@@ -58,12 +58,12 @@ const StudentTableHeader = ({
             </span>
           </div>
         </th>
-        <th>
+        <th className="reg-no-cell">
           <div className="header-content">
             <span
               className="sortable-header"
               onClick={(e) => onOpenFilterPopup("studentIdentifier", e)}>
-              Identifier
+              Reg No
             </span>
             <span
               onClick={() => onSort("studentIdentifier")}
@@ -73,7 +73,7 @@ const StudentTableHeader = ({
             </span>
           </div>
         </th>
-        <th>
+        <th className="standard-cell">
           <span
             className="sortable-header"
             onClick={(e) => onOpenFilterPopup("standard", e)}
@@ -81,7 +81,7 @@ const StudentTableHeader = ({
             Standard
           </span>
         </th>
-        <th>
+        <th className="division-cell">
           <span
             className="sortable-header"
             onClick={(e) => onOpenFilterPopup("division", e)}
@@ -105,9 +105,9 @@ const StudentTableHeader = ({
             </span>
           </div>
         </th>
-        <th>
+        {/* <th>
           Status
-        </th>
+        </th> */}
         <th className="actions-cell">Actions</th>
       </tr>
     </thead>

@@ -3,21 +3,23 @@ import { useDropzone } from "react-dropzone"; // Import useDropzone
 const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 const dropzoneBaseStyle = {
-  width: "70px",
-  height: "70px",
+  width: "64px",
+  height: "64px",
   borderWidth: "2px",
-  borderStyle: "dashed",
-  borderColor: "#adb5bd",
-  borderRadius: "5px",
+  borderStyle: "solid",
+  borderColor: "#d1d1d1", // Simple light gray border color
+  borderRadius: "8px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
   cursor: "pointer",
-  padding: "5px",
+  padding: "0px",
   transition: "border .24s ease-in-out",
   margin: "auto",
+  overflow: "hidden",
+  outline: "none",
 };
 
 const dropzoneAcceptStyle = {
@@ -37,24 +39,18 @@ const dropzoneUploadingStyle = {
 };
 
 const stagedPreviewStyle = {
-  width: "50px",
-  height: "50px",
+  width: "100%",
+  height: "100%",
   objectFit: "cover",
-  borderRadius: "50%",
-  borderWidth: "2px",
-  borderStyle: "solid",
-  borderColor: "#0d6efd",
+  borderRadius: "6px", // Added curved corners to match container
 };
 
 const photoPreviewStyle = {
-  width: "50px",
-  height: "50px",
+  width: "100%",
+  height: "100%",
   objectFit: "cover",
-  borderRadius: "50%",
+  borderRadius: "6px", // Added curved corners to match container
   verticalAlign: "middle",
-  borderWidth: "1px",
-  borderStyle: "solid",
-  borderColor: "#ccc",
 };
 
 const StudentPhotoDropzone = ({

@@ -83,6 +83,10 @@ const StudentTable = ({
           numSelected={selectedStudents.length}
           totalFilteredCount={totalFilteredCount}
           onOpenFilterPopup={handleOpenFilterPopup}
+          columnStyles={{
+            standard: "standard-cell",
+            division: "division-cell"
+          }}
         />
         <tbody>
           {students.length > 0 ? (
@@ -119,7 +123,13 @@ const StudentTable = ({
             left: popupPosition.left,
           }}
         >
-          <h4>Filter by {popupField}</h4>
+          <h4>Filter by {popupField === "fullName" ? "Full Name" : 
+              popupField === "studentIdentifier" ? "Identifier" : 
+              popupField === "address" ? "Address" : 
+              popupField === "standard" ? "Standard" : 
+              popupField === "division" ? "Division" : 
+              popupField}
+          </h4>
           <div className="filter-popup-content">
             <div className="filter-input-container">
               {popupField === "standard" && (
