@@ -30,6 +30,7 @@ import api from '../../services/api'; // For fetching common data
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FIELD_LENGTHS, VALIDATION_MESSAGES } from '../../utils/validationConstants';
+import '../../styles/buttons.css';
 
 const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
@@ -1100,9 +1101,8 @@ const handleChange = useCallback(
         <div style={{ marginTop: "20px" }}>
           <button
             type="submit"
-            onClick={() => console.log('Submit button clicked')}
             disabled={isLoading}
-            style={submitButtonStyle}
+            className="btn btn-primary"
           >
             {/* Show specific loading state */}
             {loadingSubmit
@@ -1117,7 +1117,8 @@ const handleChange = useCallback(
             type="button"
             onClick={handleCancel}
             disabled={isLoading}
-            style={cancelButtonStyle}
+            className="btn btn-secondary"
+            style={{ marginLeft: '10px' }}
           >
             Cancel
           </button>

@@ -1,0 +1,168 @@
+/* Import theme variables */
+@import './theme.css';
+
+/* Table Base Styles */
+.themed-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  table-layout: fixed;
+  box-shadow: 0 2px 8px var(--shadow);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.themed-table th,
+.themed-table td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+.themed-table th {
+  background-color: var(--primary);
+  color: var(--text-light);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.themed-table th.actions-cell,
+.themed-table th.photo-cell {
+  text-align: center;
+}
+
+/* Cell widths */
+.themed-table .photo-cell {
+  width: 90px;
+  text-align: center;
+}
+
+.themed-table .actions-cell {
+  width: 180px;
+  text-align: center;
+}
+
+.themed-table .checkbox-cell {
+  width: 50px;
+  text-align: center;
+}
+
+/* Table Row Styles */
+.themed-table tbody tr:nth-child(even) {
+  background-color: var(--background);
+}
+
+.themed-table tbody tr:hover {
+  background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+/* No Records Message */
+.no-records {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+  color: var(--text-secondary);
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 6px;
+}
+
+/* Sort Indicators */
+.sort-indicator {
+  cursor: pointer;
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.sort-indicator.active {
+  color: var(--accent);
+}
+
+.sort-indicator.inactive {
+  color: var(--text-secondary);
+}
+
+/* Filter Popup */
+.filter-popup {
+  position: fixed;
+  background-color: var(--content-bg);
+  border: 1px solid var(--border);
+  padding: 15px;
+  z-index: 9999;
+  box-shadow: 0 4px 8px var(--shadow);
+  border-radius: 4px;
+  min-width: 320px;
+}
+
+.filter-popup h4 {
+  margin: 0 0 15px 0;
+  color: var(--text-primary);
+}
+
+.filter-popup-content {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.filter-input-container {
+  flex: 1;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background-color: var(--content-bg);
+  color: var(--text-primary);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Sortable Column Header */
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-header:hover {
+  color: var(--accent);
+}
+
+/* Table Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+/* Header Content */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Sort Icon */
+.sort-icon {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+.sort-icon.active {
+  opacity: 1;
+  color: var(--accent);
+}

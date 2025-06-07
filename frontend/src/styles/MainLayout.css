@@ -1,21 +1,15 @@
-  /* Ensure the layout container takes the full height of the viewport */
+/* Import theme variables */
+@import './theme.css';
+
+/* Ensure the layout container takes the full height of the viewport */
 .layout-container {
   display: flex;
   flex-direction: column;
   height: 100vh; /* Full viewport height */
   overflow: hidden; /* Prevent horizontal overflow */
-  background-color: #f9f9f9;
+  background-color: var(--background);
   width: 1200px;
 }
-
-/* .layout-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;*/
-  /* background-color: #f9f9f9; *//* Light background for the entire layout */
-/* }*/
-
 
 /* Allow the main content area to scroll if it overflows */
 .layout-main {
@@ -23,88 +17,141 @@
   overflow-y: auto; /* Add vertical scroll bar if content overflows */
   padding: 20px; /* Optional padding for better spacing */
   box-sizing: border-box; /* Include padding in height calculation */
+  background-color: var(--content-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px var(--shadow);
+  margin: 0 20px 20px 20px;
 }
   
-  /* Header styling */
+/* Header styling */
+.layout-header {
+  background-color: var(--primary); /* Theme-based header background */
+  color: var(--text-light);
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title h3 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.user-info {
+  margin-left: 15px;
+  font-size: 0.9em;
+  color: var(--text-light);
+}
+
+/* Navigation styling */
+.layout-nav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.layout-nav a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.layout-nav a:hover {
+  color: var(--accent-light); /* Yellow hover effect */
+  background-color: var(--primary-dark);
+}
+
+.logout-button {
+  padding: 8px 12px;
+  background-color: var(--danger); /* Red logout button */
+  color: var(--text-light);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: var(--danger-dark); /* Darker red on hover */
+}
+
+.switch-school-button {
+  padding: 8px 12px;
+  background-color: var(--accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.switch-school-button:hover {
+  background-color: var(--accent-dark);
+}
+
+/* Dropdown menu styling */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-header {
+  color: var(--text-light);
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-header:hover {
+  color: var(--accent-light);
+  background-color: var(--primary-dark);
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: var(--primary-light) !important;
+  padding: 10px;
+  box-shadow: 0px 4px 6px var(--shadow);
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.dropdown-menu a {
+  color: var(--text-light);
+  padding: 8px 12px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--primary);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   .layout-header {
-    background-color: #007bff; /* Blue header background */
-    color: white;
-    padding: 15px 20px;
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .header-title h3 {
-    margin: 0;
-    font-size: 1.5em;
-  }
-  
-  .user-info {
-    margin-left: 15px;
-    font-size: 0.9em;
-    color: #e0e0e0; /* Light gray for user info */
-  }
-  
-  /* Navigation styling */
+
   .layout-nav {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
   }
-  
-  .layout-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 1em;
-    transition: color 0.3s ease;
+
+  .layout-main {
+    margin: 10px;
+    padding: 15px;
   }
-  
-  .layout-nav a:hover {
-    color: #ffdd57; /* Yellow hover effect */
-  }
-  
-  .logout-button {
-    padding: 8px 12px;
-    background-color: #ff4d4f; /* Red logout button */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-  }
-  
-  .logout-button:hover {
-    background-color: #d9363e; /* Darker red on hover */
-  }
-  
-  /* Main content styling */
-  /*.layout-main {
-    flex-grow: 1;
-    padding: 20px;*/
-   /* background-color: #ffffff;*/ /* White background for main content */
-   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/ /* Subtle shadow for content area */
-    /*margin: 20px;
-    border-radius: 8px;
-  }*/
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .layout-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .layout-nav {
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-  
-    .layout-main {
-      margin: 10px;
-      padding: 15px;
-    }
-  }
-  
+}

@@ -6,17 +6,17 @@ import SchoolSelector from '../components/SchoolSelector'; // Ensure this uses R
 import SwitchSchoolPopup from '../pages/School/SwitchSchoolPopup'; // Import the new popup component
 import api from '../services/api'; // Import your API service
 import '../styles/MainLayout.css'; // Import the CSS file
-
+import '../styles/buttons.css'; // Import the button styles
 
 function MainLayout({ selectedSchool, onSwitchSchool }) {
   const user = useSelector(selectCurrentUser); // Get user from Redux state
   const isAuthenticated = useSelector(selectIsAuthenticated); // Ensure you have this selector
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  //const location = useLocation(); // For active link styling
 
   const [isSwitchSchoolPopupOpen, setIsSwitchSchoolPopupOpen] = useState(false);
   const [isStudentsMenuOpen, setIsStudentsMenuOpen] = useState(false); // State for Students dropdown
+  const [isDarkMode, setIsDarkMode] = useState(false); // State for theme toggle
 
   const toggleStudentsMenu = () => {
     setIsStudentsMenuOpen((prev) => !prev); // Toggle the dropdown menu
@@ -25,12 +25,6 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
   const handleOptionSelect = () => {
     setIsStudentsMenuOpen(false); // Collapse the dropdown after selecting an option
   };
-
-  // const [availableSchools, setAvailableSchools] = useState([
-  //   { id: 1, name: 'School A' },
-  //   { id: 2, name: 'School B' },
-  //   { id: 3, name: 'School C' },
-  // ]);
 
   const [availableSchools, setAvailableSchools] = useState([]);
   // Fetch schools from the backend
@@ -48,7 +42,7 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
   }, []);
 
   useEffect(() => {
-    console.log("test", user,selectedSchool);
+    console.log("test", user, selectedSchool);
     // Show the popup if the user is an admin and no school is selected
     if (user?.role === 'Admin' && !selectedSchool && availableSchools.length > 0) {
       console.log("school is selected");
@@ -64,6 +58,11 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
   const handleLogout = () => {
     dispatch(logout()); // Dispatch Redux action
     navigate('/login');
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.body.classList.toggle('dark-theme');
   };
 
   // Only render layout if authenticated, otherwise ProtectedRoute handles redirection
@@ -106,37 +105,31 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
               Students <span style={{ marginLeft: "5px" }}>▼</span>
             </span>
             {isStudentsMenuOpen && (
-              <div
-                className="dropdown-menu"
-                style={{
-                  display: "flex",
-                  flexDirection: "column", // Ensure options are stacked vertically
-                  position: "absolute",
-                  backgroundColor: "#0d6efd", // Transparent background
-                  //border: "1px solid #ccc",
-                  padding: "10px",
-                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                  zIndex: 1000,
-                }}
-              >
-                <Link to="/students" style={{ marginBottom: "5px" }} onClick={handleOptionSelect}>View Students</Link>
+              <div className="dropdown-menu">
+                <Link to="/students" onClick={handleOptionSelect}>View Students</Link>
                 <Link to="/students/new" onClick={handleOptionSelect}>Add Student</Link>
               </div>
             )}
           </div>
           {/* Add User Management link for Admin users */}
           {user?.role === 'Admin' && <Link to="/users">User Management</Link>}
-           {/*<SchoolSelector /> Ensure this uses Redux */}
           <div className="school-info">
             {/* <span>Current School: {selectedSchool?.name || 'None'}</span> */}
             <button
-              className="switch-school-button"
+              className="btn btn-accent btn-sm switch-school-button"
               onClick={() => setIsSwitchSchoolPopupOpen(true)}
             >
               Switch School
             </button>
           </div>
-          <button className="logout-button" onClick={handleLogout}>
+          <button 
+            className={`btn btn-sm ${isDarkMode ? 'btn-accent' : 'btn-info'}`}
+            onClick={toggleTheme}
+            style={{ marginRight: '10px' }}
+          >
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button className="btn btn-danger btn-sm" onClick={handleLogout}>
             Logout
           </button>
         </nav>
@@ -146,13 +139,13 @@ function MainLayout({ selectedSchool, onSwitchSchool }) {
       </main>
       {/* Use the new SwitchSchoolPopup component */}
       {isSwitchSchoolPopupOpen && (
-      <SwitchSchoolPopup
-        isOpen={isSwitchSchoolPopupOpen}
-        availableSchools={availableSchools}
-        onClose={() => setIsSwitchSchoolPopupOpen(false)}
-        onSelectSchool={handleSchoolSelect}
-      />
-    )}
+        <SwitchSchoolPopup
+          isOpen={isSwitchSchoolPopupOpen}
+          availableSchools={availableSchools}
+          onClose={() => setIsSwitchSchoolPopupOpen(false)}
+          onSelectSchool={handleSchoolSelect}
+        />
+      )}
     </div>
   );
 }

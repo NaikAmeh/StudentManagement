@@ -3,28 +3,10 @@ import React, { useState, useRef, useEffect } from "react";
 import StudentTableHeader from "../students/StudentTableHeader";
 import StudentTableRow from "../students/StudentTableRow";
 import Dropdown from "../Shared/Dropdown";
-
-
-// --- Styles ---
-const tableStyle = {
-  width: "100%",
-  borderCollapse: "collapse",
-  marginTop: "10px",
-  tableLayout: "fixed", // Keep fixed for consistent column widths
-};
-const noRecordsStyle = {
-  textAlign: "center",
-  padding: "20px",
-  fontSize: "1.1em",
-  color: "#6c757d",
-};
-const tableContainerStyle = {
-    overflowX: "auto", // Ensure horizontal scrolling if needed
-    marginTop: '15px',
-};
+import "../../styles/table-styles.css"; // Import the new table styles
 
 const StudentTable = ({
-  students, // The paginated list
+  students,
   filters,
   sortConfig,
   selectedStudents,
@@ -32,7 +14,7 @@ const StudentTable = ({
   uploadingStudentId,
   deletingId,
   loadingDelete,
-  totalFilteredCount, // Total count before pagination
+  totalFilteredCount,
   onFilterChange,
   onSort,
   onSelectStudent,
@@ -56,13 +38,11 @@ const StudentTable = ({
     setPopupPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
   };
 
-// Handle closing the filter popup
   const handleCloseFilterPopup = () => {
-    setPopupField(""); // Clear the field being filtered
-    setPopupPosition(null); // Hide the popup
+    setPopupField("");
+    setPopupPosition(null);
   };
 
-// Handle applying the filter
   const handleApplyFilter = () => {
     onFilterChange({ 
       target: { 
@@ -73,13 +53,11 @@ const StudentTable = ({
     handleCloseFilterPopup();
   };
 
-// Handle canceling the filter
   const handleCancelFilter = () => {
     onFilterChange({ target: { name: popupField, value: "" } });
-    handleCloseFilterPopup(); // Close the popup without applying the filter
+    handleCloseFilterPopup();
   };
 
-// Close the popup on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -93,8 +71,8 @@ const StudentTable = ({
   }, []);
 
   return (
-    <div style={tableContainerStyle}>
-      <table style={tableStyle}>
+    <div className="table-container">
+      <table className="themed-table">
         <StudentTableHeader
           filters={filters}
           sortConfig={sortConfig}
@@ -124,33 +102,26 @@ const StudentTable = ({
             ))
           ) : (
             <tr>
-              <td colSpan="7" style={noRecordsStyle}>
+              <td colSpan="7" className="no-records">
                 No records found matching your criteria.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-{/* Render the popup outside the table */}
+
       {popupPosition && (
         <div
           ref={popupRef}
+          className="filter-popup"
           style={{
-            position: "fixed",
             top: popupPosition.top,
             left: popupPosition.left,
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            padding: "15px",
-            zIndex: 9999,
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-            borderRadius: "4px",
-            minWidth: "320px"
           }}
         >
-          <h4 style={{ margin: "0 0 15px 0" }}>Filter by {popupField}</h4>
-          <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-            <div style={{ flex: 1 }}>
+          <h4>Filter by {popupField}</h4>
+          <div className="filter-popup-content">
+            <div className="filter-input-container">
               {popupField === "standard" && (
                 <Dropdown
                   label="Select Standard"
@@ -180,42 +151,21 @@ const StudentTable = ({
                     value={tempFilter}
                     onChange={(e) => setTempFilter(e.target.value)}
                     placeholder={`Enter ${popupField}`}
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ced4da"
-                    }}
+                    className="filter-input"
                   />
                 </div>
               )}
             </div>
-            <div style={{ display: "flex", gap: "6px" }}>
+            <div className="filter-actions">
               <button 
                 onClick={handleApplyFilter} 
-                style={{ 
-                  padding: "8px 12px",
-                  backgroundColor: "#0d6efd",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap"
-                }}
+                className="btn btn-primary btn-sm"
               >
                 Apply
               </button>
               <button 
                 onClick={handleCancelFilter}
-                style={{ 
-                  padding: "8px 12px",
-                  backgroundColor: "#6c757d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap"
-                }}
+                className="btn btn-secondary btn-sm"
               >
                 Clear
               </button>

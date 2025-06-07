@@ -1,0 +1,68 @@
+:root {
+  /* School-friendly color palette */
+  --primary: #3a7ca5; /* Deep blue - calming, professional */
+  --primary-light: #81b2d4; /* Lighter blue for hover effects */
+  --primary-dark: #2c5d7c; /* Darker blue for active states */
+  --primary-rgb: 58, 124, 165; /* RGB values for transparency */
+  
+  --secondary: #4d9c3f; /* Green - growth, education */
+  --secondary-light: #7ebe74; /* Lighter green */
+  --secondary-dark: #357829; /* Darker green */
+  --secondary-rgb: 77, 156, 63; /* RGB values for transparency */
+  
+  --accent: #f2a51a; /* Gold/yellow - achievement, positivity */
+  --accent-light: #f6be5a; /* Lighter gold */
+  --accent-dark: #c98508; /* Darker gold */
+  --accent-rgb: 242, 165, 26; /* RGB values for transparency */
+  
+  --danger: #d7385e; /* Red - less harsh than traditional red */
+  --danger-light: #e56c89; /* Lighter red */
+  --danger-dark: #ab2a48; /* Darker red */
+  --danger-rgb: 215, 56, 94; /* RGB values for transparency */
+  
+  /* Neutral colors */
+  --background: #f8f9fa; /* Light background */
+  --content-bg: #ffffff; /* White content background */
+  --border: #e0e4e8; /* Subtle border color */
+  
+  /* Text colors */
+  --text-primary: #333333; /* Main text */
+  --text-secondary: #5c6570; /* Subdued text */
+  --text-light: #ffffff; /* Text on dark backgrounds */
+  
+  /* Status colors */
+  --success: #4d9c3f; /* Same as secondary */
+  --warning: #f2a51a; /* Same as accent */
+  --info: #3a7ca5; /* Same as primary */
+  
+  /* Shadow */
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode theme - can be enabled via toggle */
+.dark-theme {
+  --primary: #5590b8;
+  --primary-light: #6fa6c9;
+  --primary-dark: #3a7ca5;
+  --primary-rgb: 85, 144, 184;
+  
+  --secondary: #5eae50;
+  --secondary-light: #7ebe74;
+  --secondary-dark: #4d9c3f;
+  --secondary-rgb: 94, 174, 80;
+  
+  --accent: #f2a51a;
+  --accent-light: #f6be5a;
+  --accent-dark: #c98508;
+  --accent-rgb: 242, 165, 26;
+  
+  --background: #2e3338;
+  --content-bg: #3a3f45;
+  --border: #4a4f57;
+  
+  --text-primary: #e0e4e8;
+  --text-secondary: #b4bac3;
+  --text-light: #ffffff;
+  
+  --shadow: rgba(0, 0, 0, 0.3);
+}

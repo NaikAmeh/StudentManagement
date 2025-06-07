@@ -1,38 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
-import StudentPhotoDropzone from "../students/StudentPhotoDropzone"; // Import the dropzone
-const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
+import StudentPhotoDropzone from "../students/StudentPhotoDropzone";
+import "../../styles/table-styles.css";
+import "../../styles/buttons.css";
 
-// --- Styles ---
-const thTdStyle = {
-  border: "1px solid #dee2e6",
-  padding: "8px 10px",
-  textAlign: "left",
-  verticalAlign: "middle",
-  wordBreak: "break-word",
-};
-const photoCellStyle = { ...thTdStyle, width: "90px", textAlign: "center" };
-const actionsCellStyle = { ...thTdStyle, width: "180px", textAlign: "center" };
-const dangerButtonStyle = {
-  backgroundColor: "transparent", 
-  color: "#dc3545", 
-  border: "none",
-  padding: "2px 5px", 
-  marginLeft: "5px", 
-  cursor: "pointer", 
-  borderRadius: "3px",
-  fontSize: "0.9em",
-  transition: "color 0.2s ease",
-  ":hover": {
-    color: "#bb2d3b"
-  }
-};
-const infoButtonStyle = {
-  backgroundColor: "#0dcaf0", color: "black", borderColor: "#0dcaf0",
-  padding: "2px 5px", marginLeft: "5px", cursor: "pointer", borderRadius: "3px", border: "1px solid transparent", fontSize: "0.9em"
-};
-const editLinkStyle = { marginRight: "5px", textDecoration: 'none' }; // Optional: style edit link
+const API_IMAGE_URL = import.meta.env.VITE_API_BASEIMAGE_URL;
 
 const StudentTableRow = ({
   student,
@@ -46,12 +19,6 @@ const StudentTableRow = ({
   onDeleteStudent,
 }) => {
   const { studentId, fullName, studentIdentifier, isActive, photoName, standardName, divisionName } = student;
-console.log("StudentTableRow", studentId, fullName, studentIdentifier, isActive, photoName, standardName);
-debugger;
-  // Construct the photo URL using localhost
-  const photoUrl = photoName
-    ? `${API_IMAGE_URL}${photoName}?t=${new Date().getTime()}`
-    : null;
 
   const handleSelect = (e) => {
     onSelectStudent(studentId, e.target.checked);
@@ -67,7 +34,7 @@ debugger;
 
   return (
     <tr>
-      <td style={{ ...thTdStyle, textAlign: "center", width: "50px" }}>
+      <td className="checkbox-cell">
         <input
           type="checkbox"
           checked={isSelected}
@@ -75,20 +42,7 @@ debugger;
           disabled={isDeleting}
         />
       </td>
-      <td style={photoCellStyle}>
-         {/* {photoUrl ? (
-          <img
-            src={photoUrl}
-            alt={`${fullName}'s photo`}
-            style={{ maxWidth: "80px", maxHeight: "80px", borderRadius: "5px" }}
-            onError={(e) => {
-              e.target.style.display = "none"; // Hide the image if it fails to load
-              console.error("Failed to load photo:", photoName);
-            }}
-          />
-        ) : (
-          <span>No Photo</span>
-        )}  */}
+      <td className="photo-cell">
          <StudentPhotoDropzone
             studentId={studentId}
             photoName={student.photoName}
@@ -97,12 +51,12 @@ debugger;
             onDropPhoto={onDropPhoto}
           />
       </td>
-      <td style={thTdStyle}>{fullName}</td>
-      <td style={thTdStyle}>{studentIdentifier || "N/A"}</td>
-      <td style={thTdStyle}>{standardName || "N/A"}</td>
-      <td style={thTdStyle}>{divisionName || "N/A"}</td>
-      <td style={{ ...thTdStyle, position: "relative" }}>
-        <div title={student.address || ""}> {/* This creates the hover effect */}
+      <td>{fullName}</td>
+      <td>{studentIdentifier || "N/A"}</td>
+      <td>{standardName || "N/A"}</td>
+      <td>{divisionName || "N/A"}</td>
+      <td>
+        <div title={student.address || ""}>
           {student.address ? (
             student.address.length > 20 
               ? `${student.address.substring(0, 20)}...` 
@@ -110,29 +64,41 @@ debugger;
           ) : "N/A"}
         </div>
       </td>
-      <td style={thTdStyle}>{isActive ? "Active" : "Inactive"}</td>
-      <td style={actionsCellStyle}>
-        <Link
-          to={`/students/${studentId}/edit`}
-          style={editLinkStyle}
-        >
-          Edit
-        </Link>
-        <button
-          onClick={handleDownloadPdf}
-          disabled={isDeleting}
-          style={infoButtonStyle}
-        >
-          ID
-        </button>
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          style={dangerButtonStyle}
-          title="Delete student"
-        >
-          {isDeleting ? "..." : <RiDeleteBinLine size={18} />}
-        </button>
+      <td>
+        <span style={{ 
+          backgroundColor: isActive ? 'var(--success)' : 'var(--danger)',
+          color: 'var(--text-light)',
+          padding: '2px 8px',
+          borderRadius: '12px',
+          fontSize: '0.8em'
+        }}>
+          {isActive ? "Active" : "Inactive"}
+        </span>
+      </td>
+      <td className="actions-cell">
+        <div className="action-buttons">
+          <Link
+            to={`/students/${studentId}/edit`}
+            className="btn btn-primary btn-sm"
+          >
+            Edit
+          </Link>
+          <button
+            onClick={handleDownloadPdf}
+            disabled={isDeleting}
+            className="btn btn-info btn-sm"
+          >
+            ID
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="btn btn-danger btn-sm"
+            title="Delete student"
+          >
+            {isDeleting ? "..." : <RiDeleteBinLine size={16} />}
+          </button>
+        </div>
       </td>
     </tr>
   );

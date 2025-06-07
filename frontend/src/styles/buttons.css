@@ -1,0 +1,122 @@
+/* Import theme variables */
+@import './theme.css';
+
+/* Global Button Styles */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  text-align: center;
+  display: inline-block;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+/* Button variants */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--text-light);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: var(--text-light);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--secondary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background-color: var(--accent-dark);
+  color: var(--text-light);
+  transform: translateY(-1px);
+}
+
+.btn-accent:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: var(--text-light);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--danger-dark);
+  transform: translateY(-1px);
+}
+
+.btn-danger:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-success {
+  background-color: var(--success);
+  color: var(--text-light);
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: var(--secondary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-warning {
+  background-color: var(--warning);
+  color: var(--text-primary);
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.btn-info {
+  background-color: var(--info);
+  color: var(--text-light);
+}
+
+.btn-info:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* Button Size Variants */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.btn-lg {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+}
+
+/* Disabled button */
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
