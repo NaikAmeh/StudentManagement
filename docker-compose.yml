@@ -1,5 +1,4 @@
-# /docker-compose.yml
-# 'version' attribute is now optional/obsolete
+version: '3.8'
 
 services:
   backend:
@@ -8,21 +7,28 @@ services:
       dockerfile: src/StudentManagement.API/Dockerfile # Path to Dockerfile within that context
     container_name: studentmanagement-api-dev
     ports:
-     # - "8080:8080" # Map host port 5001 to container port 8080
-      - "8081:8081"   # HTTPS (Codespaces will forward this)
+      - "8080:80"  # Map container port 80 to host port 8080 (HTTP)
+      - "8443:443" # Map container port 443 to host port 8443 (HTTPS)
     volumes:
       # Mount source code for live reloading with 'dotnet watch'
       - ./backend/src:/app/src
-      - ./backend/StudentManagement.Sln:/app/StudentManagement.Sln
+      - ./backend/StudentManagement.sln:/app/StudentManagement.sln
       # Mount an 'uploads' folder for persistent image storage
       - ./uploads:/app/uploads
+      - ./certs:/app/certs
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081 #;http://+:8080
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Your_password123
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/cert.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
       - DOTNET_USE_POLLING_FILE_WATCHER=1 # Helps with file watching in Docker volumes
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true
+      - PORT=5000
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-studentmgmt}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
       # Database connection string; 'db' is the service name of the MySQL container
       - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};Pooling=true;AllowPublicKeyRetrieval=true;
     # Command to run inside the container for development
@@ -30,8 +36,9 @@ services:
     depends_on:
       db:
         condition: service_healthy # Ensures 'db' service is healthy before starting
+    restart: unless-stopped
     networks:
-      - app-network
+      - student-mgmt-network
 
   frontend_dev: # Service for frontend development (Vite dev server)
     build:
@@ -54,7 +61,7 @@ services:
       # If your frontend needs to know the backend API URL (passed to Vite):
       # VITE_API_BASE_URL=http://localhost:5001 (Browser accesses via localhost, Codespaces forwards)
     networks:
-      - app-network
+      - student-mgmt-network
     # depends_on: # Usually not strictly needed for frontend dev to wait for backend
     #   - backend
 
@@ -77,7 +84,7 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - app-network
+      - student-mgmt-network
 
 # Named volume for persistent MySQL data
 volumes:
@@ -85,5 +92,5 @@ volumes:
 
 # Define a common network for services to communicate with each other by service name
 networks:
-  app-network:
+  student-mgmt-network:
     driver: bridge

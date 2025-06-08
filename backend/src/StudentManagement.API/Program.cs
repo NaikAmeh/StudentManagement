@@ -29,26 +29,52 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- CORS Configuration (remains the same) ---
+// --- Codespaces Configuration ---
+var isCodespace = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CODESPACES"));
+var codespaceUrl = Environment.GetEnvironmentVariable("CODESPACE_NAME");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+
+// --- CORS Configuration (updated to handle Codespaces URLs) ---
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
                      ?? Array.Empty<string>();
+
+// Replace the incorrect 'AddOrigins' method call with 'SetIsOriginAllowed' to achieve the desired functionality.
+// The 'CorsPolicyBuilder' does not have an 'AddOrigins' method, but you can use 'SetIsOriginAllowed' to allow specific origins.
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.AllowAnyOrigin()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .WithExposedHeaders("Content-Disposition");
+                          // Only use specific origins if we have any configured
+                          if (allowedOrigins.Length > 0 || isCodespace)
+                          {
+                              // Start with configured origins from settings
+                              var corsBuilder = policy.WithOrigins(allowedOrigins)
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .WithExposedHeaders("Content-Disposition");
+
+                              // Add Codespace URLs if in Codespace environment
+                              if (isCodespace && !string.IsNullOrEmpty(codespaceUrl))
+                              {
+                                  corsBuilder.SetIsOriginAllowed(origin =>
+                                      origin == $"https://{codespaceUrl}-{port}.app.github.dev" ||
+                                      origin == $"https://{codespaceUrl}-8080.app.github.dev" ||
+                                      origin == $"https://{codespaceUrl}-8443.app.github.dev");
+                              }
+                          }
+                          else
+                          {
+                              // Fallback to allow any origin when no specific origins are configured
+                              policy.AllowAnyOrigin()
+                                   .AllowAnyHeader()
+                                   .AllowAnyMethod()
+                                   .WithExposedHeaders("Content-Disposition");
+                          }
                       });
 });
-
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-
-
 
 // Add services to the container.
 builder.Configuration.AddEnvironmentVariables();
@@ -73,7 +99,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
     .EnableDetailedErrors(builder.Environment.IsDevelopment())
 );
-
 
 // --- Register Application & Identity Services ---
 builder.Services.AddScoped<ISchoolService, SchoolService>(); // Specific service
@@ -106,7 +131,6 @@ builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddValidatorsFromAssemblyContaining<StudentImportDtoValidator>();
 // --- End Validator Registration ---
 
-
 builder.Services.AddSingleton<IPasswordGenerator, PasswordGenerator>(); // Or AddScoped
 
 // --- Add Authentication ---
@@ -126,9 +150,10 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true, // Check if the token is not expired and the signing key is valid
         ValidateIssuerSigningKey = true, // Validate the signature of the token
 
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"], // Get from appsettings
-        ValidAudience = builder.Configuration["JwtSettings:Audience"], // Get from appsettings
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? "")), // Get from appsettings
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"] ?? "StudentManagementAPI", // Fallback if not configured
+        ValidAudience = builder.Configuration["JwtSettings:Audience"] ?? "StudentManagementClients", // Fallback if not configured
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            builder.Configuration["JwtSettings:Key"] ?? "YourSuperSecretKeyWithAtLeast32Characters!!")), // Fallback if not configured
 
         ClockSkew = TimeSpan.Zero // Optional: remove default 5 minute tolerance on expiration
     };
@@ -240,7 +265,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseCors(MyAllowSpecificOrigins);
 
 // Use a fixed server path for storing student images (e.g., /var/appdata/student-images on Linux, or C:\AppData\StudentImages on Windows)
@@ -249,7 +273,6 @@ app.UseCors(MyAllowSpecificOrigins);
 //    : "/var/appdata/student-images";
 
 var serverImagePath = Path.Combine(builder.Configuration.GetSection("FileStorageSettings")["LocalStorageBasePath"], "Students");
-
 
 //var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Resources", "Images", "Students");
 if (!Directory.Exists(serverImagePath))
